@@ -1,0 +1,75 @@
+table {
+    table-layout: fixed;
+    font-size: 0.9vw;
+}
+
+#services-table th {
+    background-color: #9AC0E5;
+    text-align: center;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+#services-table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+td i {
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 5px;
+    min-width: 24px;
+    color: #E34724;
+}
+
+.subject-count, .qty-count {
+    width: 50%;
+}
+
+#pagecontainer
+{
+    max-width: 100%;
+}
+
+#logo {
+    max-width: 40%;
+    float: right;
+    padding-bottom: 50px;
+}
+
+#title {
+    text-align: center;
+}
+
+#nextVisitPage {
+    text-align: right;
+    float: right;
+}
+
+#prevVisitPage {
+    text-align: left;
+    float: left;
+}
+
+#disclaimer {
+    font-size: 1.5vw;
+    color: red;
+}
+
+.visitHeaders th {
+    height: 60px;
+}
+
+.delete-icon {
+    width: 50px;
+}
+
+.total-row {
+    border-style: hidden;
+    font-size: x-large;
+}
+
+.non-clinical-blank {
+    background-color: lightgrey;
+}

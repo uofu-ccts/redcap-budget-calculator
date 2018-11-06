@@ -1,0 +1,40 @@
+{
+  "name": "Service Calculator",
+  "description": "placeholder",
+  "documentation": "README.md",
+
+  "namespace": "UIOWA\\ServiceCalculator",
+
+
+  "authors": [
+    {
+      "name": "Eric Neuhaus",
+      "email": "eric-neuhaus@uiowa.edu",
+      "institution": "University of Iowa Institute for Clinical and Translational Science"
+    }
+  ],
+
+  "links": {
+    "control-center": [
+      {
+        "name": "Service Calculator",
+        "icon": "clipboard task",
+        "url": "index.php?NOAUTH"
+      }
+    ]
+  },
+
+  "no-auth-pages": [
+    "index"
+  ],
+
+
+  "system-settings": [
+    {
+      "key": "project-id",
+      "name": "Service Info reference project",
+      "type": "project-id",
+      "required": true
+    }
+  ]
+}
