@@ -64,9 +64,12 @@ class ServiceCalculator extends AbstractExternalModule
         $headerInfo = array(
             'clinical' => array(
                 array(
+                    'title' => '',
+                    'style' => 'border-right-style:hidden; width: 3%;'
+                ),
+                array(
                     'title' => 'Clinical Service',
-                    'style' => 'width: 25%;',
-                    'colspan' => '2'
+                    'style' => 'width: 25%;'
                 ),
                 array(
                     'title' => 'Industry Rate',
@@ -82,7 +85,7 @@ class ServiceCalculator extends AbstractExternalModule
                 ),
                 array(
                     'title' => 'Visits',
-                    'colspan' => 5
+                    'colspan' => 6
                 ),
                 array(
                     'title' => 'Cost Per Subject',
@@ -94,9 +97,12 @@ class ServiceCalculator extends AbstractExternalModule
             ),
             'nonClinical' => array(
                 array(
+                    'title' => '',
+                    'style' => 'border-right-style:hidden; width: 3%;'
+                ),
+                array(
                     'title' => 'Non-Clinical Service',
-                    'style' => 'width: 25%;',
-                    'colspan' => '2'
+                    'style' => 'width: 25%;'
                 ),
                 array(
                     'title' => 'Industry Rate',
@@ -105,14 +111,14 @@ class ServiceCalculator extends AbstractExternalModule
                     'title' => 'Federal Rate',
                 ),
                 array(
-                    'title' => 'Subjects',
+                    'title' => 'Quantity',
                 ),
                 array(
                     'title' => 'Quantity Type',
                 ),
                 array(
                     'title' => '',
-                    'colspan' => 6
+                    'colspan' => 7
                 ),
                 array(
                     'title' => 'Total Cost',

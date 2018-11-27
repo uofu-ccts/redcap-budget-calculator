@@ -17,10 +17,9 @@ table {
 
 td i {
     cursor: pointer;
-    display: inline-block;
+    /*display: inline-block;*/
     margin: 0 5px;
-    min-width: 24px;
-    color: #E34724;
+    /*min-width: 24px;*/
 }
 
 .subject-count, .qty-count {
@@ -58,7 +57,8 @@ td i {
 }
 
 .visitHeaders th {
-    height: 60px;
+    height: 40px;
+    width: 40px;
 }
 
 .delete-icon {
@@ -70,6 +70,24 @@ td i {
     font-size: x-large;
 }
 
+#hide-border {
+    border-right: hidden; !important;
+}
+
 .non-clinical-blank {
     background-color: lightgrey;
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+}
+
+.dropdown-menu > li {
+    margin-left: 50px;
 }
