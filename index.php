@@ -5,7 +5,7 @@ $page = new HtmlPage();
 $page->PrintHeaderExt();
 
 
-if (!$module->getSystemSetting("project-id")) {
+if (!$module->getSystemSetting("reference-pid")) {
     exit('Please define a source project in the module config');
 }
 

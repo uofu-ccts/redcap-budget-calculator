@@ -18,7 +18,7 @@
     "control-center": [
       {
         "name": "Service Calculator",
-        "icon": "clipboard task",
+        "icon": "clipboard_task",
         "url": "index.php?NOAUTH"
       }
     ]
@@ -31,10 +31,66 @@
 
   "system-settings": [
     {
-      "key": "project-id",
-      "name": "Service Info reference project",
+      "key": "reference-pid",
+      "name": "Reference project (must use included template)",
       "type": "project-id",
       "required": true
+    },
+    {
+      "key": "export-enabled",
+      "name": "Allow downloading of service request in PDF format",
+      "type": "checkbox",
+      "default": true
+    },
+    {
+      "key": "submission-target",
+      "name": "Target location for submitted service requests",
+      "type": "radio",
+      "choices": [
+        {
+          "name": "Disabled",
+          "value": 0
+        },
+        {
+          "name": "REDCap Project",
+          "value": 1
+        },
+        {
+          "name": "External API",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "key": "submission-pid",
+      "name": "Target project for submitted requests (must use included template)",
+      "type": "project-id",
+      "required": true,
+      "branchingLogic": {
+        "field": "submission-target",
+        "value": 1
+      }
+    },
+    {
+      "key": "submission-field",
+      "name": "Additional Requester Info fields for user to fill out on submit (must be valid variable name in target REDCap project)",
+      "type": "text",
+      "repeatable": true,
+      "branchingLogic": {
+        "field": "submission-target",
+        "value": 1
+      }
+    },
+    {
+      "key": "submission-dialog",
+      "name": "Text to display to user before confirming a request submission (HTML allowed)",
+      "type": "textarea",
+      "required": true,
+      "default": "We require some additional information before your request can be submitted.",
+      "branchingLogic": {
+        "field": "submission-target",
+        "value": 1
+      }
     }
   ]
 }

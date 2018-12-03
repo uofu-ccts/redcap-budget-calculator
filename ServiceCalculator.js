@@ -8,19 +8,45 @@ $(document).ready(function(){
     });
     // Delete row on delete button click
     $('#services-table').on("click", ".delete", function(){
+        var lineIndex = $(this).parents('tr').index();
+        var serviceType = $(this).closest('tbody').attr('id');
+
         UIOWA_ServiceCalculator.visitGrid.splice(
-            $(this).parents("tr").index(), 1
+            lineIndex, 1
         );
 
         $(this).parents("tr").remove();
 
-        // Show "No services added" placeholders
-        if ($('#clinical').find('.lineItem').length == 0) {
+        var clinicalServiceCount = $('#clinical').find('.lineItem').length;
+        var nonClinicalServiceCount = $('#non_clinical').find('.lineItem').length
+
+        // Show "No services added" placeholders, disable visits
+        if (clinicalServiceCount == 0) {
             $('#clinical-empty').show();
+
+            $('#prevVisitPage').prop('disabled', true);
+            $('#nextVisitPage').prop('disabled', true);
+
+            $('.checkAllColumn > button').hide();
+
+            $('.visitHeader').each(function (index, td) {
+                $(td).html('');
+            });
         }
-        if ($('#nonClinical').find('.lineItem').length == 0) {
-            $('#nonClinical-empty').show();
+        if (nonClinicalServiceCount == 0) {
+            $('#non_clinical-empty').show();
         }
+
+        // Disable submit/export buttons
+        if (clinicalServiceCount == 0 && nonClinicalServiceCount == 0) {
+            $('#submit').prop('disabled', true);
+            $('#pdf-export').prop('disabled', true);
+        }
+
+        // Remove line item from object
+        UIOWA_ServiceCalculator.currentRequest[serviceType].splice(
+            lineIndex - 1, 1
+        );
 
         UIOWA_ServiceCalculator.updateTotals();
     });
@@ -66,6 +92,18 @@ $(document).ready(function(){
         UIOWA_ServiceCalculator.savePdf();
     });
 
+    $('#submit-confirm').click(function(){
+        UIOWA_ServiceCalculator.sendToProject();
+    });
+
+    $('#submit-success-popup').on('hidden.bs.modal', function (e) {
+        location.reload();
+    });
+
+    UIOWA_ServiceCalculator.requestUrl = requestUrl;
+    UIOWA_ServiceCalculator.apiUrl = apiUrl;
+    UIOWA_ServiceCalculator.currentUser = currentUser;
+
     UIOWA_ServiceCalculator.formatServicesData(servicesData, servicesQuantityLabels);
 });
 
@@ -80,7 +118,7 @@ UIOWA_ServiceCalculator.maxPage = 0;
 UIOWA_ServiceCalculator.visitsPerPage = 5;
 UIOWA_ServiceCalculator.currentRequest = {
     clinical: [],
-    nonClinical: []
+    non_clinical: []
 };
 
 // Format services data from source project
@@ -176,24 +214,24 @@ UIOWA_ServiceCalculator.addService = function() {
         core: serviceInfo['core'],
         category: serviceInfo['category'],
         service: serviceInfo['service'],
-        industryRate: Number(serviceInfo['industry_rate']),
-        federalRate: Number(serviceInfo['federal_rate']),
-        serviceQty: 1,
-        perServiceLabel: this.quantityLabelLookup[serviceInfo['per_service']],
-        lineTotal: 0.00
+        industry_rate: Number(serviceInfo['industry_rate']),
+        federal_rate: Number(serviceInfo['federal_rate']),
+        service_quantity: 1,
+        unit_label: this.quantityLabelLookup[serviceInfo['per_service']],
+        subtotal: 0.00
     };
 
     //console.log(serviceInfo);
 
-    var serviceType = serviceInfo['clinical'] == '1' ? 'clinical' : 'nonClinical';
-    var uniqueCols = "<td class='non-clinical-blank' colspan='7'></td>";
+    var serviceType = serviceInfo['clinical'] == '1' ? 'clinical' : 'non_clinical';
+    var uniqueCols = "<td class='non_clinical-blank' colspan='7'></td>";
 
     if (serviceType == 'clinical') {
         // Disable visits input (todo: make this updatable on the fly)
         $('#visitCount:enabled').prop("disabled", true);
 
-        lineItemObj['visitCount'] = 0;
-        lineItemObj['serviceQty'] = Number($('#subjectCount').val());
+        lineItemObj['visit_count'] = 0;
+        lineItemObj['service_quantity'] = Number($('#subjectCount').val());
         uniqueCols =
             "<td class='allVisits'>" +
                 "<button" +
@@ -229,16 +267,20 @@ UIOWA_ServiceCalculator.addService = function() {
             "<td class='service-title'>" + lineItemObj['service'] +
                 "<i class='fas fa-info-circle' style='color:#3E72A8' data-toggle='tooltip' title='" + serviceInfo['service_description'] + "'></i>" +
             "</td>" +
-            "<td>$<span class='industry-rate'>" + this.formatAsCurrency(lineItemObj['industryRate']) + "</span></td>" +
-            "<td>$<span class='federal-rate'>" + this.formatAsCurrency(lineItemObj['federalRate']) + "</span></td>" +
-            "<td><input class='qty-count' value='" + lineItemObj['serviceQty'] + "'></td>" +
-            "<td>" + lineItemObj['perServiceLabel'] + "</td>" +
+            "<td>$<span class='industry-rate'>" + this.formatAsCurrency(lineItemObj['industry_rate']) + "</span></td>" +
+            "<td>$<span class='federal-rate'>" + this.formatAsCurrency(lineItemObj['federal_rate']) + "</span></td>" +
+            "<td><input class='qty-count' value='" + lineItemObj['service_quantity'] + "'></td>" +
+            "<td>" + lineItemObj['unit_label'] + "</td>" +
             uniqueCols +
             "<td>$<span class='line-total'>0.00</span></td>" +
         "</tr>";
 
     // Hide "no services" placeholder
     $('#' + serviceType + '-empty:visible').hide();
+
+    // Enable submit/export buttons
+    $('#submit').prop('disabled', false);
+    $('#pdf-export').prop('disabled', false);
 
     // Add service line item to currentRequest object
     this.currentRequest[serviceType].push(lineItemObj);
@@ -254,20 +296,20 @@ UIOWA_ServiceCalculator.addService = function() {
 UIOWA_ServiceCalculator.updateTotals = function() {
     var totals = {
         'clinical': 0,
-        'nonClinical': 0,
+        'non_clinical': 0,
         'grand': 0
     };
 
     var visitGrid = this.visitGrid;
 
-    $.each(['clinical', 'nonClinical'], function (i, serviceType) {
+    $.each(['clinical', 'non_clinical'], function (i, serviceType) {
         var serviceTable = $('#' + serviceType + ' > tr').not('#' + serviceType + '-empty');
 
         $.each(UIOWA_ServiceCalculator.currentRequest[serviceType], function (lineIndex, lineItem) {
             var tableLineItem = serviceTable[lineIndex];
-            var lineTotal = 0;
+            var subtotal = 0;
 
-            var serviceCost = lineItem['federalRate'];
+            var serviceCost = lineItem['federal_rate'];
             var serviceQty = Number($(tableLineItem).find('.qty-count').val()); // Get latest qty from table
 
             // Count visit checkboxes
@@ -276,33 +318,33 @@ UIOWA_ServiceCalculator.updateTotals = function() {
 
             // Update object and table with line totals
             if (serviceType == 'clinical') {
-                var lineTotalPerPatient = serviceCost * visitCount;
-                lineTotal = lineTotalPerPatient * serviceQty;
+                var costPerSubject = serviceCost * visitCount;
+                subtotal = costPerSubject * serviceQty;
 
-                UIOWA_ServiceCalculator.currentRequest[serviceType][lineIndex]['visitCount'] = visitCount;
-                UIOWA_ServiceCalculator.currentRequest[serviceType][lineIndex]['lineTotalPerPatient'] = lineTotalPerPatient;
-                $(tableLineItem).find(".line-total-per-patient").html(UIOWA_ServiceCalculator.formatAsCurrency(lineTotalPerPatient));
+                UIOWA_ServiceCalculator.currentRequest[serviceType][lineIndex]['visit_count'] = visitCount;
+                UIOWA_ServiceCalculator.currentRequest[serviceType][lineIndex]['cost_per_subject'] = costPerSubject;
+                $(tableLineItem).find(".line-total-per-patient").html(UIOWA_ServiceCalculator.formatAsCurrency(costPerSubject));
             }
             else {
-                lineTotal = serviceQty * serviceCost;
+                subtotal = serviceQty * serviceCost;
             }
 
-            totals[serviceType] += lineTotal;
+            totals[serviceType] += subtotal;
 
-            UIOWA_ServiceCalculator.currentRequest[serviceType][lineIndex]['serviceQty'] = serviceQty;
-            UIOWA_ServiceCalculator.currentRequest[serviceType][lineIndex]['lineTotal'] = lineTotal;
-            $(tableLineItem).find(".line-total").html(UIOWA_ServiceCalculator.formatAsCurrency(lineTotal));
+            UIOWA_ServiceCalculator.currentRequest[serviceType][lineIndex]['service_quantity'] = serviceQty;
+            UIOWA_ServiceCalculator.currentRequest[serviceType][lineIndex]['subtotal'] = subtotal;
+            $(tableLineItem).find(".line-total").html(UIOWA_ServiceCalculator.formatAsCurrency(subtotal));
         });
 
         // Update object and table with subtotal
-        UIOWA_ServiceCalculator.currentRequest[serviceType + 'Total'] = totals[serviceType];
+        UIOWA_ServiceCalculator.currentRequest[serviceType + '_total'] = totals[serviceType];
         $('#' + serviceType + '-total').html(UIOWA_ServiceCalculator.formatAsCurrency(totals[serviceType]));
     });
 
-    totals['grand'] = totals['clinical'] + totals['nonClinical'];
+    totals['grand'] = totals['clinical'] + totals['non_clinical'];
 
     // Update object and table with grand total
-    this.currentRequest['grandTotal'] = totals['grand'];
+    this.currentRequest['grand_total'] = totals['grand'];
     $(".total").html(this.formatAsCurrency(totals['grand']));
 
     //console.log(this.currentRequest);
@@ -479,50 +521,56 @@ UIOWA_ServiceCalculator.updateVisitGrid = function (checkbox, index) {
 
 // Save request data object as PDF table
 UIOWA_ServiceCalculator.savePdf = function() {
-    var formattedServices = {
+    var serviceReference = {
         clinical: this.currentRequest['clinical'],
-        nonClinical: this.currentRequest['nonClinical']
+        non_clinical: this.currentRequest['non_clinical']
+    };
+    var pdfFormattedRequest = {
+        clinical: [],
+        non_clinical: []
     };
     var currencyHeaders = [
-        'industryRate',
-        'federalRate',
-        'lineTotalPerPatient',
-        'lineTotal'
+        'industry_rate',
+        'federal_rate',
+        'cost_per_subject',
+        'subtotal'
     ];
 
-    $.each(formattedServices, function (serviceType, lineItems) { // clinical, nonClinical
+    $.each(serviceReference, function (serviceType, lineItems) { // clinical, non_clinical
         $.each(lineItems, function (lineIndex) { // line items
+            pdfFormattedRequest[serviceType].push(_.clone(serviceReference[serviceType][lineIndex]));
+
             $.each(lineItems[lineIndex], function (key, value) { // columns
                 // Format dollar amounts
                 if ($.inArray(key, currencyHeaders) !== -1) {
-                    formattedServices[serviceType][lineIndex][key] = '$' + UIOWA_ServiceCalculator.formatAsCurrency(value);
+                    pdfFormattedRequest[serviceType][lineIndex][key] = '$' + UIOWA_ServiceCalculator.formatAsCurrency(value);
                 }
             })
         });
 
-        formattedServices[serviceType].push({
-            'lineTotalPerPatient': serviceType == 'clinical' ? 'Clinical Total:' : 'Non-Clinical Total:',
-            'lineTotal': UIOWA_ServiceCalculator.formatAsCurrency(
-                UIOWA_ServiceCalculator.currentRequest[serviceType + 'Total']
+        pdfFormattedRequest[serviceType].push({
+            'cost_per_subject': serviceType == 'clinical' ? 'Clinical Total:' : 'Non-Clinical Total:',
+            'subtotal': '$' + UIOWA_ServiceCalculator.formatAsCurrency(
+                UIOWA_ServiceCalculator.currentRequest[serviceType + '_total']
             )
-        })
+        });
     });
 
-    console.log(formattedServices);
+    //console.log(pdfFormattedRequest);
 
     var columnLookup = [
         {title: 'Clinical Service', dataKey: 'service'},                    // 0
-        {title: 'Industry Rate', dataKey: 'industryRate'},                  // 1
-        {title: 'Federal Rate', dataKey: 'federalRate'},                    // 2
-        {title: 'Subjects', dataKey: 'serviceQty'},                         // 3
-        {title: 'Quantity Type', dataKey: 'perServiceLabel'},               // 4
-        {title: 'Visits', dataKey: 'visitCount'},                           // 5
-        {title: 'Cost Per Subject', dataKey: 'lineTotalPerPatient'},        // 6
-        {title: 'Total', dataKey: 'lineTotal'}                              // 7
+        {title: 'Industry Rate', dataKey: 'industry_rate'},                 // 1
+        {title: 'Federal Rate', dataKey: 'federal_rate'},                   // 2
+        {title: 'Subjects', dataKey: 'service_quantity'},                   // 3
+        {title: 'Quantity Type', dataKey: 'unit_label'},                    // 4
+        {title: 'Visits', dataKey: 'visit_count'},                          // 5
+        {title: 'Cost Per Subject', dataKey: 'cost_per_subject'},           // 6
+        {title: 'Total', dataKey: 'subtotal'}                               // 7
     ];
 
     var doc = new jsPDF('l', 'pt');
-    doc.autoTable(columnLookup, formattedServices['clinical'], {
+    doc.autoTable(columnLookup, pdfFormattedRequest['clinical'], {
         theme: 'striped',
         margin: {top: 60}
     });
@@ -533,17 +581,65 @@ UIOWA_ServiceCalculator.savePdf = function() {
     columnLookup[5]['title'] = ''; // was 'Visits'
     columnLookup[6]['title'] = ''; // was 'Cost Per Subject'
 
-    doc.autoTable(columnLookup, formattedServices['nonClinical'], {
+    doc.autoTable(columnLookup, pdfFormattedRequest['non_clinical'], {
         theme: 'striped',
         margin: {top: 60},
         startY: doc.autoTable.previous.finalY
     });
 
-    doc.text('Grand Total: ' + UIOWA_ServiceCalculator.formatAsCurrency(
-            UIOWA_ServiceCalculator.currentRequest['grandTotal']
+    doc.text('Grand Total: $' + UIOWA_ServiceCalculator.formatAsCurrency(
+            UIOWA_ServiceCalculator.currentRequest['grand_total']
         ), 650, doc.autoTable.previous.finalY + 25);
 
     doc.save('services.pdf');
+};
+
+UIOWA_ServiceCalculator.sendToProject = function () {
+    var serviceReference = {
+        clinical: this.currentRequest['clinical'],
+        non_clinical: this.currentRequest['non_clinical']
+    };
+    var redcapFormattedRequest = [];
+    var requestIndex = 0;
+
+    $.each(serviceReference, function (serviceType, lineItems) { // clinical, non_clinical
+        $.each(lineItems, function (lineIndex) { // line items
+            redcapFormattedRequest.push(_.clone(serviceReference[serviceType][lineIndex]));
+            redcapFormattedRequest[requestIndex]['redcap_repeat_instrument'] = 'service_info';
+            redcapFormattedRequest[requestIndex]['redcap_repeat_instance'] = requestIndex + 1;
+
+            if (serviceType == 'clinical') {
+                redcapFormattedRequest[requestIndex]['clinical'] = 1;
+            }
+
+            requestIndex++;
+        });
+    });
+
+    redcapFormattedRequest.push({
+        clinical_total: this.currentRequest['clinical_total'],
+        non_clinical_total: this.currentRequest['non_clinical_total'],
+        grand_total: this.currentRequest['grand_total']
+    });
+
+    var requesterInfo = {};
+
+    $('.requester-info > input').each(function (index, input) {
+        requesterInfo[$(input).attr('id')] = $(input).val();
+    });
+
+    redcapFormattedRequest.push(requesterInfo);
+
+    console.log(redcapFormattedRequest);
+
+    $.ajax({
+        method: 'POST',
+        url: UIOWA_ServiceCalculator.requestUrl + '&type=submit',
+        data: JSON.stringify(redcapFormattedRequest)
+    })
+    .done(function(data) {
+        $('#submit-success-popup').modal();
+    })
 };
 
 // Format dollar amounts

@@ -74,7 +74,7 @@ td i {
     border-right: hidden; !important;
 }
 
-.non-clinical-blank {
+.non_clinical-blank {
     background-color: lightgrey;
 }
 
@@ -90,4 +90,9 @@ td i {
 
 .dropdown-menu > li {
     margin-left: 50px;
+}
+
+.action-button {
+    text-align: center;
+    padding: 5px;
 }

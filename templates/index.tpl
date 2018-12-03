@@ -83,8 +83,8 @@
                 </th>
             {/foreach}
         </tr>
-        <tbody id="nonClinical">
-        <tr id="nonClinical-empty">
+        <tbody id="non_clinical">
+        <tr id="non_clinical-empty">
             <td colspan="{$headerCounts.nonClinical}">No services added</td>
         </tr>
         </tbody>
@@ -97,7 +97,60 @@
             <td>$<span class="total">0.00</span></td>
         </tr>
     </table>
-    <button id="pdf-export" class="btn btn-primary">Download as PDF</button>
+    {if $submitEnabled != 0}
+        <div class="action-button">
+            <button id="submit" class="btn btn-success" data-toggle="modal" data-target="#submit-confirmation-popup" disabled>Submit</button>
+        </div>
+        <div class="modal fade" id="submit-confirmation-popup" tabindex="-1" role="dialog" aria-labelledby="submit-confirmation-popup" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Submission</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <p>{$submissionDialogBody}</p>
+                        </div>
+                        <form>
+                            {foreach $submissionFields as $field}
+                                <div class="form-row">
+                                    <div class="form-group requester-info">
+                                        <label for="{$field.name}"><b>{$field.label}: </b></label>
+                                        <input id="{$field.name}" name="{$field.name}" value="{$field.value}" class="form-control">
+                                    </div>
+                                </div>
+                            {/foreach}
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="submit-confirm" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="submit-success-popup" tabindex="-1" role="dialog" aria-labelledby="submit-success-popup" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        Success!
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {/if}
+    {if $exportEnabled == true}<div class="action-button"><button id="pdf-export" class="btn btn-primary" disabled>Download as PDF</button></div>{/if}
 </div>
 <div id="disclaimer">
     This is a work in progress and not representative of the final product. Pricing data is for testing purposes only.
