@@ -1,6 +1,6 @@
 <?php
 
-$module = new \UIOWA\ServiceCalculator\ServiceCalculator();
+$module = new \UIOWA\BudgetCalculator\BudgetCalculator();
 
 if ($_REQUEST['type'] == 'submit') {
     $module->saveRequestToProject();

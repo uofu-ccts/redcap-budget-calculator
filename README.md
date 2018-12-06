@@ -1,3 +1,3 @@
-# Service Calculator
+# Budget Calculator
 
 todo

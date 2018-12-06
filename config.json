@@ -1,9 +1,9 @@
 {
-  "name": "Service Calculator",
+  "name": "Budget Calculator",
   "description": "placeholder",
   "documentation": "README.md",
 
-  "namespace": "UIOWA\\ServiceCalculator",
+  "namespace": "UIOWA\\BudgetCalculator",
 
 
   "authors": [
@@ -17,7 +17,7 @@
   "links": {
     "control-center": [
       {
-        "name": "Service Calculator",
+        "name": "Budget Calculator",
         "icon": "clipboard_task",
         "url": "index.php?NOAUTH"
       }
@@ -38,13 +38,13 @@
     },
     {
       "key": "export-enabled",
-      "name": "Allow downloading of service request in PDF format",
+      "name": "Allow downloading of budget in PDF format",
       "type": "checkbox",
       "default": true
     },
     {
       "key": "submission-target",
-      "name": "Target location for submitted service requests",
+      "name": "Target location for submitted requests",
       "type": "radio",
       "choices": [
         {
@@ -66,16 +66,6 @@
       "name": "Target project for submitted requests (must use included template)",
       "type": "project-id",
       "required": true,
-      "branchingLogic": {
-        "field": "submission-target",
-        "value": 1
-      }
-    },
-    {
-      "key": "submission-field",
-      "name": "Additional Requester Info fields for user to fill out on submit (must be valid variable name in target REDCap project)",
-      "type": "text",
-      "repeatable": true,
       "branchingLogic": {
         "field": "submission-target",
         "value": 1

@@ -15,11 +15,9 @@ table {
     vertical-align: middle;
 }
 
-td i {
+i {
     cursor: pointer;
-    /*display: inline-block;*/
     margin: 0 5px;
-    /*min-width: 24px;*/
 }
 
 .subject-count, .qty-count {
@@ -95,4 +93,8 @@ td i {
 .action-button {
     text-align: center;
     padding: 5px;
+}
+
+.modal-body {
+    margin: auto 5%;
 }

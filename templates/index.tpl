@@ -1,5 +1,5 @@
 <img id="logo" src={$logo}></img>
-<div id="title"><h1>Service Calculator (PROTOTYPE)</h1></div>
+<div id="title"><h1>Budget Calculator (PROTOTYPE)</h1></div>
 <br />
 <div>
     <label for="subjectCount">Subjects:</label>
@@ -114,19 +114,41 @@
                         <div>
                             <p>{$submissionDialogBody}</p>
                         </div>
-                        <form>
+                        <form id="submission-form">
                             {foreach $submissionFields as $field}
                                 <div class="form-row">
                                     <div class="form-group requester-info">
-                                        <label for="{$field.name}"><b>{$field.label}: </b></label>
-                                        <input id="{$field.name}" name="{$field.name}" value="{$field.value}" class="form-control">
+                                        <label for="{$field.field_name}"><b>{$field.element_label}</b></label>
+                                        {if $field.element_note}
+                                            <i class="fas fa-question-circle info-description" style="color:#3E72A8" data-toggle="tooltip" title="{$field.element_note}"></i>
+                                        {/if}
+                                        {if $field.element_type == 'radio' || $field.element_type == 'checkbox'}
+                                            {foreach $field.choices as $choice}
+                                                <div class="form-check">
+                                                    <input class="form-check-input info-field-{$field.element_type}" type="{$field.element_type}" id="{$field.field_name}___{$choice.value}" name="{$field.field_name}" value="{$choice.value}">
+                                                    <label class="form-check-label" for="{$field.field_name}___{$choice.value}">
+                                                        {$choice.label}
+                                                    </label>
+                                                </div>
+                                            {/foreach}
+                                        {elseif $field.element_type == 'select'}
+                                            <select {if $field.field_req == 1}required{/if} class="form-control info-field" id="{$field.field_name}" name="{$field.field_name}">
+                                            {foreach $field.choices as $choice}
+                                                <option value="{$choice.value}">{$choice.label}</option>
+                                            {/foreach}
+                                            </select>
+                                        {elseif $field.element_type == 'textarea'}
+                                            <textarea {if $field.field_req == 1}required{/if} id="{$field.field_name}" name="{$field.field_name}" class="form-control info-field">{$field.value}</textarea>
+                                        {elseif $field.element_type == 'text'}
+                                            <input {if $field.field_req == 1}required{/if} id="{$field.field_name}" name="{$field.field_name}" value="{$field.value}" class="form-control info-field">
+                                        {/if}
                                     </div>
                                 </div>
                             {/foreach}
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="submit-confirm" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                        <button type="button" id="submit-confirm" class="btn btn-primary">Submit</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
                     </div>
                 </div>
