@@ -32,11 +32,10 @@ i {
 #logo {
     max-width: 40%;
     float: right;
-    padding-bottom: 50px;
 }
 
 #title {
-    text-align: center;
+    float: left;
 }
 
 #nextVisitPage {
@@ -98,3 +97,42 @@ i {
 .modal-body {
     margin: auto 5%;
 }
+
+.modal-backdrop {
+    z-index: 100000 !important;
+}
+
+.modal {
+    z-index: 100001 !important;
+}
+
+.hide {
+    display: none;
+}
+
+/*#wrapper {*/
+    /*width: 1005px;*/
+    /*margin: 0 auto;*/
+/*}*/
+/*#title:after {*/
+    /*clear: both;*/
+/*}*/
+/*#logo:after {*/
+    /*clear: both;*/
+/*}*/
+
+/*#title, #logo {*/
+    /*border: 1px solid white;*/
+    /*float: left;*/
+    /*min-height: 450px;*/
+    /*color: white;*/
+/*}*/
+/*#title {*/
+    /*width: 250px;*/
+    /*background-color: #111;*/
+/*}*/
+
+/*#logo {*/
+    /*width: 750px;*/
+    /*background-color: #777;*/
+/*}*/

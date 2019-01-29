@@ -57,24 +57,6 @@ $(document).ready(function(){
         UIOWA_BudgetCalculator.updateTotals();
     });
 
-    // Populate dropdowns
-    $('#core').change(function() {
-        UIOWA_BudgetCalculator.populateDropdown('category');
-    });
-    $('#category').change(function() {
-        UIOWA_BudgetCalculator.populateDropdown('service');
-    });
-    $('#service').change(function() {
-        var addServiceButton = $('#addService');
-
-        if ($(this).val() == 'not selected') {
-            addServiceButton.prop('disabled', true);
-        }
-        else {
-            addServiceButton.prop('disabled', false);
-        }
-    });
-
     // Update visits page on button click
     $('#prevVisitPage').click(function() {
         if (UIOWA_BudgetCalculator.visitPage > 0) {
@@ -95,9 +77,37 @@ $(document).ready(function(){
         UIOWA_BudgetCalculator.changeVisitsPage();
     });
 
+    $('#terms-checkbox').change(function () {
+        var confirmBtn = $('#welcome-confirm');
+
+        if (this.checked) {
+            confirmBtn.prop( "disabled", false );
+        }
+        else {
+            confirmBtn.prop( "disabled", true );
+        }
+    });
+
     // Initiate PDF download
     $('#pdf-export').click(function(){
         UIOWA_BudgetCalculator.savePdf();
+    });
+
+    $('#edit-budget-info').click(function(){
+        $('#welcome-popup').modal();
+    });
+
+    // Validate user input before submitting
+    $('#welcome-confirm').click(function(){
+        var form = $('#welcome-form');
+
+        form.validate();
+
+        if (form.valid()) {
+            $('#welcome-popup').modal('hide');
+            $('.welcome-only').hide();
+            $('.edit-only').show();
+        }
     });
 
     // Validate user input before submitting
@@ -106,7 +116,7 @@ $(document).ready(function(){
 
         form.validate();
 
-        // todo fix this
+        // todo fix validation based on redcap rules
         //$.each(UIOWA_BudgetCalculator.submissionFieldLookup, function (index, field) {
         //    if (field['element_validation_type'] !== null) {
         //        //console.log($('#' + field['field_name'] + '_regex').val());
@@ -154,6 +164,8 @@ $(document).ready(function(){
     });
 
     UIOWA_BudgetCalculator.formatServicesData(servicesData, servicesQuantityLabels);
+
+    $('#welcome-popup').modal({backdrop: 'static', keyboard: false});
 });
 
 var UIOWA_BudgetCalculator = {};
@@ -172,9 +184,26 @@ UIOWA_BudgetCalculator.currentRequest = {
 
 // Format services data from source project
 UIOWA_BudgetCalculator.formatServicesData = function(servicesData, servicesQuantityLabels) {
-    servicesData = _.map(servicesData, function(item) {
-        item = item[Object.keys(item)[0]];
-        return item;
+    servicesData = _.map(servicesData, function(record) {
+        var itemKey = Object.keys(record['repeat_instances'])[0];
+        var instruments = record['repeat_instances'][itemKey];
+        var serviceRecord = {};
+
+        _.each(instruments, function(instrument) {
+            var repeatKeys = Object.keys(instrument);
+            var latestKey = repeatKeys[repeatKeys.length - 1];
+            var latestInstance = instrument[latestKey];
+
+            _.each(latestInstance, function(field, key) {
+                if (field !== '') {
+                    serviceRecord[key] = field;
+                }
+            });
+
+            serviceRecord['revision'] = repeatKeys.length;
+        });
+
+        return serviceRecord;
     });
 
     this.data = _.filter(servicesData, function (item) {
@@ -185,92 +214,160 @@ UIOWA_BudgetCalculator.formatServicesData = function(servicesData, servicesQuant
     var labelArray = [];
 
     _.each(servicesQuantityLabels, function(item) {
-        item = item.split(", ");
-        labelArray[item[0]] = item[1];
+        item = item.trim();
+        item = item.split(",");
+        labelArray[item[0]] = item[1].trim();
     });
 
     this.quantityLabelLookup = labelArray;
 
-    this.populateDropdown('core');
+    this.populateSmartMenu('core');
 };
 
 // Populate core/category/service dropdown with available options
-UIOWA_BudgetCalculator.populateDropdown = function(type) {
-    var dropdown = document.getElementById(type);
-    var label = document.getElementById(type + 'Label');
+UIOWA_BudgetCalculator.populateSmartMenu = function(type) {
     var data = this.data;
-
-    for (var i = dropdown.options.length - 1 ; i >= 0 ; i--)
-    {
-        dropdown.remove(i);
-    }
-
-    var initialOption = document.createElement("option");
-    initialOption.text = '---Select---';
-    initialOption.value = 'not selected';
-    dropdown.appendChild(initialOption);
-
-    var coreValue = document.getElementById('core').value;
-    var catValue = document.getElementById('category').value;
-
-    if (type == 'category') {
-        var serviceDropdown = document.getElementById('service');
-
-        for (var i = serviceDropdown.options.length - 1 ; i >= 0 ; i--)
-        {
-            serviceDropdown.remove(i);
-        }
-
-        initialOption = document.createElement("option");
-        initialOption.text = '---Select---';
-        initialOption.value = 'not selected';
-        serviceDropdown.appendChild(initialOption);
-
-        data = _.filter(data, function (item) {
-            return item['core'] == coreValue;
-        });
-    }
-    if (type == 'service') {
-        data = _.filter(data, function (item) {
-            return item['core'] == coreValue && item['category'] == catValue;
-        });
-    }
+    var addServiceMenu = $('#add-service-menu');
 
     var newOptions = _.uniq(_.map(data, function(item) {
-        return item[type];
+        return item['core'];
     }));
 
     for (var j in newOptions) {
         var newOption = document.createElement("option");
         newOption.text = newOptions[j];
         newOption.value = newOptions[j];
-        dropdown.appendChild(newOption);
+
+        addServiceMenu.append('<li class="core-menu"><a href="#">' + newOption.text + '</a><ul class="category-menu" data-id="' + newOption.text + '"></ul></li>');
     }
 
-    dropdown.style.display = '';
-    label.style.display = '';
+    var coreList = addServiceMenu.find('li');
+
+    addServiceMenu.append('<li class="no-services hide">No Services Found</li>');
+
+    coreList.each(function (index, coreListItem) {
+        var coreItem = $(coreListItem).find('a');
+        var categoryList = $(coreListItem).find('ul');
+        var coreData = _.filter(data, function (item) {
+            return item['core'] == $(coreItem).html();
+        });
+        var categoryData = _.uniq(_.map(coreData, function(item) {
+            return item['category'];
+        }));
+
+        for (var j in categoryData) {
+            var categoryLabel = categoryData[j];
+
+            categoryList.append('<li class="show"><a href="#">' + categoryLabel + '</a><ul class="service-menu" data-id="' + categoryLabel + '"></ul></li>');
+
+            var serviceList = $('ul[data-id="' + $(coreItem).html() + '"]').find('ul[data-id="' + categoryLabel + '"]');
+            var filteredData = _.filter(coreData, function (item) {
+                return item['core'] == $(coreItem).html() && item['category'] == categoryLabel;
+            });
+            var serviceData = _.uniq(_.map(filteredData, function(item) {
+                return {
+                    'id': item['record_id'],
+                    'title': item['service']
+                };
+            }));
+
+            for (var k in serviceData) {
+                serviceList.append('<li class="show"><a href="#" class="add-new" onclick="UIOWA_BudgetCalculator.addService(\'' + serviceData[k]['id'] + '\')">' + serviceData[k]['title'] + '</a></li>');
+            }
+        }
+    });
+
+    $('#main-menu').smartmenus({
+        mainMenusSubOffsetX: 1,
+        mainMenusSubOffsetY: -8,
+        hideOnClick: false
+        //,subMenusMinWidth: '300px'
+    });
+
+    // Filter box
+    $(function() {
+        $('#filter-menu').on('keyup', function() {
+            var val = $(this).val();
+            var $services = $('.service-menu > li');
+            var $categories = $('.category-menu > li');
+            var $cores = $('.core-menu');
+
+            // clear all filtering
+            $services.removeClass('hide').addClass('show');
+            $categories.removeClass('hide').addClass('show');
+            $cores.removeClass('hide').addClass('show');
+
+            // filter services by textbox
+            if (val.length > 0) {
+                $services.filter(function() {
+                    return $(this).children('a').eq(0).text().toLowerCase().indexOf(val.toLowerCase()) == -1;
+                }).removeClass('show').addClass('hide');
+
+                $categories.each(function () {
+                    $services = $(this).find('.service-menu > li');
+
+                    if ($services.filter(function() { return $(this).hasClass('show') }).length == 0) {
+                        $(this).removeClass('show');
+                        $(this).addClass('hide');
+                    }
+                    else {
+                        $(this).removeClass('hide');
+                        $(this).addClass('show');
+                    }
+                });
+
+                $cores.each(function () {
+                    $categories = $(this).find('.category-menu > li');
+
+                    if ($categories.filter(function() { return $(this).hasClass('show') }).length == 0) {
+                        $(this).removeClass('show');
+                        $(this).addClass('hide');
+                    }
+                    else {
+                        $(this).removeClass('hide');
+                        $(this).addClass('show');
+                    }
+                });
+
+                var $noServicesMsg = $('.no-services');
+
+                if ($cores.find('.show').length == 0) {
+                    $noServicesMsg.removeClass('hide');
+                    $noServicesMsg.addClass('show');
+                }
+                else {
+                    $noServicesMsg.removeClass('show');
+                    $noServicesMsg.addClass('hide');
+                }
+            }
+        });
+    });
 };
 
 // Add service line item
-UIOWA_BudgetCalculator.addService = function() {
-    var serviceInfo = _.findWhere(this.data, {
-        core: $('#core').val(),
-        category: $('#category').val(),
-        service: $('#service').val()
+UIOWA_BudgetCalculator.addService = function(recordID) {
+    var serviceInfo = _.find(this.data, {
+        record_id: recordID
     });
 
+    console.log(serviceInfo);
+
+    var baseRate = $('#funding option')[1].value;
+    var fundingType = $('#funding').val();
+
     var lineItemObj = {
+        service_id: serviceInfo['record_id'],
+        revision: serviceInfo['revision'],
         core: serviceInfo['core'],
         category: serviceInfo['category'],
         service: serviceInfo['service'],
-        industry_rate: Number(serviceInfo['industry_rate']),
-        federal_rate: Number(serviceInfo['federal_rate']),
+        clinical: serviceInfo['clinical'],
+        base_cost: Number(serviceInfo[baseRate]),
+        your_cost: Number(serviceInfo[fundingType]),
         service_quantity: 1,
         unit_label: this.quantityLabelLookup[serviceInfo['per_service']],
         subtotal: 0.00
     };
-
-    //console.log(serviceInfo);
 
     var serviceType = serviceInfo['clinical'] == '1' ? 'clinical' : 'non_clinical';
     var uniqueCols = "<td class='non_clinical-blank' colspan='7'></td>";
@@ -316,8 +413,8 @@ UIOWA_BudgetCalculator.addService = function() {
             "<td class='service-title'>" + lineItemObj['service'] +
                 "<i class='fas fa-info-circle' style='color:#3E72A8' data-toggle='tooltip' title='" + serviceInfo['service_description'] + "'></i>" +
             "</td>" +
-            "<td>$<span class='industry-rate'>" + this.formatAsCurrency(lineItemObj['industry_rate']) + "</span></td>" +
-            "<td>$<span class='federal-rate'>" + this.formatAsCurrency(lineItemObj['federal_rate']) + "</span></td>" +
+            "<td>$<span class='base-cost'>" + this.formatAsCurrency(lineItemObj['base_cost']) + "</span></td>" +
+            "<td>$<span class='your-cost'>" + this.formatAsCurrency(lineItemObj['your_cost']) + "</span></td>" +
             "<td><input class='qty-count' value='" + lineItemObj['service_quantity'] + "'></td>" +
             "<td>" + lineItemObj['unit_label'] + "</td>" +
             uniqueCols +
@@ -358,7 +455,7 @@ UIOWA_BudgetCalculator.updateTotals = function() {
             var tableLineItem = serviceTable[lineIndex];
             var subtotal = 0;
 
-            var serviceCost = lineItem['federal_rate'];
+            var serviceCost = lineItem['your_cost'];
             var serviceQty = Number($(tableLineItem).find('.qty-count').val()); // Get latest qty from table
 
             // Count visit checkboxes
@@ -579,8 +676,8 @@ UIOWA_BudgetCalculator.savePdf = function() {
         non_clinical: []
     };
     var currencyHeaders = [
-        'industry_rate',
-        'federal_rate',
+        'base_cost',
+        'your_cost',
         'cost_per_subject',
         'subtotal'
     ];
@@ -605,12 +702,15 @@ UIOWA_BudgetCalculator.savePdf = function() {
         });
     });
 
+    var doc = new jsPDF('l', 'pt');
+
     //console.log(pdfFormattedRequest);
 
+    // todo user info from submit
     var columnLookup = [
         {title: 'Clinical Service', dataKey: 'service'},                    // 0
-        {title: 'Industry Rate', dataKey: 'industry_rate'},                 // 1
-        {title: 'Federal Rate', dataKey: 'federal_rate'},                   // 2
+        {title: 'Base Cost', dataKey: 'base_cost'},                         // 1
+        {title: 'Your Rate', dataKey: 'adjusted_rate'},                     // 2
         {title: 'Subjects', dataKey: 'service_quantity'},                   // 3
         {title: 'Quantity Type', dataKey: 'unit_label'},                    // 4
         {title: 'Visits', dataKey: 'visit_count'},                          // 5
@@ -618,7 +718,23 @@ UIOWA_BudgetCalculator.savePdf = function() {
         {title: 'Total', dataKey: 'subtotal'}                               // 7
     ];
 
-    var doc = new jsPDF('l', 'pt');
+    doc.autoTable(columnLookup, pdfFormattedRequest['clinical'], {
+        //theme: 'striped',
+        margin: {top: 60}
+    });
+
+    columnLookup = [
+        {title: 'Clinical Service', dataKey: 'service'},                    // 0
+        {title: 'Base Cost', dataKey: 'base_cost'},                         // 1
+        {title: 'Your Rate', dataKey: 'adjusted_rate'},                     // 2
+        {title: 'Subjects', dataKey: 'service_quantity'},                   // 3
+        {title: 'Quantity Type', dataKey: 'unit_label'},                    // 4
+        {title: 'Visits', dataKey: 'visit_count'},                          // 5
+        {title: 'Cost Per Subject', dataKey: 'cost_per_subject'},           // 6
+        {title: 'Total', dataKey: 'subtotal'}                               // 7
+    ];
+
+    doc = new jsPDF('l', 'pt');
     doc.autoTable(columnLookup, pdfFormattedRequest['clinical'], {
         theme: 'striped',
         margin: {top: 60}
@@ -692,10 +808,11 @@ UIOWA_BudgetCalculator.sendToProject = function () {
     $.ajax({
         method: 'POST',
         url: UIOWA_BudgetCalculator.requestUrl + '&type=submit',
-        data: JSON.stringify(redcapFormattedRequest)
-    })
-    .done(function(data) {
-        $('#submit-success-popup').modal();
+        data: JSON.stringify(redcapFormattedRequest),
+        success: function(data) {
+            console.log(data);
+            $('#submit-success-popup').modal();
+        }
     })
 };
 

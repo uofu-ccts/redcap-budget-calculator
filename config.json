@@ -19,7 +19,7 @@
       {
         "name": "Budget Calculator",
         "icon": "clipboard_task",
-        "url": "index.php?NOAUTH"
+        "url": "index.php"
       }
     ]
   },
@@ -32,9 +32,28 @@
   "system-settings": [
     {
       "key": "reference-pid",
-      "name": "Reference project (must use included template)",
+      "name": "Reference project (must use included template, open module for more information)",
       "type": "project-id",
       "required": true
+    },
+    {
+      "key": "welcome-dialog",
+      "name": "Text to display to user on page load (HTML allowed)",
+      "type": "textarea",
+      "required": true,
+      "default": "Thank you for using the Budget Calculator! Please provide the following information to get started."
+    },
+    {
+      "key": "terms-text",
+      "name": "Custom terms user must agree to before being allowed access to the Budget Calculator (leave blank to disable)",
+      "type": "textarea",
+      "default": "I understand that this tool is intended for budgeting purposes only and rates are subject to change."
+    },
+    {
+      "key": "noauth-access",
+      "name": "Allow access without a REDCap login (add '&NOAUTH' to URL to bypass login screen)",
+      "type": "checkbox",
+      "default": false
     },
     {
       "key": "export-enabled",

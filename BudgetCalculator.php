@@ -23,10 +23,10 @@ class BudgetCalculator extends AbstractExternalModule
                 'style' => 'width: 25%;'
             ),
             array(
-                'title' => 'Industry Rate',
+                'title' => 'Base Cost',
             ),
             array(
-                'title' => 'Federal Rate',
+                'title' => 'Your Cost',
             ),
             array(
                 'title' => 'Subjects',
@@ -56,10 +56,10 @@ class BudgetCalculator extends AbstractExternalModule
                 'style' => 'width: 25%;'
             ),
             array(
-                'title' => 'Industry Rate',
+                'title' => 'Base Cost',
             ),
             array(
-                'title' => 'Federal Rate',
+                'title' => 'Your Cost',
             ),
             array(
                 'title' => 'Quantity',
@@ -99,13 +99,15 @@ class BudgetCalculator extends AbstractExternalModule
 
     public function initializeCalculator()
     {
+        $sourcePID = $this->getSystemSetting("reference-pid");
         $submissionFieldLookup = [];
-        $servicesData = \REDCap::getData($this->getSystemSetting("reference-pid"), 'array');
+        $rateFieldLookup = [];
+        $servicesData = \REDCap::getData($sourcePID, 'array');
 
         $result = $this->query("
                 SELECT element_enum
                 FROM redcap_metadata
-                WHERE project_id = " . $this->getSystemSetting("reference-pid") . " AND field_name = 'per_service'
+                WHERE project_id = $sourcePID AND field_name = 'per_service'
             ");
 
         $servicesQuantityLabels = db_fetch_assoc($result);
@@ -123,6 +125,29 @@ class BudgetCalculator extends AbstractExternalModule
                 else {
                     $headerCounts[$index] += 1;
                 }
+            }
+        }
+
+        // Get rate fields
+        $result = $this->query("
+            SELECT
+              field_name,
+              element_label
+            FROM redcap_metadata AS m
+            WHERE project_id = $sourcePID
+            ORDER BY field_order
+        ");
+
+        while ($row = db_fetch_assoc($result)) {
+            $len = strlen($row['field_name']);
+
+            if (substr($row['field_name'], $len - 5, $len) == '_rate') {
+                $field = array(
+                    'value' => $row['field_name'],
+                    'label' => $row['element_label']
+                );
+
+                array_push($rateFieldLookup, $field);
             }
         }
 
@@ -211,6 +236,9 @@ class BudgetCalculator extends AbstractExternalModule
         self::$smarty->assign('submitEnabled', $this->getSystemSetting('submission-target'));
         self::$smarty->assign('exportEnabled', $this->getSystemSetting('export-enabled'));
         self::$smarty->assign('submissionDialogBody', $this->getSystemSetting('submission-dialog'));
+        self::$smarty->assign('welcomeDialogBody', $this->getSystemSetting('welcome-dialog'));
+        self::$smarty->assign('termsText', $this->getSystemSetting('terms-text'));
+        self::$smarty->assign('rateFields', $rateFieldLookup);
 
         ?>
 
@@ -219,7 +247,6 @@ class BudgetCalculator extends AbstractExternalModule
             var apiUrl = '<?= self::$apiUrl ?>';
             var currentUser = '<?= USERID ?>';
             var submissionFieldLookup = <?= json_encode($submissionFieldLookup) ?>;
-            console.log(<?= json_encode($userInfo) ?>);
 
             var servicesData = <?= json_encode($servicesData) ?>;
             var servicesQuantityLabels = <?= json_encode($servicesQuantityLabels) ?>;
@@ -246,11 +273,20 @@ class BudgetCalculator extends AbstractExternalModule
             $data[$index]['record_id'] = $nextRecordId;
         }
 
-        return json_encode(\REDCap::saveData($pid, 'json', json_encode($data)));
-//        error_log(json_encode(\REDCap::saveData($pid, 'json', json_encode($data))));
+        $result = json_encode(\REDCap::saveData($pid, 'json', json_encode($data)));
+
+        error_log($result);
+
+
+//        return json_encode(\REDCap::saveData($pid, 'json', json_encode($data)));
+        echo $result;
     }
 
     public function redcapApiCall($data) {
+        if (isset($data['odm'])) {
+            $data['odm'] = html_entity_decode($data['odm']);
+        }
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, self::$apiUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

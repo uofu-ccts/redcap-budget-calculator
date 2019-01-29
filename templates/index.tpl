@@ -1,27 +1,82 @@
-<img id="logo" src={$logo}></img>
-<div id="title"><h1>Budget Calculator (PROTOTYPE)</h1></div>
-<br />
-<div>
-    <label for="subjectCount">Subjects:</label>
-    <input id="subjectCount" value="5"><br />
-    <label for="visitCount">Visits:</label>
-    <input id="visitCount" value="12"><br />
-    <label id="coreLabel" for="core">Core:</label>
-    <select id="core">
-        <option>--Select--</option>
-    </select>
-    <br />
-    <label id="categoryLabel" for="category" style="display:none">Category:</label>
-    <select id="category" style="display:none">
-        <option>--Select--</option>
-    </select>
-    <br />
-    <label id="serviceLabel" for="service" style="display:none">Service:</label>
-    <select id="service" style="display:none">
-        <option>--Select--</option>
-    </select>
+<div id="wrapper">
+    <div id="title"><h1>Budget Calculator (PROTOTYPE)</h1></div>
+    <div><img id="logo" src={$logo}></img></div>
+    <div style="clear: both;"></div>
 </div>
-<button type="button" id="addService" disabled class="btn btn-success add-new"><i class="fa fa-plus"></i> Add Service</button>
+
+<br />
+<br />
+
+<div class="modal fade" id="welcome-popup" tabindex="-1" role="dialog" aria-labelledby="welcome-popup" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="welcome-only">
+                    <p>{$welcomeDialogBody}</p>
+                </div>
+                <form id="welcome-form">
+                    <div class="form-row">
+                        <div class="form-group initial-info">
+                            <label for="subjectCount"><b>Subject Count:</b></label>
+                            <input required id="subjectCount" name="subjectCount" value="5" type="number" min="0" class="form-control info-field">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group initial-info">
+                            <label for="visitCount"><b>Visit Count:</b></label>
+                            <input required id="visitCount" name="visitCount" value="12" type="number" min="0" class="form-control info-field">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group initial-info">
+                            <label for="funding"><b>Funding Type:</b></label>
+                            <select required id="funding" name="funding" class="form-control info-field">
+                                <option value="">---Select---</option>
+                                {foreach $rateFields as $field}
+                                    <option value="{$field['value']}">{$field['label']}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    {if $termsText}
+                        <div class="form-row welcome-only">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="terms-checkbox" name="terms-checkbox">
+                                <label class="form-check-label" for="terms-checkbox">
+                                    {$termsText}
+                                </label>
+                            </div>
+                        </div>
+                    {/if}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="welcome-confirm" type="button" class="btn btn-primary" {if $termsText}disabled{/if}>Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<nav class="main-nav" role="navigation">
+    <ul id="main-menu" class="sm sm-blue">
+        <li>
+            <a href="#">Add Service</a>
+            <ul id="add-service-menu">
+                <li>
+                    <label for="filter-menu" style="padding: 5px">Filter services:</label>
+                    <input id="filter-menu" name="filter-menu" type="text" />
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#" id="edit-budget-info">Edit Budget Information</a>
+        </li>
+        {if $exportEnabled == true}
+        <li>
+            <a href="#" id="pdf-export">Download As PDF</a>
+        </li>
+        {/if}
+    </ul>
+</nav>
 <br />
 <br />
 <div>
@@ -90,7 +145,7 @@
         </tbody>
         <tr class="bg-secondary text-white">
             <td colspan="{$headerCounts.clinical - 1}" style="text-align: right; border-right-style:hidden;">Non-Clinical Total:</td>
-            <td>$<span id="nonClinical-total">0.00</span></td>
+            <td>$<span id="non_clinical-total">0.00</span></td>
         </tr>
         <tr class="total-row">
             <td class="total-header" colspan="{$headerCounts.nonClinical - 1}" style="text-align: right; border-right-style:hidden;">Grand Total:</b></td>
@@ -172,7 +227,7 @@
             </div>
         </div>
     {/if}
-    {if $exportEnabled == true}<div class="action-button"><button id="pdf-export" class="btn btn-primary" disabled>Download as PDF</button></div>{/if}
+    {*{if $exportEnabled == true}<div class="action-button"><button id="pdf-export" class="btn btn-primary" disabled>Download as PDF</button></div>{/if}*}
 </div>
 <div id="disclaimer">
     This is a work in progress and not representative of the final product. Pricing data is for testing purposes only.
