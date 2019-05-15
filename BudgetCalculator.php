@@ -217,10 +217,6 @@ class BudgetCalculator extends AbstractExternalModule
             self::$smarty->assign('submissionFields', $submissionFieldLookup);
         }
 
-        if ($this->getSystemSetting("save-pid") !== null && $this->getSystemSetting('save-for-later')) {
-            $targetSavePID = $this->getSystemSetting("save-pid");
-        }
-
         // If logged in user, get info
         if (USERID) {
             $result = $this->query("
@@ -242,45 +238,49 @@ class BudgetCalculator extends AbstractExternalModule
                 }
             }
 
-            // Get previously submitted budgets
-            $result = $this->query("
-                  SELECT
-                    record,
-                    event_id
-                  FROM redcap_data
-                  WHERE project_id = $targetSavePID
-                    AND field_name = 'username'
-                    AND value = '" . USERID . "'
-                ");
+            if ($this->getSystemSetting("save-pid") !== null && $this->getSystemSetting('save-for-later')) {
+                $targetSavePID = $this->getSystemSetting("save-pid");
 
-            $recordIds = array();
+                // Get previously submitted budgets
+                $result = $this->query("
+                      SELECT
+                        record,
+                        event_id
+                      FROM redcap_data
+                      WHERE project_id = $targetSavePID
+                        AND field_name = 'username'
+                        AND value = '" . USERID . "'
+                    ");
 
-            while ($row = db_fetch_assoc($result)) {
-                array_push($recordIds, $row['record']);
-                $eventId = $row['event_id'];
-            }
+                $recordIds = array();
 
-            $getData = \REDCap::getData(
-                array(
-                    'project_id' => $targetSavePID,
-                    'records' => $recordIds
-                )
-            );
+                while ($row = db_fetch_assoc($result)) {
+                    array_push($recordIds, $row['record']);
+                    $eventId = $row['event_id'];
+                }
+
+                $getData = \REDCap::getData(
+                    array(
+                        'project_id' => $targetSavePID,
+                        'records' => $recordIds
+                    )
+                );
 
 //                $savedBudgetData = $getData;
 
-            $index = 0;
+                $index = 0;
 
-            foreach ($getData as $record => $data) {
-                $savedBudgetData[$record] = $data[$eventId];
-                $savedBudgetData[$record]['repeat_instances'] = $data['repeat_instances'][$eventId]['service_info'];
+                foreach ($getData as $record => $data) {
+                    $savedBudgetData[$record] = $data[$eventId];
+                    $savedBudgetData[$record]['repeat_instances'] = $data['repeat_instances'][$eventId]['service_info'];
 
-                $savedBudgetLookup[$index]['label'] = $data[$eventId]['budget_title'];
-                $savedBudgetLookup[$index]['value'] = $record;
-                $index++;
+                    $savedBudgetLookup[$index]['label'] = $data[$eventId]['budget_title'];
+                    $savedBudgetLookup[$index]['value'] = $record;
+                    $index++;
+                }
+
+                self::$smarty->assign('savedBudgetLookup', $savedBudgetLookup);
             }
-
-            self::$smarty->assign('savedBudgetLookup', $savedBudgetLookup);
         }
 
         $logoSrc = $this->getUrl('/resources/logo.png');
