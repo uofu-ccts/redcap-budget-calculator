@@ -77,6 +77,15 @@ class BudgetCalculator extends AbstractExternalModule
         )
     );
 
+    public function redcap_module_link_check_display($project_id, $link)
+    {
+        if ($this->getSystemSetting('noauth-access') == true) {
+            $link['url'] = $link['url'] . '&NOAUTH';
+        }
+
+        return $link;
+    }
+
     public function __construct()
     {
         parent::__construct();
@@ -103,6 +112,8 @@ class BudgetCalculator extends AbstractExternalModule
         $submissionFieldLookup = [];
         $rateFieldLookup = [];
         $servicesData = \REDCap::getData($sourcePID, 'array');
+        $savedBudgetData = array();
+        $savedBudgetLookup = array();
 
         $result = $this->query("
                 SELECT element_enum
@@ -203,9 +214,16 @@ class BudgetCalculator extends AbstractExternalModule
                 array_push($submissionFieldLookup, $row);
             }
 
-            // If logged in user, get info
-            if (USERID) {
-                $result = $this->query("
+            self::$smarty->assign('submissionFields', $submissionFieldLookup);
+        }
+
+        if ($this->getSystemSetting("save-pid") !== null && $this->getSystemSetting('save-for-later')) {
+            $targetSavePID = $this->getSystemSetting("save-pid");
+        }
+
+        // If logged in user, get info
+        if (USERID) {
+            $result = $this->query("
                   SELECT
                       username AS 'username',
                       user_firstname AS 'first_name',
@@ -214,18 +232,55 @@ class BudgetCalculator extends AbstractExternalModule
                   FROM redcap_user_information
                   WHERE username = '" . USERID . "'
                 ");
-                $userInfo = db_fetch_assoc($result);
+            $userInfo = db_fetch_assoc($result);
 
-                foreach ($submissionFieldLookup as $index => $value) {
-                    $fieldName = $value['field_name'];
+            foreach ($submissionFieldLookup as $index => $value) {
+                $fieldName = $value['field_name'];
 
-                    if ($userInfo[$fieldName]) {
-                        $submissionFieldLookup[$index]['value'] = $userInfo[$fieldName];
-                    }
+                if ($userInfo[$fieldName]) {
+                    $submissionFieldLookup[$index]['value'] = $userInfo[$fieldName];
                 }
             }
 
-            self::$smarty->assign('submissionFields', $submissionFieldLookup);
+            // Get previously submitted budgets
+            $result = $this->query("
+                  SELECT
+                    record,
+                    event_id
+                  FROM redcap_data
+                  WHERE project_id = $targetSavePID
+                    AND field_name = 'username'
+                    AND value = '" . USERID . "'
+                ");
+
+            $recordIds = array();
+
+            while ($row = db_fetch_assoc($result)) {
+                array_push($recordIds, $row['record']);
+                $eventId = $row['event_id'];
+            }
+
+            $getData = \REDCap::getData(
+                array(
+                    'project_id' => $targetSavePID,
+                    'records' => $recordIds
+                )
+            );
+
+//                $savedBudgetData = $getData;
+
+            $index = 0;
+
+            foreach ($getData as $record => $data) {
+                $savedBudgetData[$record] = $data[$eventId];
+                $savedBudgetData[$record]['repeat_instances'] = $data['repeat_instances'][$eventId]['service_info'];
+
+                $savedBudgetLookup[$index]['label'] = $data[$eventId]['budget_title'];
+                $savedBudgetLookup[$index]['value'] = $record;
+                $index++;
+            }
+
+            self::$smarty->assign('savedBudgetLookup', $savedBudgetLookup);
         }
 
         $logoSrc = $this->getUrl('/resources/logo.png');
@@ -235,6 +290,7 @@ class BudgetCalculator extends AbstractExternalModule
         self::$smarty->assign('logo', $logoSrc);
         self::$smarty->assign('submitEnabled', $this->getSystemSetting('submission-target'));
         self::$smarty->assign('exportEnabled', $this->getSystemSetting('export-enabled'));
+        self::$smarty->assign('saveEnabled', $this->getSystemSetting('save-for-later') && !isset($_GET['NOAUTH']));
         self::$smarty->assign('submissionDialogBody', $this->getSystemSetting('submission-dialog'));
         self::$smarty->assign('welcomeDialogBody', $this->getSystemSetting('welcome-dialog'));
         self::$smarty->assign('termsText', $this->getSystemSetting('terms-text'));
@@ -243,10 +299,11 @@ class BudgetCalculator extends AbstractExternalModule
         ?>
 
         <script>
-            var requestUrl = '<?= $this->getUrl('requestHandler.php') ?>';
-            var apiUrl = '<?= self::$apiUrl ?>';
-            var currentUser = '<?= USERID ?>';
-            var submissionFieldLookup = <?= json_encode($submissionFieldLookup) ?>;
+            UIOWA_BudgetCalculator.requestUrl = '<?= $this->getUrl('requestHandler.php') ?>';
+            UIOWA_BudgetCalculator.apiUrl = '<?= self::$apiUrl ?>';
+            UIOWA_BudgetCalculator.currentUser = '<?= USERID ?>';
+            UIOWA_BudgetCalculator.submissionFieldLookup = <?= json_encode($submissionFieldLookup) ?>;
+            UIOWA_BudgetCalculator.savedBudgets = <?= json_encode($savedBudgetData) ?>;
 
             var servicesData = <?= json_encode($servicesData) ?>;
             var servicesQuantityLabels = <?= json_encode($servicesQuantityLabels) ?>;
@@ -255,53 +312,48 @@ class BudgetCalculator extends AbstractExternalModule
         <?php
     }
 
-    public function saveRequestToProject() {
+    public function saveBudgetToProject() {
         $data = json_decode(file_get_contents('php://input'), true);
-        $pid = $this->getSystemSetting('submission-pid');
+        $pid = $this->getSystemSetting('save-pid');
+        $recordId = $data['record_id'];
+        $username = $data['username'];
+        $redcapData = json_decode($data['budget'], true);
 
-        $nextRecordId = $this->query(
-            "
+        if (!isset($recordId)) {
+            $recordId = $this->query(
+                "
               SELECT
                 MAX(CAST(record AS SIGNED)) AS 'lastRecordId'
               FROM redcap_data
               WHERE project_id = $pid
         ");
 
-        $nextRecordId = intval(db_fetch_assoc($nextRecordId)['lastRecordId']) + 1;
-
-        foreach ($data as $index => $lineItem) {
-            $data[$index]['record_id'] = $nextRecordId;
+            $recordId = intval(db_fetch_assoc($recordId)['lastRecordId']) + 1;
         }
 
-        $result = json_encode(\REDCap::saveData($pid, 'json', json_encode($data)));
+        $userInfo = $this->query(
+            "
+            select
+              user_firstname,
+              user_lastname,
+              user_email
+            from redcap_user_information
+            where username = '$username'
+            "
+        );
 
-        error_log($result);
+        $userInfo = db_fetch_assoc($userInfo);
 
+        foreach ($redcapData as $index => $lineItem) {
+            $redcapData[$index]['record_id'] = $recordId;
+        }
+
+        error_log(json_encode($redcapData));
+
+        $result = json_encode(\REDCap::saveData($pid, 'json', json_encode($redcapData)));
 
 //        return json_encode(\REDCap::saveData($pid, 'json', json_encode($data)));
         echo $result;
-    }
-
-    public function redcapApiCall($data) {
-        if (isset($data['odm'])) {
-            $data['odm'] = html_entity_decode($data['odm']);
-        }
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, self::$apiUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_VERBOSE, 0);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
-        curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-        curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data, '', '&'));
-        $output = curl_exec($ch);
-        curl_close($ch);
-
-        return $output;
     }
 }
 ?>

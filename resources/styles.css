@@ -3,6 +3,10 @@ table {
     font-size: 0.9vw;
 }
 
+.service-title > span {
+    font-size: 1vw;
+}
+
 #services-table th {
     background-color: #9AC0E5;
     text-align: center;
@@ -110,13 +114,12 @@ i {
     display: none;
 }
 
-/*#wrapper {*/
-    /*width: 1005px;*/
-    /*margin: 0 auto;*/
-/*}*/
-/*#title:after {*/
-    /*clear: both;*/
-/*}*/
+#wrapper {
+    vertical-align: middle;
+}
+#title {
+    vertical-align: middle;
+}
 /*#logo:after {*/
     /*clear: both;*/
 /*}*/

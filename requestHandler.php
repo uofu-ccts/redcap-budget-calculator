@@ -2,8 +2,8 @@
 
 $module = new \UIOWA\BudgetCalculator\BudgetCalculator();
 
-if ($_REQUEST['type'] == 'submit') {
-    $module->saveRequestToProject();
+if ($_REQUEST['type'] == 'save') {
+    $module->saveBudgetToProject();
 }
 else if ($_REQUEST['type'] == 'createTemplate') {
     $content = htmlentities(file_get_contents($module->getUrl('ServiceListTemplate.xml')));

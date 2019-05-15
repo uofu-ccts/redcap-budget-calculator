@@ -1,6 +1,6 @@
 <div id="wrapper">
-    <div id="title"><h1>Budget Calculator (PROTOTYPE)</h1></div>
-    <div><img id="logo" src={$logo}></img></div>
+    <h1 id="title">Budget Calculator (PROTOTYPE)</h1>
+    <img id="logo" src={$logo}>
     <div style="clear: both;"></div>
 </div>
 
@@ -15,27 +15,31 @@
                     <p>{$welcomeDialogBody}</p>
                 </div>
                 <form id="welcome-form">
-                    <div class="form-row">
-                        <div class="form-group initial-info">
-                            <label for="subjectCount"><b>Subject Count:</b></label>
-                            <input required id="subjectCount" name="subjectCount" value="5" type="number" min="0" class="form-control info-field">
+                    {if $saveEnabled}
+                        <div class="form-row">
+                            <div class="form-group initial-info">
+
+                                <label for="savedBudget"><b>Load saved budget:</b></label>
+                                <select id="savedBudget" name="savedBudget" class="form-control info-field">
+                                    <option value="none">---Select---</option>
+                                    {foreach $savedBudgetLookup as $option}
+                                        <option value="{$option['value']}">{$option['label']}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group initial-info">
-                            <label for="visitCount"><b>Visit Count:</b></label>
-                            <input required id="visitCount" name="visitCount" value="12" type="number" min="0" class="form-control info-field">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group initial-info">
-                            <label for="funding"><b>Funding Type:</b></label>
-                            <select required id="funding" name="funding" class="form-control info-field">
-                                <option value="">---Select---</option>
-                                {foreach $rateFields as $field}
-                                    <option value="{$field['value']}">{$field['label']}</option>
-                                {/foreach}
-                            </select>
+                    {/if}
+                    <div>
+                        <div class="form-row">
+                            <div class="form-group initial-info">
+                                <label for="funding_type"><b>Funding Type:</b></label>
+                                <select required id="funding_type" name="funding_type" class="form-control info-field">
+                                    <option value="">---Select---</option>
+                                    {foreach $rateFields as $field}
+                                        <option value="{$field['value']}">{$field['label']}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
                         </div>
                     </div>
                     {if $termsText}
@@ -51,7 +55,62 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="welcome-confirm" type="button" class="btn btn-primary" {if $termsText}disabled{/if}>Confirm</button>
+                <button id="welcome-confirm" type="button" class="btn btn-primary" {if $termsText}disabled{/if}>Create New Budget</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="clinical-info-modal" tabindex="-1" role="dialog" aria-labelledby="clinical-info-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div>
+                    <p>Before adding clinical services, please supply this additional information:</p>
+                </div>
+                <form>
+                    <div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="subject_count"><b>Subject Count:</b></label>
+                                <input required id="subject_count" name="subject_count" type="number" min="1" class="form-control info-field">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="visit_count_default"><b>Visit Count:</b></label>
+                                <input required id="visit_count_default" name="visit_count_default" type="number" min="1" class="form-control info-field">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-clinical-info" type="button" class="btn btn-primary" onclick="">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="save-modal" tabindex="-1" role="dialog" aria-labelledby="save-modal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div>
+                    <p>You may optionally provide a title for your budget before saving.</p>
+                </div>
+                <form>
+                    <div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="budgetTitle"><b>Budget Title:</b></label>
+                                <input required id="budgetTitle" name="budgetTitle" class="form-control info-field">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button id="confirm-save-budget" type="button" class="btn btn-primary">Confirm</button>
             </div>
         </div>
     </div>
@@ -72,7 +131,12 @@
         </li>
         {if $exportEnabled == true}
         <li>
-            <a href="#" id="pdf-export">Download As PDF</a>
+            <a href="#" id="pdf-export" class="disabled">Download as PDF</a>
+        </li>
+        {/if}
+        {if $saveEnabled == true}
+        <li style="float:right">
+            <a href="#" id="save-budget" class="disabled">Save for Later</a>
         </li>
         {/if}
     </ul>
@@ -152,6 +216,9 @@
             <td>$<span class="total">0.00</span></td>
         </tr>
     </table>
+    <form id="dirtyCheck" name="dirtyCheck">
+        <input type="checkbox" id="serviceCount" name="serviceCount" style="display: none;">
+    </form>
     {if $submitEnabled != 0}
         <div class="action-button">
             <button id="submit" class="btn btn-success" data-toggle="modal" data-target="#submit-confirmation-popup" disabled>Submit</button>
@@ -170,6 +237,10 @@
                             <p>{$submissionDialogBody}</p>
                         </div>
                         <form id="submission-form">
+                            <div class="form-row">
+                                <label for="budget_title"><b>Budget Title (for future reference):</b></label>
+                                <input id="budget_title" class="form-control info-field">
+                            </div>
                             {foreach $submissionFields as $field}
                                 <div class="form-row">
                                     <div class="form-group requester-info">
@@ -213,6 +284,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
+                        <h5>Submitted</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

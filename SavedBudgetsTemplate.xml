@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ODM xmlns="http://www.cdisc.org/ns/odm/v1.3" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:redcap="https://projectredcap.org" xsi:schemaLocation="http://www.cdisc.org/ns/odm/v1.3 schema/odm/ODM1-3-1.xsd" ODMVersion="1.3.1" FileOID="000-00-0000" FileType="Snapshot" Description="Saved Budgets" AsOfDateTime="2019-05-15T10:53:18" CreationDateTime="2019-05-15T10:53:18" SourceSystem="REDCap" SourceSystemVersion="9.0.1">
+<Study OID="Project.SavedBudgets">
+<GlobalVariables>
+	<StudyName>Saved Budgets</StudyName>
+	<StudyDescription>This file contains the metadata, events, and data for REDCap project "Saved Budgets".</StudyDescription>
+	<ProtocolName>Saved Budgets</ProtocolName>
+	<redcap:RecordAutonumberingEnabled>1</redcap:RecordAutonumberingEnabled>
+	<redcap:CustomRecordLabel></redcap:CustomRecordLabel>
+	<redcap:SecondaryUniqueField></redcap:SecondaryUniqueField>
+	<redcap:SchedulingEnabled>0</redcap:SchedulingEnabled>
+	<redcap:SurveysEnabled>0</redcap:SurveysEnabled>
+	<redcap:SurveyInvitationEmailField></redcap:SurveyInvitationEmailField>
+	<redcap:Purpose>0</redcap:Purpose>
+	<redcap:PurposeOther></redcap:PurposeOther>
+	<redcap:ProjectNotes>[CTW]</redcap:ProjectNotes>
+	<redcap:RepeatingInstrumentsAndEvents>
+		<redcap:RepeatingInstruments>
+			<redcap:RepeatingInstrument redcap:UniqueEventName="event_1_arm_1" redcap:RepeatInstrument="service_info" redcap:CustomLabel=""/>
+		</redcap:RepeatingInstruments>
+	</redcap:RepeatingInstrumentsAndEvents>
+</GlobalVariables>
+<MetaDataVersion OID="Metadata.SavedBudgets_2019-05-15_1053" Name="Saved Budgets" redcap:RecordIdField="record_id">
+	<FormDef OID="Form.budget_info" Name="Budget Info" Repeating="No" redcap:FormName="budget_info">
+		<ItemGroupRef ItemGroupOID="budget_info.record_id" Mandatory="No"/>
+		<ItemGroupRef ItemGroupOID="budget_info.budget_info_complete" Mandatory="No"/>
+	</FormDef>
+	<FormDef OID="Form.requester_info" Name="Requester Info" Repeating="No" redcap:FormName="requester_info">
+		<ItemGroupRef ItemGroupOID="requester_info.username" Mandatory="No"/>
+		<ItemGroupRef ItemGroupOID="requester_info.requester_info_complete" Mandatory="No"/>
+	</FormDef>
+	<FormDef OID="Form.service_info" Name="Service Info" Repeating="No" redcap:FormName="service_info">
+		<ItemGroupRef ItemGroupOID="service_info.service_id" Mandatory="No"/>
+		<ItemGroupRef ItemGroupOID="service_info.service_info_complete" Mandatory="No"/>
+	</FormDef>
+	<FormDef OID="Form.request_totals" Name="Request Totals" Repeating="No" redcap:FormName="request_totals">
+		<ItemGroupRef ItemGroupOID="request_totals.table" Mandatory="No"/>
+		<ItemGroupRef ItemGroupOID="request_totals.request_totals_complete" Mandatory="No"/>
+	</FormDef>
+	<ItemGroupDef OID="budget_info.record_id" Name="Budget Info" Repeating="No">
+		<ItemRef ItemOID="record_id" Mandatory="No" redcap:Variable="record_id"/>
+		<ItemRef ItemOID="budget_title" Mandatory="No" redcap:Variable="budget_title"/>
+		<ItemRef ItemOID="subject_count" Mandatory="No" redcap:Variable="subject_count"/>
+		<ItemRef ItemOID="visit_total" Mandatory="No" redcap:Variable="visit_total"/>
+		<ItemRef ItemOID="funding_type" Mandatory="No" redcap:Variable="funding_type"/>
+	</ItemGroupDef>
+	<ItemGroupDef OID="budget_info.budget_info_complete" Name="Form Status" Repeating="No">
+		<ItemRef ItemOID="budget_info_complete" Mandatory="No" redcap:Variable="budget_info_complete"/>
+	</ItemGroupDef>
+	<ItemGroupDef OID="requester_info.username" Name="Requester Info" Repeating="No">
+		<ItemRef ItemOID="username" Mandatory="No" redcap:Variable="username"/>
+		<ItemRef ItemOID="first_name" Mandatory="No" redcap:Variable="first_name"/>
+		<ItemRef ItemOID="last_name" Mandatory="No" redcap:Variable="last_name"/>
+		<ItemRef ItemOID="email" Mandatory="No" redcap:Variable="email"/>
+		<ItemRef ItemOID="irb" Mandatory="No" redcap:Variable="irb"/>
+	</ItemGroupDef>
+	<ItemGroupDef OID="requester_info.requester_info_complete" Name="Form Status" Repeating="No">
+		<ItemRef ItemOID="requester_info_complete" Mandatory="No" redcap:Variable="requester_info_complete"/>
+	</ItemGroupDef>
+	<ItemGroupDef OID="service_info.service_id" Name="Service Info" Repeating="No">
+		<ItemRef ItemOID="service_id" Mandatory="No" redcap:Variable="service_id"/>
+		<ItemRef ItemOID="revision" Mandatory="No" redcap:Variable="revision"/>
+		<ItemRef ItemOID="core" Mandatory="No" redcap:Variable="core"/>
+		<ItemRef ItemOID="category" Mandatory="No" redcap:Variable="category"/>
+		<ItemRef ItemOID="service" Mandatory="No" redcap:Variable="service"/>
+		<ItemRef ItemOID="base_cost" Mandatory="No" redcap:Variable="base_cost"/>
+		<ItemRef ItemOID="your_cost" Mandatory="No" redcap:Variable="your_cost"/>
+		<ItemRef ItemOID="clinical" Mandatory="No" redcap:Variable="clinical"/>
+		<ItemRef ItemOID="service_quantity" Mandatory="No" redcap:Variable="service_quantity"/>
+		<ItemRef ItemOID="unit_label" Mandatory="No" redcap:Variable="unit_label"/>
+		<ItemRef ItemOID="visit_count" Mandatory="No" redcap:Variable="visit_count"/>
+		<ItemRef ItemOID="cost_per_subject" Mandatory="No" redcap:Variable="cost_per_subject"/>
+		<ItemRef ItemOID="subtotal" Mandatory="No" redcap:Variable="subtotal"/>
+	</ItemGroupDef>
+	<ItemGroupDef OID="service_info.service_info_complete" Name="Form Status" Repeating="No">
+		<ItemRef ItemOID="service_info_complete" Mandatory="No" redcap:Variable="service_info_complete"/>
+	</ItemGroupDef>
+	<ItemGroupDef OID="request_totals.table" Name="Request Totals" Repeating="No">
+		<ItemRef ItemOID="table" Mandatory="No" redcap:Variable="table"/>
+		<ItemRef ItemOID="clinical_total" Mandatory="No" redcap:Variable="clinical_total"/>
+		<ItemRef ItemOID="non_clinical_total" Mandatory="No" redcap:Variable="non_clinical_total"/>
+		<ItemRef ItemOID="grand_total" Mandatory="No" redcap:Variable="grand_total"/>
+	</ItemGroupDef>
+	<ItemGroupDef OID="request_totals.request_totals_complete" Name="Form Status" Repeating="No">
+		<ItemRef ItemOID="request_totals_complete" Mandatory="No" redcap:Variable="request_totals_complete"/>
+	</ItemGroupDef>
+	<ItemDef OID="record_id" Name="record_id" DataType="text" Length="999" redcap:Variable="record_id" redcap:FieldType="text">
+		<Question><TranslatedText>Record ID</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="budget_title" Name="budget_title" DataType="text" Length="999" redcap:Variable="budget_title" redcap:FieldType="text">
+		<Question><TranslatedText>Budget Title</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="subject_count" Name="subject_count" DataType="float" Length="999" SignificantDigits="1" redcap:Variable="subject_count" redcap:FieldType="text" redcap:TextValidationType="float">
+		<Question><TranslatedText>Subject Count</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="visit_total" Name="visit_total" DataType="float" Length="999" SignificantDigits="1" redcap:Variable="visit_total" redcap:FieldType="text" redcap:TextValidationType="float">
+		<Question><TranslatedText>Visit Total</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="funding_type" Name="funding_type" DataType="text" Length="999" redcap:Variable="funding_type" redcap:FieldType="text">
+		<Question><TranslatedText>Funding Type</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="budget_info_complete" Name="budget_info_complete" DataType="text" Length="1" redcap:Variable="budget_info_complete" redcap:FieldType="select" redcap:SectionHeader="Form Status">
+		<Question><TranslatedText>Complete?</TranslatedText></Question>
+		<CodeListRef CodeListOID="budget_info_complete.choices"/>
+	</ItemDef>
+	<ItemDef OID="username" Name="username" DataType="text" Length="999" redcap:Variable="username" redcap:FieldType="text" redcap:FieldAnnotation="@USER-DEFINED">
+		<Question><TranslatedText>Username</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="first_name" Name="first_name" DataType="text" Length="999" redcap:Variable="first_name" redcap:FieldType="text" redcap:FieldAnnotation="@USER-DEFINED">
+		<Question><TranslatedText>First Name</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="last_name" Name="last_name" DataType="text" Length="999" redcap:Variable="last_name" redcap:FieldType="text" redcap:FieldAnnotation="@USER-DEFINED">
+		<Question><TranslatedText>Last Name</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="email" Name="email" DataType="text" Length="999" redcap:Variable="email" redcap:FieldType="text" redcap:TextValidationType="email" redcap:FieldAnnotation="@USER-DEFINED">
+		<Question><TranslatedText>Email</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="irb" Name="irb" DataType="text" Length="999" redcap:Variable="irb" redcap:FieldType="text" redcap:FieldAnnotation="@USER-DEFINED">
+		<Question><TranslatedText>IRB Number</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="requester_info_complete" Name="requester_info_complete" DataType="text" Length="1" redcap:Variable="requester_info_complete" redcap:FieldType="select" redcap:SectionHeader="Form Status">
+		<Question><TranslatedText>Complete?</TranslatedText></Question>
+		<CodeListRef CodeListOID="requester_info_complete.choices"/>
+	</ItemDef>
+	<ItemDef OID="service_id" Name="service_id" DataType="text" Length="999" redcap:Variable="service_id" redcap:FieldType="text">
+		<Question><TranslatedText>Service ID</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="revision" Name="revision" DataType="float" Length="999" SignificantDigits="1" redcap:Variable="revision" redcap:FieldType="text" redcap:TextValidationType="float">
+		<Question><TranslatedText>Revision</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="core" Name="core" DataType="text" Length="999" redcap:Variable="core" redcap:FieldType="text">
+		<Question><TranslatedText>Core</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="category" Name="category" DataType="text" Length="999" redcap:Variable="category" redcap:FieldType="text">
+		<Question><TranslatedText>Category</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="service" Name="service" DataType="text" Length="999" redcap:Variable="service" redcap:FieldType="text">
+		<Question><TranslatedText>Service Title</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="base_cost" Name="base_cost" DataType="float" Length="999" SignificantDigits="1" redcap:Variable="base_cost" redcap:FieldType="text" redcap:TextValidationType="float">
+		<Question><TranslatedText>Base Cost</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="your_cost" Name="your_cost" DataType="float" Length="999" SignificantDigits="1" redcap:Variable="your_cost" redcap:FieldType="text" redcap:TextValidationType="float">
+		<Question><TranslatedText>Your Cost</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="clinical" Name="clinical" DataType="boolean" Length="1" redcap:Variable="clinical" redcap:FieldType="yesno">
+		<Question><TranslatedText>Clinical?</TranslatedText></Question>
+		<CodeListRef CodeListOID="clinical.choices"/>
+	</ItemDef>
+	<ItemDef OID="service_quantity" Name="service_quantity" DataType="float" Length="999" SignificantDigits="1" redcap:Variable="service_quantity" redcap:FieldType="text" redcap:TextValidationType="float">
+		<Question><TranslatedText>Subject/Quantity Count</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="unit_label" Name="unit_label" DataType="text" Length="999" redcap:Variable="unit_label" redcap:FieldType="text">
+		<Question><TranslatedText>Quantity Type</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="visit_count" Name="visit_count" DataType="float" Length="999" SignificantDigits="1" redcap:Variable="visit_count" redcap:FieldType="text" redcap:TextValidationType="float" redcap:BranchingLogic="[clinical] = &#039;1&#039;">
+		<Question><TranslatedText>Visit Count</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="cost_per_subject" Name="cost_per_subject" DataType="float" Length="999" SignificantDigits="1" redcap:Variable="cost_per_subject" redcap:FieldType="text" redcap:TextValidationType="float" redcap:BranchingLogic="[clinical] = &#039;1&#039;">
+		<Question><TranslatedText>Cost Per Subject</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="subtotal" Name="subtotal" DataType="float" Length="999" SignificantDigits="1" redcap:Variable="subtotal" redcap:FieldType="text" redcap:TextValidationType="float">
+		<Question><TranslatedText>Total Cost</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="service_info_complete" Name="service_info_complete" DataType="text" Length="1" redcap:Variable="service_info_complete" redcap:FieldType="select" redcap:SectionHeader="Form Status">
+		<Question><TranslatedText>Complete?</TranslatedText></Question>
+		<CodeListRef CodeListOID="service_info_complete.choices"/>
+	</ItemDef>
+	<ItemDef OID="table" Name="table" DataType="text" Length="999" redcap:Variable="table" redcap:FieldType="descriptive" redcap:FieldAnnotation="@INSTANCETABLE=service_info">
+		<Question><TranslatedText>table</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="clinical_total" Name="clinical_total" DataType="text" Length="999" redcap:Variable="clinical_total" redcap:FieldType="text">
+		<Question><TranslatedText>Clinical Total</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="non_clinical_total" Name="non_clinical_total" DataType="text" Length="999" redcap:Variable="non_clinical_total" redcap:FieldType="text">
+		<Question><TranslatedText>Non-Clinical Total</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="grand_total" Name="grand_total" DataType="text" Length="999" redcap:Variable="grand_total" redcap:FieldType="text">
+		<Question><TranslatedText>Grand Total</TranslatedText></Question>
+	</ItemDef>
+	<ItemDef OID="request_totals_complete" Name="request_totals_complete" DataType="text" Length="1" redcap:Variable="request_totals_complete" redcap:FieldType="select" redcap:SectionHeader="Form Status">
+		<Question><TranslatedText>Complete?</TranslatedText></Question>
+		<CodeListRef CodeListOID="request_totals_complete.choices"/>
+	</ItemDef>
+	<CodeList OID="budget_info_complete.choices" Name="budget_info_complete" DataType="text" redcap:Variable="budget_info_complete">
+		<CodeListItem CodedValue="0"><Decode><TranslatedText>Incomplete</TranslatedText></Decode></CodeListItem>
+		<CodeListItem CodedValue="1"><Decode><TranslatedText>Unverified</TranslatedText></Decode></CodeListItem>
+		<CodeListItem CodedValue="2"><Decode><TranslatedText>Complete</TranslatedText></Decode></CodeListItem>
+	</CodeList>
+	<CodeList OID="requester_info_complete.choices" Name="requester_info_complete" DataType="text" redcap:Variable="requester_info_complete">
+		<CodeListItem CodedValue="0"><Decode><TranslatedText>Incomplete</TranslatedText></Decode></CodeListItem>
+		<CodeListItem CodedValue="1"><Decode><TranslatedText>Unverified</TranslatedText></Decode></CodeListItem>
+		<CodeListItem CodedValue="2"><Decode><TranslatedText>Complete</TranslatedText></Decode></CodeListItem>
+	</CodeList>
+	<CodeList OID="clinical.choices" Name="clinical" DataType="boolean" redcap:Variable="clinical">
+		<CodeListItem CodedValue="1"><Decode><TranslatedText>Yes</TranslatedText></Decode></CodeListItem>
+		<CodeListItem CodedValue="0"><Decode><TranslatedText>No</TranslatedText></Decode></CodeListItem>
+	</CodeList>
+	<CodeList OID="service_info_complete.choices" Name="service_info_complete" DataType="text" redcap:Variable="service_info_complete">
+		<CodeListItem CodedValue="0"><Decode><TranslatedText>Incomplete</TranslatedText></Decode></CodeListItem>
+		<CodeListItem CodedValue="1"><Decode><TranslatedText>Unverified</TranslatedText></Decode></CodeListItem>
+		<CodeListItem CodedValue="2"><Decode><TranslatedText>Complete</TranslatedText></Decode></CodeListItem>
+	</CodeList>
+	<CodeList OID="request_totals_complete.choices" Name="request_totals_complete" DataType="text" redcap:Variable="request_totals_complete">
+		<CodeListItem CodedValue="0"><Decode><TranslatedText>Incomplete</TranslatedText></Decode></CodeListItem>
+		<CodeListItem CodedValue="1"><Decode><TranslatedText>Unverified</TranslatedText></Decode></CodeListItem>
+		<CodeListItem CodedValue="2"><Decode><TranslatedText>Complete</TranslatedText></Decode></CodeListItem>
+	</CodeList>
+</MetaDataVersion>
+</Study>
+</ODM>

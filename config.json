@@ -51,9 +51,25 @@
     },
     {
       "key": "noauth-access",
-      "name": "Allow access without a REDCap login (add '&NOAUTH' to URL to bypass login screen)",
+      "name": "Allow access without a REDCap login",
       "type": "checkbox",
       "default": false
+    },
+    {
+      "key": "save-for-later",
+      "name": "Allow logged in users to to save and restore budgets",
+      "type": "checkbox",
+      "default": false
+    },
+    {
+      "key": "save-pid",
+      "name": "Target project for storing budgets using 'Save for Later' feature (must use included template)",
+      "type": "project-id",
+      "required": true,
+      "branchingLogic": {
+        "field": "save-for-later",
+        "value": true
+      }
     },
     {
       "key": "export-enabled",

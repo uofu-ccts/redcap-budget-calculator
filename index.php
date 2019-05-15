@@ -78,6 +78,7 @@ else if (!$module->getSystemSetting("reference-pid")) {
     <script src="<?= $module->getUrl("resources/jspdf.plugin.autotable.min.js") ?>"></script>
     <script src="<?= $module->getUrl("resources/jquery.validate.min.js") ?>"></script>
     <script src="<?= $module->getUrl("resources/jquery.smartmenus.js") ?>"></script>
+    <script src="<?= $module->getUrl("resources/jquery.are-you-sure.js") ?>"></script>
 
     <link rel="stylesheet" href="<?= $module->getUrl("resources/sm-core-css.css") ?>">
     <link rel="stylesheet" href="<?= $module->getUrl("resources/sm-blue.css") ?>">
