@@ -16,7 +16,7 @@ else if (!$module->getSystemSetting("reference-pid")) {
     $token = db_fetch_assoc($token)['api_token'];
 
     $baseUrl = APP_PATH_WEBROOT_FULL . APP_PATH_WEBROOT;
-    $templateUrl = $module->getUrl('ServiceListTemplate.xml');
+    $templateUrl = $module->getUrl('ServiceCatalogTemplate.xml');
 
     ?>
     <p>
@@ -36,7 +36,7 @@ else if (!$module->getSystemSetting("reference-pid")) {
         <strong>OPTION 2:</strong> Manually import template project
     </p>
     <ol>
-        <li><a style="text-decoration: underline;" href="<?= $templateUrl ?>" download>Download "Service List" project XML</a></li>
+        <li><a style="text-decoration: underline;" href="<?= $templateUrl ?>" download>Download "Service Catalog" project XML</a></li>
         <li>Create a new REDCap project using the XML template</li>
         <li>Select the project as the "Reference project" in module system configuration</li>
     </ol>
@@ -55,7 +55,11 @@ else if (!$module->getSystemSetting("reference-pid")) {
 
             $.ajax({
                 method: 'POST',
-                url: '<?= $module->getUrl('requestHandler.php?type=createTemplate&token=') ?>' + '&token=' + token,
+                url: '<?= $module->getUrl('requestHandler.php?type=createTemplate') ?>',
+                data: {
+                    token: token,
+                    title: "Service Catalog for Budget Calculator"
+                },
                 success: function(pid) {
                     $('#statusMessage').html('<span style="color:green">Success!</span>');
                     $('#progressText').html(
@@ -79,6 +83,7 @@ else if (!$module->getSystemSetting("reference-pid")) {
     <script src="<?= $module->getUrl("resources/jquery.validate.min.js") ?>"></script>
     <script src="<?= $module->getUrl("resources/jquery.smartmenus.js") ?>"></script>
     <script src="<?= $module->getUrl("resources/jquery.are-you-sure.js") ?>"></script>
+    <script src="<?= $module->getUrl("resources/timeago.min.js") ?>"></script>
 
     <link rel="stylesheet" href="<?= $module->getUrl("resources/sm-core-css.css") ?>">
     <link rel="stylesheet" href="<?= $module->getUrl("resources/sm-blue.css") ?>">

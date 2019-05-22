@@ -143,7 +143,8 @@ class BudgetCalculator extends AbstractExternalModule
         $result = $this->query("
             SELECT
               field_name,
-              element_label
+              element_label,
+              element_enum
             FROM redcap_metadata AS m
             WHERE project_id = $sourcePID
             ORDER BY field_order
@@ -155,7 +156,8 @@ class BudgetCalculator extends AbstractExternalModule
             if (substr($row['field_name'], $len - 5, $len) == '_rate') {
                 $field = array(
                     'value' => $row['field_name'],
-                    'label' => $row['element_label']
+                    'label' => $row['element_label'],
+                    'calc' => $row['element_enum']
                 );
 
                 array_push($rateFieldLookup, $field);
@@ -238,8 +240,8 @@ class BudgetCalculator extends AbstractExternalModule
                 }
             }
 
-            if ($this->getSystemSetting("save-pid") !== null && $this->getSystemSetting('save-for-later')) {
-                $targetSavePID = $this->getSystemSetting("save-pid");
+            if ($this->getSystemSetting("save-token") !== null && $this->getSystemSetting('save-for-later')) {
+                $targetSavePID = $this->getProjectIdFromToken($this->getSystemSetting("save-token"));
 
                 // Get previously submitted budgets
                 $result = $this->query("
@@ -304,6 +306,7 @@ class BudgetCalculator extends AbstractExternalModule
             UIOWA_BudgetCalculator.currentUser = '<?= USERID ?>';
             UIOWA_BudgetCalculator.submissionFieldLookup = <?= json_encode($submissionFieldLookup) ?>;
             UIOWA_BudgetCalculator.savedBudgets = <?= json_encode($savedBudgetData) ?>;
+//            UIOWA_BudgetCalculator.rateLookup = <?//= json_encode($rateFieldLookup) ?>//;
 
             var servicesData = <?= json_encode($servicesData) ?>;
             var servicesQuantityLabels = <?= json_encode($servicesQuantityLabels) ?>;
@@ -314,9 +317,9 @@ class BudgetCalculator extends AbstractExternalModule
 
     public function saveBudgetToProject() {
         $data = json_decode(file_get_contents('php://input'), true);
-        $pid = $this->getSystemSetting('save-pid');
+        $pid = $this->getProjectIdFromToken($this->getSystemSetting("save-token"));
+
         $recordId = $data['record_id'];
-        $username = $data['username'];
         $redcapData = json_decode($data['budget'], true);
 
         if (!isset($recordId)) {
@@ -331,29 +334,47 @@ class BudgetCalculator extends AbstractExternalModule
             $recordId = intval(db_fetch_assoc($recordId)['lastRecordId']) + 1;
         }
 
-        $userInfo = $this->query(
-            "
-            select
-              user_firstname,
-              user_lastname,
-              user_email
-            from redcap_user_information
-            where username = '$username'
-            "
-        );
-
-        $userInfo = db_fetch_assoc($userInfo);
-
         foreach ($redcapData as $index => $lineItem) {
             $redcapData[$index]['record_id'] = $recordId;
         }
 
-        error_log(json_encode($redcapData));
+        // need to delete existing record because repeatable forms
+        $this->redcapApiCall(
+            array(
+                'token' => $this->getSystemSetting('save-token'),
+                'content' => 'record',
+                'action' => 'delete',
+                'records' => [$recordId]
+            )
+        );
 
         $result = json_encode(\REDCap::saveData($pid, 'json', json_encode($redcapData)));
 
-//        return json_encode(\REDCap::saveData($pid, 'json', json_encode($data)));
         echo $result;
+    }
+
+    public function getProjectIdFromToken($token) {
+        $result = db_query('SELECT project_id FROM redcap_user_rights WHERE api_token = "' . $token . '"');
+        return db_fetch_assoc($result)['project_id'];
+    }
+
+    public function redcapApiCall($data) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, self::$apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_AUTOREFERER, true);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_FRESH_CONNECT, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data, '', '&'));
+        $output = curl_exec($ch);
+
+        curl_close($ch);
+
+        return $output;
     }
 }
 ?>

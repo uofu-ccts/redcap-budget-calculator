@@ -19,13 +19,13 @@ table {
     vertical-align: middle;
 }
 
-i {
+.delete, .info {
     cursor: pointer;
     margin: 0 5px;
 }
 
 .subject-count, .qty-count {
-    width: 50%;
+    width: 80%;
 }
 
 #pagecontainer

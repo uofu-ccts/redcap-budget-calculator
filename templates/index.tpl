@@ -1,5 +1,13 @@
 <div id="wrapper">
-    <h1 id="title">Budget Calculator (PROTOTYPE)</h1>
+    <div id="title">
+        <h1>Budget Calculator (PROTOTYPE)</h1>
+        <br />
+        <br />
+        <div id="budgetTitleDisplay" style="display: none">
+            <h5>Title: <span id="budgetTitleText"></span></h5>
+            <small>Last saved <span id="lastSaveTime"></span></small>
+        </div>
+    </div>
     <img id="logo" src={$logo}>
     <div style="clear: both;"></div>
 </div>
@@ -14,18 +22,34 @@
                 <div class="welcome-only">
                     <p>{$welcomeDialogBody}</p>
                 </div>
-                <form id="welcome-form">
+                <form id="welcome-form" onsubmit="return false;">
                     {if $saveEnabled}
-                        <div class="form-row">
-                            <div class="form-group initial-info">
-
+                        <div {if !$savedBudgetLookup}style="display: none;"{/if}>
+                            <div class="form-row">
                                 <label for="savedBudget"><b>Load saved budget:</b></label>
-                                <select id="savedBudget" name="savedBudget" class="form-control info-field">
-                                    <option value="none">---Select---</option>
-                                    {foreach $savedBudgetLookup as $option}
-                                        <option value="{$option['value']}">{$option['label']}</option>
-                                    {/foreach}
-                                </select>
+                            </div>
+                            <div class="form-row">
+                                <div class="col">
+                                    <div class="form-group initial-info">
+                                        <select id="savedBudget" name="savedBudget" class="form-control info-field">
+                                            <option value="none">---Select---</option>
+                                            {foreach $savedBudgetLookup as $option}
+                                                <option value="{$option['value']}">{$option['label']}</option>
+                                            {/foreach}
+                                        </select>
+                                        <input id="savedBudgetRename" class="form-control info-field" style="display: none;">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <button type="button" class="btn btm-sm btn-primary rename-budget" style="max-width:50px; display: none;">
+                                        <i class="fas fa-edit"></i>
+                                        <span class="sr-only">Rename Budget</span>
+                                    </button>
+                                    <button type="button" class="btn btm-sm btn-danger delete-budget" style="max-width:50px; display: none;">
+                                        <i class="fas fa-trash"></i>
+                                        <span class="sr-only">Delete Budget</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     {/if}
@@ -67,7 +91,7 @@
                 <div>
                     <p>Before adding clinical services, please supply this additional information:</p>
                 </div>
-                <form>
+                <form onsubmit="return false;">
                     <div>
                         <div class="form-row">
                             <div class="form-group">
@@ -85,6 +109,7 @@
                 </form>
             </div>
             <div class="modal-footer">
+                <button type="button"  class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <button id="confirm-clinical-info" type="button" class="btn btn-primary" onclick="">Confirm</button>
             </div>
         </div>
@@ -95,9 +120,9 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div>
-                    <p>You may optionally provide a title for your budget before saving.</p>
+                    <p>Please provide a title for your budget before saving. This is for personal reference only.</p>
                 </div>
-                <form>
+                <form onsubmit="return false;">
                     <div>
                         <div class="form-row">
                             <div class="form-group">
@@ -109,8 +134,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button id="confirm-save-budget" type="button" class="btn btn-primary">Confirm</button>
+                <button id="cancel-save-budget" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="confirm-save-budget" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
             </div>
         </div>
     </div>
@@ -216,8 +241,7 @@
             <td>$<span class="total">0.00</span></td>
         </tr>
     </table>
-    <form id="dirtyCheck" name="dirtyCheck">
-        <input type="checkbox" id="serviceCount" name="serviceCount" style="display: none;">
+    <form id="dirtyCheck" name="dirtyCheck" onsubmit="return false;">
     </form>
     {if $submitEnabled != 0}
         <div class="action-button">
@@ -236,7 +260,7 @@
                         <div>
                             <p>{$submissionDialogBody}</p>
                         </div>
-                        <form id="submission-form">
+                        <form id="submission-form" onsubmit="return false;">
                             <div class="form-row">
                                 <label for="budget_title"><b>Budget Title (for future reference):</b></label>
                                 <input id="budget_title" class="form-control info-field">
@@ -299,7 +323,6 @@
             </div>
         </div>
     {/if}
-    {*{if $exportEnabled == true}<div class="action-button"><button id="pdf-export" class="btn btn-primary" disabled>Download as PDF</button></div>{/if}*}
 </div>
 <div id="disclaimer">
     This is a work in progress and not representative of the final product. Pricing data is for testing purposes only.

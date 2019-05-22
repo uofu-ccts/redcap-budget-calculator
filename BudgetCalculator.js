@@ -2,12 +2,12 @@ $(document).ready(function(){
     // Enable tooltips
     $('[data-toggle="tooltip"]').tooltip();
 
-    $('#dirtyCheck').areYouSure(
-        {
+    $('#dirtyCheck')
+        .areYouSure({
             message: 'Services have been added to your budget. '
             + 'If you leave before saving, your changes will be lost.'
-        }
-    );
+        })
+        .trigger('checkform.areYouSure');
 
     // Delete row on delete button click
     $('#services-table').on("click", ".delete", function(){
@@ -20,14 +20,14 @@ $(document).ready(function(){
             UIOWA_BudgetCalculator.visitPage--;
         }
 
-        UIOWA_BudgetCalculator.changeVisitsPage();
+        UIOWA_BudgetCalculator.updateVisitDisplay();
     });
     $('#nextVisitPage').click(function() {
         if (UIOWA_BudgetCalculator.visitPage < UIOWA_BudgetCalculator.maxPage) {
             UIOWA_BudgetCalculator.visitPage++;
         }
 
-        UIOWA_BudgetCalculator.changeVisitsPage();
+        UIOWA_BudgetCalculator.updateVisitDisplay();
     });
 
     $('#visit_count').change(function(){
@@ -51,7 +51,7 @@ $(document).ready(function(){
             }
         });
 
-        UIOWA_BudgetCalculator.changeVisitsPage();
+        UIOWA_BudgetCalculator.updateVisitDisplay();
     });
 
     $('#terms-checkbox').change(function () {
@@ -74,41 +74,127 @@ $(document).ready(function(){
 
     $('#savedBudget').change(function(){
         var confirmBtn = $('#welcome-confirm');
-        var budgetInfo = UIOWA_BudgetCalculator.savedBudgets[$(this).val()];
-        var clinicalRows = $('#clinical > tr').not('#clinical-empty').length;
-        var nonClinicalRows = $('#non_clinical > tr').not('#non_clinical-empty').length;
+        var renameBtn = $('.rename-budget');
+        var deleteBtn = $('.delete-budget');
 
-        while (clinicalRows > 0) {
-            UIOWA_BudgetCalculator.removeService(1, 'clinical');
-            clinicalRows--;
-        }
-        while (nonClinicalRows > 0) {
-            UIOWA_BudgetCalculator.removeService(1, 'non_clinical');
-            nonClinicalRows--;
-        }
+        UIOWA_BudgetCalculator.clearBudget();
 
         if ($(this).val() != 'none') {
             confirmBtn.html('Load Selected Budget');
-            $('#subject_count').val(budgetInfo['subject_count']);
-            $('#visit_count_default').val(budgetInfo['visit_total']);
-            $('#funding_type').val(budgetInfo['funding_type']);
+            renameBtn.show();
+            deleteBtn.show();
 
             UIOWA_BudgetCalculator.loadFromProject();
+            UIOWA_BudgetCalculator.toggleSaving(false);
         }
         else {
             confirmBtn.html('Create New Budget');
-            $('#subject_count').val('');
-            $('#visit_count_default').val('');
-            $('#funding_type').val('');
+            renameBtn.hide();
+            deleteBtn.hide();
+            $('#budgetTitleDisplay').hide();
+            UIOWA_BudgetCalculator.toggleSaving(true);
+            $('#save-budget').addClass('disabled');
+            $('#funding_type').find('option[value=""]').prop('disabled', false);
+        }
+    });
+
+    $('#funding_type').change(function() {
+        UIOWA_BudgetCalculator.updateTotals();
+    });
+
+    $('.rename-budget').click(function () {
+        var renameInput = $('#savedBudgetRename');
+        var savedBudgetSelect = $('#savedBudget');
+        var selectedBudgetTitle = $('#savedBudget option:selected').html();
+
+        if (renameInput.is(":visible")) {
+            $('#savedBudget option:selected').html(renameInput.val());
+            $('#budgetTitleText').html(renameInput.val());
+
+            if (renameInput.val() != selectedBudgetTitle) {
+                $.ajax({
+                    method: 'POST',
+                    url: UIOWA_BudgetCalculator.requestUrl + '&type=rename',
+                    data: JSON.stringify([{
+                        record_id: $('#savedBudget').val(),
+                        budget_title: renameInput.val()
+                    }]),
+                    success: function () {
+                        UIOWA_BudgetCalculator.savedBudgets[$('#savedBudget').val()]['budget_title'] = renameInput.val();
+                        $('#budgetTitle').val(renameInput.val());
+                    }
+                });
+            }
+
+            savedBudgetSelect.show();
+            renameInput.hide();
+
+            $('#welcome-popup').find('button, input, select').prop('disabled', '');
+
+            $(this)
+                .removeClass('btn-success')
+                .addClass('btn-primary')
+                .find('i')
+                .removeClass('fa-check')
+                .addClass('fa-edit');
+        }
+        else {
+            renameInput.val(selectedBudgetTitle);
+            renameInput.prop('placeholder', selectedBudgetTitle);
+            savedBudgetSelect.hide();
+            renameInput.show();
+
+            //disable all other buttons/inputs/etc until rename is done
+            $('#welcome-popup')
+                .find('button, input, select')
+                .not('#savedBudgetRename, .rename-budget')
+                .prop('disabled', 'disabled');
+
+            //change rename button to green checkmark
+            $(this)
+                .removeClass('btn-primary')
+                .addClass('btn-success')
+                .find('i')
+                .removeClass('fa-edit')
+                .addClass('fa-check');
+
+            //focus and highlight input
+            renameInput.focus().select();
+        }
+    });
+
+    $('#savedBudgetRename').on('keypress', function (e) {
+        if(e.which === 13){
+            $('.rename-budget').click();
+        }
+    });
+
+    $('.delete-budget').click(function () {
+        var confirmed = confirm('Are you sure you want to delete this budget?');
+
+        if (confirmed) {
+            $.ajax({
+                method: 'POST',
+                url: UIOWA_BudgetCalculator.requestUrl + '&type=delete',
+                data: {
+                    content: 'record',
+                    action: 'delete',
+                    records: JSON.stringify([
+                        $('#savedBudget').val()
+                    ])
+                },
+                success: function (data) {
+                    $('#savedBudget option:selected').remove();
+                    $('#savedBudget').change();
+                }
+            });
+
+
         }
     });
 
     $('#edit-budget-info').click(function(){
         $('#clinical-info-modal').modal('show');
-    });
-
-    $('#save-budget').click(function () {
-        $('#save-modal').modal('show');
     });
 
     $('#confirm-clinical-info').click(function(){
@@ -133,10 +219,6 @@ $(document).ready(function(){
             form.validate().destroy();
         }
     });
-
-    //$('#clinical-info-modal').on('hidden.bs.modal', function (e) {
-    //    if ()
-    //});
 
     // Validate user input before submitting
     $('#welcome-confirm').click(function(){
@@ -168,13 +250,35 @@ $(document).ready(function(){
         //});
 
         if (form.valid()) {
-            $('#submit-confirmation-popup').modal('hide');
-            UIOWA_BudgetCalculator.saveToProject();
+            //$('#submit-confirmation-popup').modal('hide');
+            //UIOWA_BudgetCalculator.saveToProject();
+        }
+    });
+
+    $('#budgetTitle').on('keypress', function (e) {
+        if(e.which === 13){
+            $('#confirm-save-budget').click();
+        }
+    });
+
+    $('#save-budget').click(function () {
+        if (!$(this).hasClass('disabled') && !$(this).hasClass('saving')) {
+            if ($('#budgetTitle').val() != '') {
+                $(this).addClass('saving');
+                $('#confirm-save-budget').click();
+            }
+            else {
+                $('#save-modal').modal('show');
+            }
         }
     });
 
     $('#confirm-save-budget').click(function(){
         UIOWA_BudgetCalculator.saveToProject();
+    });
+
+    $('#cancel-save-budget').click(function () {
+        $('#budgetTitle').val('');
     });
 
     // Reload page after successful submit
@@ -266,11 +370,11 @@ UIOWA_BudgetCalculator.formatServicesData = function(servicesData, servicesQuant
 
     this.quantityLabelLookup = labelArray;
 
-    this.populateSmartMenu('core');
+    this.populateSmartMenu();
 };
 
 // Populate core/category/service dropdown with available options
-UIOWA_BudgetCalculator.populateSmartMenu = function(type) {
+UIOWA_BudgetCalculator.populateSmartMenu = function() {
     var data = this.data;
     var addServiceMenu = $('#add-service-menu');
 
@@ -391,7 +495,7 @@ UIOWA_BudgetCalculator.populateSmartMenu = function(type) {
 };
 
 // Add service line item
-UIOWA_BudgetCalculator.addService = function(recordID) {
+UIOWA_BudgetCalculator.addService = function(recordID, savedBudgetInfo) {
     var visitInputComplete = $('#visit_count_default').val() > 0;
     var subjectInputComplete = $('#subject_count').val() != '';
 
@@ -460,26 +564,26 @@ UIOWA_BudgetCalculator.addService = function(recordID) {
     }
 
     var lineItem =
-        "<tr class='lineItem' oninput='UIOWA_BudgetCalculator.updateTotals()'>" +
+        $("<tr class='lineItem' oninput='UIOWA_BudgetCalculator.updateTotals()'>" +
             "<td style='border-right-style:hidden;'>" +
                 "<span>" +
-                    "<a class=\"delete\" title=\"Delete\" data-toggle=\"tooltip\">" +
-                        "<i class=\"material-icons\" style='color:red'>&#xE872;</i>" +
+                    "<a class='delete' title='Delete' data-toggle='tooltip'>" +
+                        "<i class='fas fa-trash fa-lg' style='color:red'></i>" +
                     "</a>" +
                 "</span>" +
             "</td>" +
             "<td class='service-title'>" +
                 "<small>" + lineItemObj['core'] + " > " + lineItemObj['category'] + "</small>" +
                 "<br /><span>" + lineItemObj['service'] + "</span>" +
-                "<i class='fas fa-info-circle' style='color:#3E72A8' data-toggle='tooltip' title='" + serviceInfo['service_description'] + "'></i>" +
+                "<i class='fas fa-info-circle info' style='color:#3E72A8' data-toggle='tooltip' title='" + serviceInfo['service_description'] + "'></i>" +
             "</td>" +
             "<td>$<span class='base-cost'>" + this.formatAsCurrency(lineItemObj['base_cost']) + "</span></td>" +
             "<td>$<span class='your-cost'>" + this.formatAsCurrency(lineItemObj['your_cost']) + "</span></td>" +
-            "<td><input class='qty-count' value='" + lineItemObj['service_quantity'] + "'></td>" +
+            "<td><input class='qty-count' type='number' min='1' value='" + lineItemObj['service_quantity'] + "'></td>" +
             "<td>" + lineItemObj['unit_label'] + "</td>" +
             uniqueCols +
             "<td>$<span class='line-total'>0.00</span></td>" +
-        "</tr>";
+        "</tr>");
 
     // Hide "no services" placeholder
     $('#' + serviceType + '-empty:visible').hide();
@@ -487,25 +591,36 @@ UIOWA_BudgetCalculator.addService = function(recordID) {
     // Enable submit/export buttons
     $('#submit').prop('disabled', false);
     $('#pdf-export').removeClass('disabled');
-    $('#save-budget').removeClass('disabled');
-    $('#serviceCount').prop( "checked", true );
-    $('#dirtyCheck').trigger('checkform.areYouSure');
 
     // Add service line item to currentRequest object
     this.currentRequest[serviceType].push(lineItemObj);
 
-    // Add service line item to table and enable tooltips
+    // Add service line item to table and add update qty inputs (if loaded budget)
+    var qtyInput = lineItem.find('.qty-count');
+
+    qtyInput.on('keyup change', function() {
+        UIOWA_BudgetCalculator.toggleSaving(true);
+    });
+
+    if (savedBudgetInfo) {
+        qtyInput.val(savedBudgetInfo['service_quantity']);
+    }
+    else {
+        UIOWA_BudgetCalculator.toggleSaving(true);
+    }
+
     $("#" + serviceType).append(lineItem);
     $('[data-toggle="tooltip"]').tooltip();
 
-    this.changeVisitsPage();
+    this.updateVisitDisplay();
 };
 
+// Remove service line item
 UIOWA_BudgetCalculator.removeService = function (lineIndex, serviceType) {
     var lineItem = $('#' + serviceType + ' > tr')[lineIndex];
 
     UIOWA_BudgetCalculator.visitGrid.splice(
-        lineIndex, 1
+        lineIndex - 1, 1
     );
 
     $(lineItem).remove();
@@ -534,10 +649,11 @@ UIOWA_BudgetCalculator.removeService = function (lineIndex, serviceType) {
     if (clinicalServiceCount == 0 && nonClinicalServiceCount == 0) {
         $('#submit').prop('disabled', true);
         $('#pdf-export').addClass('disabled');
-        $('#save-budget').addClass('disabled');
 
-        $('#serviceCount').prop("checked", false);
-        $('#dirtyCheck').trigger('checkform.areYouSure');
+        UIOWA_BudgetCalculator.toggleSaving(false);
+    }
+    else {
+        UIOWA_BudgetCalculator.toggleSaving(true);
     }
 
     // Remove line item from object
@@ -548,7 +664,7 @@ UIOWA_BudgetCalculator.removeService = function (lineIndex, serviceType) {
     UIOWA_BudgetCalculator.updateTotals();
 };
 
-// Update request totals
+// Update budget totals
 UIOWA_BudgetCalculator.updateTotals = function() {
     var totals = {
         'clinical': 0,
@@ -562,6 +678,17 @@ UIOWA_BudgetCalculator.updateTotals = function() {
         var serviceTable = $('#' + serviceType + ' > tr').not('#' + serviceType + '-empty');
 
         $.each(UIOWA_BudgetCalculator.currentRequest[serviceType], function (lineIndex, lineItem) {
+            var serviceInfo = _.find(UIOWA_BudgetCalculator.data, {
+                record_id: lineItem['service_id']
+            });
+
+            var newServiceCost = Number(serviceInfo[$('#funding_type').val()]);
+
+            // update "Your Cost" if changed
+            if (newServiceCost != lineItem['your_cost']) {
+                lineItem['your_cost'] = newServiceCost;
+            }
+
             var tableLineItem = serviceTable[lineIndex];
             var subtotal = 0;
 
@@ -609,8 +736,8 @@ UIOWA_BudgetCalculator.updateTotals = function() {
     $(".total").html(this.formatAsCurrency(totals['grand']));
 };
 
-// Change visit checkboxes displayed
-UIOWA_BudgetCalculator.changeVisitsPage = function () {
+// Update visit UI
+UIOWA_BudgetCalculator.updateVisitDisplay = function () {
     this.maxPage = Math.ceil(document.getElementById('visit_count_default').value / this.visitsPerPage) - 1;
 
     var lineItems = $("#clinical").find('.lineItem');
@@ -637,7 +764,7 @@ UIOWA_BudgetCalculator.changeVisitsPage = function () {
         $(td).html('');
     });
 
-    lineItems.each(function (index) {
+    lineItems.each(function (index, row) {
         $(lineItems[index]).find('.visitCheckbox').remove();
 
         var visitCount = document.getElementById('visit_count_default').value;
@@ -692,25 +819,61 @@ UIOWA_BudgetCalculator.changeVisitsPage = function () {
                         //"<input type='checkbox' onclick='UIOWA_BudgetCalculator.updateVisitGrid(this, \"column\")'" +
                         //    ($.inArray(visitIndex, UIOWA_BudgetCalculator.allChecked) != -1 ? 'checked' : '')
                         //+ ">"
-                        $.inArray(visitIndex, UIOWA_BudgetCalculator.allChecked) != -1 ?
-                            "<button" +
-                                " class='btn btn-danger fas fa-times'" +
-                                " style='width: 40px'" +
-                                " onclick='UIOWA_BudgetCalculator.updateVisitGrid(this, \"column\")'" +
-                                " value='none'>" +
-                            "</button>"
-                                :
-                            "<button" +
-                                " class='btn btn-success fas fa-check'" +
-                                " style='width: 40px'" +
-                                " onclick='UIOWA_BudgetCalculator.updateVisitGrid(this, \"column\")'" +
-                                " value='all'>" +
-                            "</button>"
+                        "<button" +
+                            " class='btn btn-danger fas fa-times uncheck-all-column-button'" +
+                            " style='width: 40px'" +
+                            " onclick='UIOWA_BudgetCalculator.updateVisitGrid(this, \"column\")'" +
+                            " value='none'>" +
+                        "</button>" +
+                        "<button" +
+                            " class='btn btn-success fas fa-check check-all-column-button'" +
+                            " style='width: 40px'" +
+                            " onclick='UIOWA_BudgetCalculator.updateVisitGrid(this, \"column\")'" +
+                            " value='all'>" +
+                        "</button>"
                     );
 
                     visitIndex++;
                 }
             }
+        }
+
+        // update (un)check all row buttons
+        var allVisitsChecked = visitData.every(function (value) {
+            return value == true
+        });
+        var checkAllButton = $(row).find('.checkAllRow');
+        var uncheckAllButton = $(row).find('.uncheckAllRow');
+
+        if (allVisitsChecked) {
+            checkAllButton.hide();
+            uncheckAllButton.show();
+        }
+        else {
+            checkAllButton.show();
+            uncheckAllButton.hide();
+        }
+    });
+
+    // update (un)check all column buttons
+    $('.checkAllColumn').each(function (index, column) {
+        var allVisitsChecked = $.map(UIOWA_BudgetCalculator.visitGrid, function (row) {
+            return row[UIOWA_BudgetCalculator.visitPage][index];
+        });
+
+        allVisitsChecked = allVisitsChecked.every(function (value) {
+            return value == true
+        });
+        var checkAllButton = $(column).find('.check-all-column-button');
+        var uncheckAllButton = $(column).find('.uncheck-all-column-button');
+
+        if (allVisitsChecked) {
+            checkAllButton.hide();
+            uncheckAllButton.show();
+        }
+        else {
+            checkAllButton.show();
+            uncheckAllButton.hide();
         }
     });
 
@@ -744,10 +907,6 @@ UIOWA_BudgetCalculator.updateVisitGrid = function (checkbox, index) {
                 this.visitGrid[lineIndex][page][box] = checked;
             }
         }
-
-        if ($('#visit_count_default').val() != '') {
-            UIOWA_BudgetCalculator.changeVisitsPage();
-        }
     }
     else if (index == 'column') {
         var startingVisitIndex = UIOWA_BudgetCalculator.visitPage * UIOWA_BudgetCalculator.visitsPerPage;
@@ -767,8 +926,6 @@ UIOWA_BudgetCalculator.updateVisitGrid = function (checkbox, index) {
                 return value != visitIndex;
             });
         }
-
-        UIOWA_BudgetCalculator.changeVisitsPage();
     }
     else {
         checked = checkbox.checked ? true : false;
@@ -776,7 +933,8 @@ UIOWA_BudgetCalculator.updateVisitGrid = function (checkbox, index) {
         this.visitGrid[lineIndex][this.visitPage][index] = checked;
     }
 
-
+    UIOWA_BudgetCalculator.toggleSaving(true);
+    UIOWA_BudgetCalculator.updateVisitDisplay();
 };
 
 // Save request data object as PDF table
@@ -875,12 +1033,19 @@ UIOWA_BudgetCalculator.savePdf = function() {
 
 // Submit request data to REDCap project
 UIOWA_BudgetCalculator.saveToProject = function () {
+    var saveBtn = $('#save-budget');
+    var savedSelect = $('#savedBudget');
+
+    saveBtn.prop('disabled', true);
+    saveBtn.html('<i class="fas fa-spinner fa-spin test-progress"></i> Saving...');
+
     var serviceReference = {
         clinical: this.currentRequest['clinical'],
         non_clinical: this.currentRequest['non_clinical']
     };
     var redcapFormattedRequest = [];
     var requestIndex = 0;
+    var savedTimestamp = UIOWA_BudgetCalculator.getTimestamp();
 
     $.each(serviceReference, function (serviceType, lineItems) { // clinical, non_clinical
         $.each(lineItems, function (lineIndex) { // line items
@@ -897,9 +1062,11 @@ UIOWA_BudgetCalculator.saveToProject = function () {
     });
 
     redcapFormattedRequest.push({
+        timestamp: savedTimestamp,
         budget_title: $('#budgetTitle').val(),
         subject_count: $('#subject_count').val(),
         visit_total: $('#visit_count_default').val(),
+        visit_data: JSON.stringify(UIOWA_BudgetCalculator.visitGrid),
         funding_type: $('#funding_type').val(),
         username: UIOWA_BudgetCalculator.currentUser,
         clinical_total: this.currentRequest['clinical_total'],
@@ -928,37 +1095,126 @@ UIOWA_BudgetCalculator.saveToProject = function () {
         method: 'POST',
         url: UIOWA_BudgetCalculator.requestUrl + '&type=save',
         data: JSON.stringify({
-            record_id: $('#savedBudget').val() == 'none' ? null : $('#savedBudget').val(),
+            record_id: savedSelect.val() == 'none' ? null : savedSelect.val(),
             username: UIOWA_BudgetCalculator.currentUser,
             budget: JSON.stringify(redcapFormattedRequest)
         }),
-        success: function(data) {
-            var submitModal = $('#submit-success-popup');
+        success: function (data) {
             data = JSON.parse(data);
+            var newRecordId = Object.keys(data['ids'])[0];
 
             if (data['errors'].length > 0) {
-                submitModal.find('.modal-header > h5').text('Failed to save budget.');
-                submitModal.find('.modal-body').text(data['errors']);
+                console.log(data['errors']);
+                $(saveBtn).html('<i class="fas fa-times"></i> Save Failed');
             }
             else {
-                submitModal.find('.modal-header > h5').text('Successfully saved budget!');
-                submitModal.find('.modal-body').text(''); // todo make this text configurable
+                $('#budgetTitleDisplay').show();
+                $('#budgetTitleText').html($('#budgetTitle').val());
+
+                //todo still saving duplicates...only on first cause no dropdown exists
+                // Add new record_id to dropdown to avoid duplicates
+                if (savedSelect.val() == 'none') {
+                    savedSelect
+                        .append(
+                            $('<option></option>')
+                                .attr('value', newRecordId)
+                                .text($('#budgetTitle').val())
+                        )
+                        .val(newRecordId);
+                }
+
+                $('#lastSaveTime').attr('datetime', savedTimestamp);
+                timeago.cancel();
+                timeago.render($('#lastSaveTime'));
+
+                $(saveBtn).html('<i class="fas fa-check"></i> Saved');
+                $(saveBtn).removeClass('saving');
+                UIOWA_BudgetCalculator.toggleSaving(false);
             }
-            submitModal.modal('show');
         }
-    })
+    });
 };
 
+// Load request data from REDCap project
 UIOWA_BudgetCalculator.loadFromProject = function () {
     var record_id = $('#savedBudget').val();
-    var savedBudget = UIOWA_BudgetCalculator.savedBudgets[record_id];
+    var budgetInfo = UIOWA_BudgetCalculator.savedBudgets[record_id];
 
-    $.each(savedBudget['repeat_instances'], function (index, lineItem) {
-        UIOWA_BudgetCalculator.addService(lineItem['service_id']);
-    })
+    $('#subject_count').val(budgetInfo['subject_count']);
+    $('#visit_count_default').val(budgetInfo['visit_total']);
+    $('#budgetTitle').val(budgetInfo['budget_title']);
+    $('#funding_type')
+        .val(budgetInfo['funding_type'])
+        .find('option[value=""]').prop('disabled', true);
+
+    $.each(budgetInfo['repeat_instances'], function (index, lineItem) {
+        UIOWA_BudgetCalculator.addService(lineItem['service_id'], lineItem);
+    });
+
+    $('#budgetTitleDisplay').show();
+    $('#budgetTitleText').html($('#budgetTitle').val());
+
+    var timestamp = budgetInfo['timestamp'];
+    $('#lastSaveTime').attr('datetime', timestamp);
+    timeago.cancel();
+    timeago.render($('#lastSaveTime'));
+
+    UIOWA_BudgetCalculator.visitGrid = JSON.parse(budgetInfo['visit_data']);
+    UIOWA_BudgetCalculator.updateVisitDisplay();
+};
+
+// Remove all services and clear fields
+UIOWA_BudgetCalculator.clearBudget = function () {
+    var clinicalRows = $('#clinical > tr').not('#clinical-empty').length;
+    var nonClinicalRows = $('#non_clinical > tr').not('#non_clinical-empty').length;
+
+    while (clinicalRows > 0) {
+        UIOWA_BudgetCalculator.removeService(1, 'clinical');
+        clinicalRows--;
+    }
+    while (nonClinicalRows > 0) {
+        UIOWA_BudgetCalculator.removeService(1, 'non_clinical');
+        nonClinicalRows--;
+    }
+
+    $('#subject_count').val('');
+    $('#visit_count_default').val('');
+    $('#funding_type').val('');
+    $('#budgetTitle').val('');
+};
+
+UIOWA_BudgetCalculator.toggleSaving = function (saveAllowed) {
+    var saveBtn = $('#save-budget');
+    var dirtyCheck = $('#dirtyCheck');
+
+    if (saveAllowed) {
+        saveBtn.html('Save for Later');
+        saveBtn.removeClass('disabled');
+        dirtyCheck.addClass('dirty');
+    }
+    else {
+        saveBtn.html('Saved');
+        saveBtn.addClass('disabled');
+        dirtyCheck.removeClass('dirty');
+    }
 };
 
 // Format dollar amounts
 UIOWA_BudgetCalculator.formatAsCurrency = function(value) {
     return Number(value).toLocaleString("en-US", {style: "decimal", minimumFractionDigits: 2})
+};
+
+// Get current datetime
+UIOWA_BudgetCalculator.getTimestamp = function () {
+    var date = new Date();
+
+    date =
+        date.getFullYear() + "-" +
+        ('0' + (date.getMonth() + 1)).slice(-2) + "-" +
+        ('0' + date.getDate()).slice(-2) + " " +
+        ('0' + date.getHours()).slice(-2) + ":" +
+        ('0' + date.getMinutes()).slice(-2) + ":" +
+        ('0' + date.getSeconds()).slice(-2);
+
+    return date;
 };

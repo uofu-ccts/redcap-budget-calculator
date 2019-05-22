@@ -32,7 +32,7 @@
   "system-settings": [
     {
       "key": "reference-pid",
-      "name": "Reference project (must use included template, open module for more information)",
+      "name": "Service Catalog reference project (must use included template)",
       "type": "project-id",
       "required": true
     },
@@ -62,9 +62,9 @@
       "default": false
     },
     {
-      "key": "save-pid",
-      "name": "Target project for storing budgets using 'Save for Later' feature (must use included template)",
-      "type": "project-id",
+      "key": "save-token",
+      "name": "API import/update token for 'Save for Later' project (must use included template)",
+      "type": "text",
       "required": true,
       "branchingLogic": {
         "field": "save-for-later",
@@ -73,7 +73,7 @@
     },
     {
       "key": "export-enabled",
-      "name": "Allow downloading of budget in PDF format",
+      "name": "Allow PDF download of budget",
       "type": "checkbox",
       "default": true
     },

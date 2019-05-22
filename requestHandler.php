@@ -5,15 +5,35 @@ $module = new \UIOWA\BudgetCalculator\BudgetCalculator();
 if ($_REQUEST['type'] == 'save') {
     $module->saveBudgetToProject();
 }
+if ($_REQUEST['type'] == 'rename') {
+    $data = array(
+        'token' => $module->getSystemSetting('save-token'),
+        'content' => 'record',
+        'format' => 'json',
+        'data' => file_get_contents('php://input')
+    );
+
+    echo $module->redcapApiCall($data);
+}
+if ($_REQUEST['type'] == 'delete') {
+    $data = array(
+        'token' => $module->getSystemSetting('save-token'),
+        'content' => 'record',
+        'action' => 'delete',
+        'records' => json_decode($_REQUEST['records'])
+    );
+
+    echo $module->redcapApiCall($data);
+}
 else if ($_REQUEST['type'] == 'createTemplate') {
-    $content = htmlentities(file_get_contents($module->getUrl('ServiceListTemplate.xml')));
+    $content = file_get_contents($module->getUrl('ServiceCatalogTemplate.xml'));
 
     $data = array(
-        'token' => $_REQUEST['token'],
+        'token' => $_POST['token'],
         'content' => 'project',
         'format' => 'json',
         'data' => '[{
-            "project_title": "Service List",
+            "project_title": "' . $_POST['title'] . '",
             "purpose": 4
         }]',
         'odm' => $content

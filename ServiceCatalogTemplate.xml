@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<ODM xmlns="http://www.cdisc.org/ns/odm/v1.3" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:redcap="https://projectredcap.org" xsi:schemaLocation="http://www.cdisc.org/ns/odm/v1.3 schema/odm/ODM1-3-1.xsd" ODMVersion="1.3.1" FileOID="000-00-0000" FileType="Snapshot" Description="Service List" AsOfDateTime="2019-01-10T09:37:23" CreationDateTime="2019-01-10T09:37:23" SourceSystem="REDCap" SourceSystemVersion="8.10.1">
-<Study OID="Project.ServiceList">
+<ODM xmlns="http://www.cdisc.org/ns/odm/v1.3" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:redcap="https://projectredcap.org" xsi:schemaLocation="http://www.cdisc.org/ns/odm/v1.3 schema/odm/ODM1-3-1.xsd" ODMVersion="1.3.1" FileOID="000-00-0000" FileType="Snapshot" Description="Service Catalog (Budget Calculator)" AsOfDateTime="2019-05-22T08:01:32" CreationDateTime="2019-05-22T08:01:32" SourceSystem="REDCap" SourceSystemVersion="9.0.1">
+<Study OID="Project.ServiceCatalogBudgetCalculator">
 <GlobalVariables>
-	<StudyName>Service List</StudyName>
-	<StudyDescription>This file contains the metadata, events, and data for REDCap project "Service List".</StudyDescription>
-	<ProtocolName>Service List</ProtocolName>
+	<StudyName>Service Catalog (Budget Calculator)</StudyName>
+	<StudyDescription>This file contains the metadata, events, and data for REDCap project "Service Catalog (Budget Calculator)".</StudyDescription>
+	<ProtocolName>Service Catalog (Budget Calculator)</ProtocolName>
 	<redcap:RecordAutonumberingEnabled>1</redcap:RecordAutonumberingEnabled>
 	<redcap:CustomRecordLabel>[service]: [category]: [core]</redcap:CustomRecordLabel>
 	<redcap:SecondaryUniqueField></redcap:SecondaryUniqueField>
@@ -13,23 +13,31 @@
 	<redcap:SurveyInvitationEmailField></redcap:SurveyInvitationEmailField>
 	<redcap:Purpose>4</redcap:Purpose>
 	<redcap:PurposeOther></redcap:PurposeOther>
-	<redcap:ProjectNotes>ICTS Service List</redcap:ProjectNotes>
+	<redcap:ProjectNotes></redcap:ProjectNotes>
 	<redcap:RepeatingInstrumentsAndEvents>
 		<redcap:RepeatingInstruments>
-			<redcap:RepeatingInstrument redcap:UniqueEventName="event_1_arm_1" redcap:RepeatInstrument="service_list" redcap:CustomLabel=""/>
+			<redcap:RepeatingInstrument redcap:UniqueEventName="event_1_arm_1" redcap:RepeatInstrument="service_info" redcap:CustomLabel=""/>
 		</redcap:RepeatingInstruments>
 	</redcap:RepeatingInstrumentsAndEvents>
 </GlobalVariables>
-<MetaDataVersion OID="Metadata.ServiceList_2019-01-10_0937" Name="Service List" redcap:RecordIdField="record_id">
-	<FormDef OID="Form.service_list" Name="Service List" Repeating="No" redcap:FormName="service_list">
-		<ItemGroupRef ItemGroupOID="service_list.record_id" Mandatory="No"/>
-		<ItemGroupRef ItemGroupOID="service_list.industry_rate" Mandatory="No"/>
-		<ItemGroupRef ItemGroupOID="service_list.federal_rate" Mandatory="No"/>
-		<ItemGroupRef ItemGroupOID="service_list.service_list_complete" Mandatory="No"/>
+<MetaDataVersion OID="Metadata.ServiceCatalogBudgetCalculator_2019-05-22_0801" Name="Service Catalog (Budget Calculator)" redcap:RecordIdField="record_id">
+	<FormDef OID="Form.service_info" Name="Service Info" Repeating="No" redcap:FormName="service_info">
+		<ItemGroupRef ItemGroupOID="service_info.record_id" Mandatory="No"/>
+		<ItemGroupRef ItemGroupOID="service_info.core" Mandatory="No"/>
+		<ItemGroupRef ItemGroupOID="service_info.category" Mandatory="No"/>
+		<ItemGroupRef ItemGroupOID="service_info.industry_rate" Mandatory="No"/>
+		<ItemGroupRef ItemGroupOID="service_info.federal_rate" Mandatory="No"/>
+		<ItemGroupRef ItemGroupOID="service_info.service_info_complete" Mandatory="No"/>
 	</FormDef>
-	<ItemGroupDef OID="service_list.record_id" Name="Service List" Repeating="No">
+	<ItemGroupDef OID="service_info.record_id" Name="Service Info" Repeating="No">
 		<ItemRef ItemOID="record_id" Mandatory="No" redcap:Variable="record_id"/>
+	</ItemGroupDef>
+	<ItemGroupDef OID="service_info.core" Name="--NON-EDITABLE FIELDS--
+
+Do NOT edit the configuration of the below fields. The Budget Calculator will look for exact field names when loading service data." Repeating="No">
 		<ItemRef ItemOID="core" Mandatory="No" redcap:Variable="core"/>
+	</ItemGroupDef>
+	<ItemGroupDef OID="service_info.category" Name="Service Info" Repeating="No">
 		<ItemRef ItemOID="category" Mandatory="No" redcap:Variable="category"/>
 		<ItemRef ItemOID="service" Mandatory="No" redcap:Variable="service"/>
 		<ItemRef ItemOID="clinical" Mandatory="No" redcap:Variable="clinical"/>
@@ -37,19 +45,23 @@
 		<ItemRef ItemOID="active_service" Mandatory="No" redcap:Variable="active_service"/>
 		<ItemRef ItemOID="service_description" Mandatory="No" redcap:Variable="service_description"/>
 	</ItemGroupDef>
-	<ItemGroupDef OID="service_list.industry_rate" Name="Define rate fields below" Repeating="No">
+	<ItemGroupDef OID="service_info.industry_rate" Name="--END OF NON-EDITABLE FIELDS--
+
+Rate fields can be defined below. The first rate field will be used to find the &quot;Base Cost&quot;. All field names must end in &quot;_rate&quot; to be loaded as user options." Repeating="No">
 		<ItemRef ItemOID="industry_rate" Mandatory="No" redcap:Variable="industry_rate"/>
 	</ItemGroupDef>
-	<ItemGroupDef OID="service_list.federal_rate" Name="Service List" Repeating="No">
+	<ItemGroupDef OID="service_info.federal_rate" Name="Service Info" Repeating="No">
 		<ItemRef ItemOID="federal_rate" Mandatory="No" redcap:Variable="federal_rate"/>
 	</ItemGroupDef>
-	<ItemGroupDef OID="service_list.service_list_complete" Name="Form Status" Repeating="No">
-		<ItemRef ItemOID="service_list_complete" Mandatory="No" redcap:Variable="service_list_complete"/>
+	<ItemGroupDef OID="service_info.service_info_complete" Name="Form Status" Repeating="No">
+		<ItemRef ItemOID="service_info_complete" Mandatory="No" redcap:Variable="service_info_complete"/>
 	</ItemGroupDef>
 	<ItemDef OID="record_id" Name="record_id" DataType="text" Length="999" redcap:Variable="record_id" redcap:FieldType="text">
 		<Question><TranslatedText>record id</TranslatedText></Question>
 	</ItemDef>
-	<ItemDef OID="core" Name="core" DataType="text" Length="999" redcap:Variable="core" redcap:FieldType="text" redcap:FieldAnnotation="@DEFAULT=&#039;[core][previous-instance]&#039;">
+	<ItemDef OID="core" Name="core" DataType="text" Length="999" redcap:Variable="core" redcap:FieldType="text" redcap:SectionHeader="--NON-EDITABLE FIELDS--
+
+Do NOT edit the configuration of the below fields. The Budget Calculator will look for exact field names when loading service data." redcap:FieldAnnotation="@DEFAULT=&#039;[core][previous-instance]&#039;">
 		<Question><TranslatedText>Core</TranslatedText></Question>
 	</ItemDef>
 	<ItemDef OID="category" Name="category" DataType="text" Length="999" redcap:Variable="category" redcap:FieldType="text" redcap:FieldAnnotation="@DEFAULT=&#039;[category][previous-instance]&#039;">
@@ -73,15 +85,17 @@
 	<ItemDef OID="service_description" Name="service_description" DataType="text" Length="999" redcap:Variable="service_description" redcap:FieldType="textarea" redcap:FieldAnnotation="@DEFAULT=&#039;[service_description][previous-instance]&#039;">
 		<Question><TranslatedText>Service Description</TranslatedText></Question>
 	</ItemDef>
-	<ItemDef OID="industry_rate" Name="industry_rate" DataType="float" Length="999" redcap:Variable="industry_rate" redcap:FieldType="text" redcap:TextValidationType="number_2dp" redcap:FieldNote="Industry Sponsored" redcap:SectionHeader="Define rate fields below" redcap:FieldAnnotation="@DEFAULT=&#039;[industry_rate][previous-instance]&#039;">
-		<Question><TranslatedText>Industry Rate</TranslatedText></Question>
+	<ItemDef OID="industry_rate" Name="industry_rate" DataType="float" Length="999" redcap:Variable="industry_rate" redcap:FieldType="text" redcap:TextValidationType="number_2dp" redcap:SectionHeader="--END OF NON-EDITABLE FIELDS--
+
+Rate fields can be defined below. The first rate field will be used to find the &quot;Base Cost&quot;. All field names must end in &quot;_rate&quot; to be loaded as user options." redcap:FieldAnnotation="@DEFAULT=&#039;[industry_rate][previous-instance]&#039;">
+		<Question><TranslatedText>Industry Sponsored</TranslatedText></Question>
 	</ItemDef>
-	<ItemDef OID="federal_rate" Name="federal_rate" DataType="float" Length="999" redcap:Variable="federal_rate" redcap:FieldType="calc" redcap:FieldNote="Federal Funded" redcap:Calculation="[industry_rate]/2">
+	<ItemDef OID="federal_rate" Name="federal_rate" DataType="float" Length="999" redcap:Variable="federal_rate" redcap:FieldType="calc" redcap:Calculation="[industry_rate]/2" redcap:FieldAnnotation="@DEFAULT=&#039;[federal_rate][previous-instance]&#039;">
 		<Question><TranslatedText>Federal Rate</TranslatedText></Question>
 	</ItemDef>
-	<ItemDef OID="service_list_complete" Name="service_list_complete" DataType="text" Length="1" redcap:Variable="service_list_complete" redcap:FieldType="select" redcap:SectionHeader="Form Status">
+	<ItemDef OID="service_info_complete" Name="service_info_complete" DataType="text" Length="1" redcap:Variable="service_info_complete" redcap:FieldType="select" redcap:SectionHeader="Form Status">
 		<Question><TranslatedText>Complete?</TranslatedText></Question>
-		<CodeListRef CodeListOID="service_list_complete.choices"/>
+		<CodeListRef CodeListOID="service_info_complete.choices"/>
 	</ItemDef>
 	<CodeList OID="clinical.choices" Name="clinical" DataType="boolean" redcap:Variable="clinical">
 		<CodeListItem CodedValue="1"><Decode><TranslatedText>True</TranslatedText></Decode></CodeListItem>
@@ -121,7 +135,7 @@
 		<CodeListItem CodedValue="1"><Decode><TranslatedText>True</TranslatedText></Decode></CodeListItem>
 		<CodeListItem CodedValue="0"><Decode><TranslatedText>False</TranslatedText></Decode></CodeListItem>
 	</CodeList>
-	<CodeList OID="service_list_complete.choices" Name="service_list_complete" DataType="text" redcap:Variable="service_list_complete">
+	<CodeList OID="service_info_complete.choices" Name="service_info_complete" DataType="text" redcap:Variable="service_info_complete">
 		<CodeListItem CodedValue="0"><Decode><TranslatedText>Incomplete</TranslatedText></Decode></CodeListItem>
 		<CodeListItem CodedValue="1"><Decode><TranslatedText>Unverified</TranslatedText></Decode></CodeListItem>
 		<CodeListItem CodedValue="2"><Decode><TranslatedText>Complete</TranslatedText></Decode></CodeListItem>
