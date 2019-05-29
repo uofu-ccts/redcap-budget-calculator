@@ -7,19 +7,19 @@ table {
     font-size: 1vw;
 }
 
-#services-table th {
+#servicesTable th {
     background-color: #9AC0E5;
     text-align: center;
     font-weight: bold;
     vertical-align: middle;
 }
 
-#services-table td {
+#servicesTable td {
     text-align: center;
     vertical-align: middle;
 }
 
-.delete, .info {
+.info {
     cursor: pointer;
     margin: 0 5px;
 }
@@ -42,12 +42,11 @@ table {
     float: left;
 }
 
-#nextVisitPage {
+#nextVisitsBtn {
     text-align: right;
     float: right;
 }
-
-#prevVisitPage {
+#prevVisitsBtn {
     text-align: left;
     float: left;
 }
@@ -57,13 +56,9 @@ table {
     color: red;
 }
 
-.visitHeaders th {
+.visit-header-row th {
     height: 40px;
     width: 40px;
-}
-
-.delete-icon {
-    width: 50px;
 }
 
 .total-row {
@@ -71,8 +66,8 @@ table {
     font-size: x-large;
 }
 
-#hide-border {
-    border-right: hidden; !important;
+th.hide-border {
+    border: none;
 }
 
 .non_clinical-blank {

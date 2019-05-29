@@ -15,14 +15,14 @@
 <br />
 <br />
 
-<div class="modal fade" id="welcome-popup" tabindex="-1" role="dialog" aria-labelledby="welcome-popup" aria-hidden="true">
+<div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="welcomeModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="welcome-only">
                     <p>{$welcomeDialogBody}</p>
                 </div>
-                <form id="welcome-form" onsubmit="return false;">
+                <form id="welcomeForm" onsubmit="return false;">
                     {if $saveEnabled}
                         <div {if !$savedBudgetLookup}style="display: none;"{/if}>
                             <div class="form-row">
@@ -34,7 +34,7 @@
                                         <select id="savedBudget" name="savedBudget" class="form-control info-field">
                                             <option value="none">---Select---</option>
                                             {foreach $savedBudgetLookup as $option}
-                                                <option value="{$option['value']}">{$option['label']}</option>
+                                                <option value="{$option.value}">{$option.label}</option>
                                             {/foreach}
                                         </select>
                                         <input id="savedBudgetRename" class="form-control info-field" style="display: none;">
@@ -56,11 +56,11 @@
                     <div>
                         <div class="form-row">
                             <div class="form-group initial-info">
-                                <label for="funding_type"><b>Funding Type:</b></label>
-                                <select required id="funding_type" name="funding_type" class="form-control info-field">
+                                <label for="fundingType"><b>Funding Type:</b></label>
+                                <select required id="fundingType" name="fundingType" class="form-control info-field">
                                     <option value="">---Select---</option>
                                     {foreach $rateFields as $field}
-                                        <option value="{$field['value']}">{$field['label']}</option>
+                                        <option value="{$field.value}">{$field.label}</option>
                                     {/foreach}
                                 </select>
                             </div>
@@ -69,8 +69,8 @@
                     {if $termsText}
                         <div class="form-row welcome-only">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="terms-checkbox" name="terms-checkbox">
-                                <label class="form-check-label" for="terms-checkbox">
+                                <input class="form-check-input" type="checkbox" id="termsCheckbox" name="termsCheckbox">
+                                <label class="form-check-label" for="termsCheckbox">
                                     {$termsText}
                                 </label>
                             </div>
@@ -79,12 +79,12 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="welcome-confirm" type="button" class="btn btn-primary" {if $termsText}disabled{/if}>Create New Budget</button>
+                <button id="welcomeConfirmBtn" type="button" class="btn btn-primary" {if $termsText}disabled{/if}>Create New Budget</button>
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="clinical-info-modal" tabindex="-1" role="dialog" aria-labelledby="clinical-info-modal" aria-hidden="true">
+<div class="modal fade" id="budgetInfoModal" tabindex="-1" role="dialog" aria-labelledby="budgetInfoModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
@@ -109,13 +109,13 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button"  class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button id="confirm-clinical-info" type="button" class="btn btn-primary" onclick="">Confirm</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button id="confirmInfoBtn" type="button" class="btn btn-primary" onclick="">Confirm</button>
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="save-modal" tabindex="-1" role="dialog" aria-labelledby="save-modal" aria-hidden="true">
+<div class="modal fade" id="saveModal" tabindex="-1" role="dialog" aria-labelledby="saveModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body">
@@ -126,16 +126,16 @@
                     <div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="budgetTitle"><b>Budget Title:</b></label>
-                                <input required id="budgetTitle" name="budgetTitle" class="form-control info-field">
+                                <label for="userTitleInput"><b>Budget Title:</b></label>
+                                <input required id="userTitleInput" name="userTitleInput" class="form-control info-field">
                             </div>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="cancel-save-budget" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button id="confirm-save-budget" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                <button id="cancelSaveBtn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="confirmSaveBtn" type="button" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>
@@ -144,7 +144,7 @@
     <ul id="main-menu" class="sm sm-blue">
         <li>
             <a href="#">Add Service</a>
-            <ul id="add-service-menu">
+            <ul id="addServiceMenu">
                 <li>
                     <label for="filter-menu" style="padding: 5px">Filter services:</label>
                     <input id="filter-menu" name="filter-menu" type="text" />
@@ -152,16 +152,16 @@
             </ul>
         </li>
         <li>
-            <a href="#" id="edit-budget-info">Edit Budget Information</a>
+            <a href="#" data-toggle="modal" data-target="#budgetInfoModal">Edit Budget Information</a>
         </li>
         {if $exportEnabled == true}
         <li>
-            <a href="#" id="pdf-export" class="disabled">Download as PDF</a>
+            <a href="#" id="downloadPdfBtn" class="disabled">Download as PDF</a>
         </li>
         {/if}
         {if $saveEnabled == true}
         <li style="float:right">
-            <a href="#" id="save-budget" class="disabled">Save for Later</a>
+            <a href="#" id="saveBtn" class="disabled">Save for Later</a>
         </li>
         {/if}
     </ul>
@@ -169,20 +169,20 @@
 <br />
 <br />
 <div>
-    <table id="services-table" class="table table-bordered table-striped">
+    <table id="servicesTable" class="table table-bordered table-striped">
         <tr class="clinicalHeaders">
-            {foreach $headerInfo['clinical'] as $header}
+            {foreach $headerInfo.clinical as $header}
                 {if $header.title eq 'Visits'}
-                    <th id="hide-border">
+                    <th class="hide-border">
                         <div>
-                            <button type='button' id="prevVisitPage" disabled class="btn btn-primary fas fas fa-arrow-left">
+                            <button id="prevVisitsBtn" disabled class="btn btn-primary fas fas fa-arrow-left">
                             </button>
                         </div>
                     </th>
-                    <th id="hide-border" colspan="4">{$header.title}</th>
-                    <th>
+                    <th class="hide-border" colspan="4">{$header.title}</th>
+                    <th class="hide-border">
                         <div>
-                            <button type='button' id="nextVisitPage" disabled class="btn btn-primary fas fa-arrow-right">
+                            <button id="nextVisitsBtn" disabled class="btn btn-primary fas fa-arrow-right">
                             </button>
                         </div>
                     </th>
@@ -197,28 +197,36 @@
                 {/if}
             {/foreach}
         </tr>
-        <tr class="visitHeaders">
+        <tr class="visit-header-row">
             <td rowspan="2"></td>
             {for $i = 1 to 5}
-                <td><b class="visitHeader"></b></td>
+                <td><b class="visit-header"></b></td>
             {/for}
         </tr>
         <tr>
             {for $i = 1 to 5}
-                <td class="checkAllColumn" data-visitIndex="{$i}"></td>
+                <td class="check-all-column" data-id="{$i}">
+                    <button
+                        class='btn btn-success fas fa-check check-column-button'
+                        style='width: 40px'
+                        value='all'
+                        disabled
+                    >
+                    </button>
+                </td>
             {/for}
         </tr>
         <tbody id="clinical">
-        <tr id="clinical-empty">
+        <tr id="clinicalEmpty">
             <td colspan="{$headerCounts.clinical}">No services added</td>
         </tr>
         </tbody>
         <tr class="bg-secondary text-white">
             <td colspan="{$headerCounts.nonClinical - 1}" style="text-align: right; border-right-style:hidden;">Clinical Total:</td>
-            <td>$<span id="clinical-total">0.00</span></td>
+            <td>$<span id="clinicalTotal">0.00</span></td>
         </tr>
         <tr class="nonClinicalHeaders">
-            {foreach $headerInfo['nonClinical'] as $header}
+            {foreach $headerInfo.nonClinical as $header}
                 <th
                     {if $header.colspan}colspan="{$header.colspan}"{/if}
                     {if $header.style}style="{$header.style}"{/if}
@@ -228,13 +236,13 @@
             {/foreach}
         </tr>
         <tbody id="non_clinical">
-        <tr id="non_clinical-empty">
+        <tr id="non_clinicalEmpty">
             <td colspan="{$headerCounts.nonClinical}">No services added</td>
         </tr>
         </tbody>
         <tr class="bg-secondary text-white">
             <td colspan="{$headerCounts.clinical - 1}" style="text-align: right; border-right-style:hidden;">Non-Clinical Total:</td>
-            <td>$<span id="non_clinical-total">0.00</span></td>
+            <td>$<span id="non_clinicalTotal">0.00</span></td>
         </tr>
         <tr class="total-row">
             <td class="total-header" colspan="{$headerCounts.nonClinical - 1}" style="text-align: right; border-right-style:hidden;">Grand Total:</b></td>
@@ -245,9 +253,9 @@
     </form>
     {if $submitEnabled != 0}
         <div class="action-button">
-            <button id="submit" class="btn btn-success" data-toggle="modal" data-target="#submit-confirmation-popup" disabled>Submit</button>
+            <button id="submit" class="btn btn-success" data-toggle="modal" data-target="#submitModal" disabled>Submit</button>
         </div>
-        <div class="modal fade" id="submit-confirmation-popup" tabindex="-1" role="dialog" aria-labelledby="submit-confirmation-popup" aria-hidden="true">
+        <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="submitModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -260,10 +268,10 @@
                         <div>
                             <p>{$submissionDialogBody}</p>
                         </div>
-                        <form id="submission-form" onsubmit="return false;">
+                        <form id="submissionForm" onsubmit="return false;">
                             <div class="form-row">
-                                <label for="budget_title"><b>Budget Title (for future reference):</b></label>
-                                <input id="budget_title" class="form-control info-field">
+                                <label for="userTitleInputSubmit"><b>Budget Title (for future reference):</b></label>
+                                <input id="userTitleInputSubmit" class="form-control info-field">
                             </div>
                             {foreach $submissionFields as $field}
                                 <div class="form-row">
@@ -298,13 +306,13 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="submit-confirm" class="btn btn-primary">Submit</button>
+                        <button type="button" id="confirmSubmitBtn" class="btn btn-primary">Submit</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="submit-success-popup" tabindex="-1" role="dialog" aria-labelledby="submit-success-popup" aria-hidden="true">
+        <div class="modal fade" id="submitSuccessModal" tabindex="-1" role="dialog" aria-labelledby="submitSuccessModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
