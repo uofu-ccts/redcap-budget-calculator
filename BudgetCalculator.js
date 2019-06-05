@@ -239,7 +239,7 @@ $(document).ready(function(){
                     $el: $('#fundingType'),
                     event: 'change',
                     handler: function() {
-                        UIOWA_BudgetCalculator.updateTotals();
+                        UIOWA_BudgetCalculator.updateTotals($(this).val());
                     }
                 },
                 {
@@ -710,6 +710,17 @@ var UIOWA_BudgetCalculator = {
             subtotal: 0.00
         };
 
+        var costDifference = false;
+
+        if (savedBudgetInfo) {
+            costDifference = lineItemObj.your_cost != savedBudgetInfo.your_cost;
+
+            if (costDifference) {
+                var newCostGreater = lineItemObj.your_cost > savedBudgetInfo.your_cost;
+                var rowBgColor = newCostGreater ? 'pink' : 'GreenYellow';
+            }
+        }
+
         var serviceType = serviceInfo.clinical == '1' ? 'clinical' : 'non_clinical';
         var visitsCell = "<td class='non_clinical-blank' colspan='7'></td>";
 
@@ -732,12 +743,16 @@ var UIOWA_BudgetCalculator = {
                 <td class='visit-column'></td>
                 <td class='visit-column'></td>
                 <td class='visit-column'></td>
-                <td>$<span class='line-total-per-patient'>0.00</span></td>
+                <td class='line-total-per-patient'>0.00</td>
             `
         }
 
         var $lineItem = $(`
-            <tr class='service-line-item' oninput='UIOWA_BudgetCalculator.updateTotals()'>
+            <tr
+                class='service-line-item'
+                oninput='UIOWA_BudgetCalculator.updateTotals()'
+                ${savedBudgetInfo ? `data-bg-color="${rowBgColor}" style="background-color:${rowBgColor}"` : ''}
+            >
                 <td style='border-right-style:hidden;'>
                     <span>
                         <button class='delete btn btn-link' title='Delete' data-toggle='tooltip'>
@@ -750,12 +765,22 @@ var UIOWA_BudgetCalculator = {
                     <br /><span> ${lineItemObj.service} </span>
                     <i class='fas fa-info-circle info' style='color:#3E72A8' data-toggle='tooltip' title=' ${serviceInfo.service_description} '></i>
                 </td>
-                <td>$<span class='base-cost'> ${this.formatAsCurrency(lineItemObj.base_cost)} </span></td>
-                <td>$<span class='your-cost'> ${this.formatAsCurrency(lineItemObj.your_cost)} </span></td>
+                <td class='base-cost'>${this.formatAsCurrency(lineItemObj.base_cost)}</td>
+                <td class='your-cost'>${this.formatAsCurrency(lineItemObj.your_cost)}
+                ${costDifference ?
+                    `<i
+            class='fas fa-exclamation-triangle cost-alert'
+            style='color: ${newCostGreater ? 'red' : 'green'}'
+            data-toggle='tooltip'
+            title="
+            The cost of this service has ${newCostGreater ? 'increased' : 'decreased'} from ${this.formatAsCurrency(savedBudgetInfo.your_cost)} to ${this.formatAsCurrency(lineItemObj.your_cost)} since this budget was last saved.">
+                    </i>`
+            : ''}
+                </td>
                 <td><input class='qty-count' type='number' min='1' value='${lineItemObj.service_quantity}'></td>
-                <td> ${lineItemObj.unit_label} </td>
+                <td>${lineItemObj.unit_label}</td>
                 ${visitsCell}
-                <td>$<span class='line-total'>0.00</span></td>
+                <td class='line-total'>$0.00</td>
             </tr>
         `);
 
@@ -824,7 +849,7 @@ var UIOWA_BudgetCalculator = {
     },
 
     // Update budget totals
-    updateTotals: function() {
+    updateTotals: function(newFundingType, oldFundingType) {
         var self = this;
         var totals = {
             'clinical': 0,
@@ -849,18 +874,22 @@ var UIOWA_BudgetCalculator = {
                 );
 
                 var subtotal = 0;
-                var newServiceCost = Number(serviceInfo[$('#fundingType').val()]);
                 var $tableLineItem = $($serviceTable[lineIndex]);
                 var serviceQty = Number($tableLineItem.find('.qty-count').val()); // Get latest qty from table
 
-                // todo alert if cost changed
-                if (newServiceCost != lineItem.your_cost) {
-                    console.log('changed')
+                if (newFundingType) {
+                    var newCost = serviceInfo[newFundingType];
+
+                    $tableLineItem
+                        .find('.your-cost')
+                        .html(self.formatAsCurrency(newCost));
+
+                    self.currentRequest[serviceType][lineIndex].your_cost = newCost;
                 }
 
                 // Update object and table with line totals
                 if (serviceType == 'clinical') {
-                    var costPerSubject = newServiceCost * visitCount;
+                    var costPerSubject = lineItem.your_cost * visitCount;
                     subtotal = costPerSubject * serviceQty;
 
                     lineItem.visit_count = _.filter(
@@ -876,12 +905,11 @@ var UIOWA_BudgetCalculator = {
                         .html(self.formatAsCurrency(costPerSubject));
                 }
                 else {
-                    subtotal = serviceQty * newServiceCost;
+                    subtotal = serviceQty * lineItem.your_cost;
                 }
 
                 totals[serviceType] += subtotal;
 
-                lineItem.your_cost = newServiceCost;
                 lineItem.service_quantity = serviceQty;
                 lineItem.subtotal = subtotal;
                 $tableLineItem
@@ -980,15 +1008,21 @@ var UIOWA_BudgetCalculator = {
 
         // update (un)check all column buttons
         $('.check-all-column').each(function (index, column) {
-            var allVisitsChecked = $.map(UIOWA_BudgetCalculator.visitGrid, function (row) {
+                var noClinicalServices = $('#clinical').find('.service-line-item').length == 0;
+                var allVisitsChecked = $.map(UIOWA_BudgetCalculator.visitGrid, function (row) {
                 return row[UIOWA_BudgetCalculator.visitPage][index];
             });
 
-            allVisitsChecked = allVisitsChecked.every(function (value) {
-                return value == true
-            });
+            if (noClinicalServices) {
+                allVisitsChecked = false;
+            }
+            else {
+                allVisitsChecked = allVisitsChecked.every(function (value) {
+                    return value == true
+                });
+            }
 
-            self.toggleCheckAllButton($(column).find('.check-column-button'), allVisitsChecked)
+            self.toggleCheckAllButton($(column).find('.check-column-button'), allVisitsChecked, noClinicalServices)
         });
 
         this.updateTotals();
@@ -1065,14 +1099,14 @@ var UIOWA_BudgetCalculator = {
                 $.each(lineItems[lineIndex], function (key, value) { // columns
                     // Format dollar amounts
                     if ($.inArray(key, currencyHeaders) !== -1) {
-                        pdfFormattedRequest[serviceType][lineIndex][key] = '$' + UIOWA_BudgetCalculator.formatAsCurrency(value);
+                        pdfFormattedRequest[serviceType][lineIndex][key] = UIOWA_BudgetCalculator.formatAsCurrency(value);
                     }
                 })
             });
 
             pdfFormattedRequest[serviceType].push({
                 'cost_per_subject': serviceType == 'clinical' ? 'Clinical Total:' : 'Non-Clinical Total:',
-                'subtotal': '$' + UIOWA_BudgetCalculator.formatAsCurrency(
+                'subtotal': UIOWA_BudgetCalculator.formatAsCurrency(
                     UIOWA_BudgetCalculator.currentRequest[serviceType + '_total']
                 )
             });
@@ -1128,7 +1162,7 @@ var UIOWA_BudgetCalculator = {
             startY: doc.autoTable.previous.finalY
         });
 
-        doc.text('Grand Total: $' + UIOWA_BudgetCalculator.formatAsCurrency(
+        doc.text('Grand Total: ' + UIOWA_BudgetCalculator.formatAsCurrency(
                 UIOWA_BudgetCalculator.currentRequest.grand_total
             ), 650, doc.autoTable.previous.finalY + 25);
 
@@ -1235,6 +1269,9 @@ var UIOWA_BudgetCalculator = {
                         .html('<i class="fas fa-check"></i> Saved')
                         .removeClass('saving');
                     UIOWA_BudgetCalculator.toggleSaving(false);
+
+                    $('.cost-alert').remove();
+                    $('.service-line-item').css('background-color', '')
                 }
             }
         });
@@ -1249,7 +1286,7 @@ var UIOWA_BudgetCalculator = {
         $('#visit_count_default').val(budgetInfo.visit_total);
         $('#userTitleInput').val(budgetInfo.budget_title);
         $('#fundingType')
-            .val(budgetInfo.funding_type)
+            .val(budgetInfo.funding_type) //todo disable if cost alerts
             .find('option[value=""]').prop('disabled', true);
 
         $.each(budgetInfo.repeat_instances, function (index, lineItem) {
@@ -1309,7 +1346,9 @@ var UIOWA_BudgetCalculator = {
 
     // Format dollar amounts
     formatAsCurrency: function(value) {
-        return Number(value).toLocaleString("en-US", {style: "decimal", minimumFractionDigits: 2})
+        var formattedNumber = Number(value).toLocaleString("en-US", {style: "decimal", minimumFractionDigits: 2});
+
+        return '$' + formattedNumber;
     },
 
     // Get current datetime

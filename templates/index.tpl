@@ -223,7 +223,7 @@
         </tbody>
         <tr class="bg-secondary text-white">
             <td colspan="{$headerCounts.nonClinical - 1}" style="text-align: right; border-right-style:hidden;">Clinical Total:</td>
-            <td>$<span id="clinicalTotal">0.00</span></td>
+            <td id="clinicalTotal">$0.00</td>
         </tr>
         <tr class="nonClinicalHeaders">
             {foreach $headerInfo.nonClinical as $header}
@@ -242,11 +242,11 @@
         </tbody>
         <tr class="bg-secondary text-white">
             <td colspan="{$headerCounts.clinical - 1}" style="text-align: right; border-right-style:hidden;">Non-Clinical Total:</td>
-            <td>$<span id="non_clinicalTotal">0.00</span></td>
+            <td id="non_clinicalTotal">$0.00</td>
         </tr>
         <tr class="total-row">
             <td class="total-header" colspan="{$headerCounts.nonClinical - 1}" style="text-align: right; border-right-style:hidden;">Grand Total:</b></td>
-            <td>$<span class="total">0.00</span></td>
+            <td class="total">$0.00</td>
         </tr>
     </table>
     <form id="dirtyCheck" name="dirtyCheck" onsubmit="return false;">

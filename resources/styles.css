@@ -19,7 +19,7 @@ table {
     vertical-align: middle;
 }
 
-.info {
+.info, .cost-alert {
     cursor: pointer;
     margin: 0 5px;
 }
