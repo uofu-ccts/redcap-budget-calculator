@@ -376,9 +376,39 @@ class BudgetCalculator extends AbstractExternalModule
 
         return $output;
     }
+
+    /**
+     * Call this method before handling API calls with sensitive data. If the caller is a third-party 
+     * service using the endpoint with a valid token, it returns true. Also, if the user 
+     * is logged in to REDCap (calling from an external module) this will also return true.
+     * 
+     * @return bool authorized to use this API
+     */
+    public function verifyApiCaller() : bool
+    {
+        $verified = false;
+
+        // check for NOAUTH and no-auth-pages configuration for current page
+        // these two settings must be present for the endpoint to be visible outside of REDCap
+        if (isset($_GET['NOAUTH']) && in_array($_GET['page'], parent::getConfig()["no-auth-pages"])) 
+        {
+            // MODIFY THIS CHECK for the security needs of your system.
+            // This hardcoded token should be changed and pulled from a secure location,
+            // if using with a third-party service.
+            $rctoken = $_REQUEST['rctoken'];
+            if ($rctoken === 'ca5d63d58b507615c328da941270ddf0')//IMPORTANT: modify token and pull from a secure location
+            {
+                $verified = true;
+            }
+        }
+        // if endpoint is not externally accessible, then this endpoint user has been authenticated by REDCap
+        else
+        {
+            $verified = true;
+        }
+
+
+        return $verified;
+    }
 }
 ?>
-
-
-
-
