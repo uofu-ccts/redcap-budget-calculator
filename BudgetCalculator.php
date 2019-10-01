@@ -410,5 +410,221 @@ class BudgetCalculator extends AbstractExternalModule
 
         return $verified;
     }
+
+    public function getBudgetCalculatorData()
+    {
+        $bcResult = array();
+
+        $sourcePID = $this->getSystemSetting("reference-pid");
+        $submissionFieldLookup = [];
+        $rateFieldLookup = [];
+        $servicesData = \REDCap::getData($sourcePID, 'array');
+        $savedBudgetData = array();
+        $savedBudgetLookup = array();
+
+        $result = $this->query("
+                SELECT element_enum
+                FROM redcap_metadata
+                WHERE project_id = $sourcePID AND field_name = 'per_service'
+            ");
+
+            $servicesQuantityLabels = db_fetch_assoc($result);
+
+        $headerCounts = array(
+            'clinical' => 0,
+            'nonClinical' => 0
+        );
+
+        foreach (self::$headerInfo as $index => $tableHeaders) {
+            foreach ($tableHeaders as $header) {
+                if ($header['colspan']) {
+                    $headerCounts[$index] += $header['colspan'];
+                }
+                else {
+                    $headerCounts[$index] += 1;
+                }
+            }
+        }
+
+        // Get rate fields
+        $result = $this->query("
+            SELECT
+              field_name,
+              element_label,
+              element_enum
+            FROM redcap_metadata AS m
+            WHERE project_id = $sourcePID
+            ORDER BY field_order
+        ");
+
+        while ($row = db_fetch_assoc($result)) {
+            $len = strlen($row['field_name']);
+
+            if (substr($row['field_name'], $len - 5, $len) == '_rate') {
+                $field = array(
+                    'value' => $row['field_name'],
+                    'label' => $row['element_label'],
+                    'calc' => $row['element_enum']
+                );
+
+                array_push($rateFieldLookup, $field);
+            }
+        }
+
+        // Prepare additional fields if project submission is enabled
+        if ($this->getSystemSetting("submission-pid") !== null && $this->getSystemSetting('submission-target') == 1) {
+            $targetPID = $this->getSystemSetting("submission-pid");
+
+            $result = $this->query("
+                SELECT
+                  field_name,
+                  element_type,
+                  element_label,
+                  element_enum,
+                  element_note,
+                  element_validation_type,
+                  field_req,
+                  regex_js
+                FROM redcap_metadata AS m
+                LEFT JOIN redcap_validation_types AS v
+                  ON m.element_validation_type = v.validation_name
+                WHERE m.project_id = $targetPID
+                  AND m.form_name = 'requester_info'
+                  AND m.misc = '@USER-DEFINED'
+                ORDER BY field_order
+            ");
+
+            while ($row = db_fetch_assoc($result)) {
+                if ($row['element_type'] == 'yesno') {
+                    $row['element_type'] = 'radio';
+                    $row['element_enum'] = '1,Yes\n0,No';
+                }
+                else if ($row['element_type'] == 'truefalse') {
+                    $row['element_type'] = 'radio';
+                    $row['element_enum'] = '1,True\n0,False';
+                }
+
+                $formattedChoices = [];
+                $choices = explode('\n', $row['element_enum']);
+
+                foreach ($choices as $choiceStr) {
+                    $splitChoice = explode(',', $choiceStr);
+
+                    $newChoice = array(
+                        'value' => $splitChoice[0],
+                        'label' => $splitChoice[1]
+                    );
+
+                    array_push($formattedChoices, $newChoice);
+                }
+
+                $row['choices'] = $formattedChoices;
+
+                array_push($submissionFieldLookup, $row);
+            }
+
+            // self::$smarty->assign('submissionFields', $submissionFieldLookup);//TODO add to the final result
+            $bcResult['submissionFieldLookup'] = $submissionFieldLookup;
+        }
+        
+        // If logged in user, get info
+        if (USERID) {
+            $result = $this->query("
+                  SELECT
+                      username AS 'username',
+                      user_firstname AS 'first_name',
+                      user_lastname AS 'last_name',
+                      user_email AS 'email'
+                  FROM redcap_user_information
+                  WHERE username = '" . USERID . "'
+                ");
+            $userInfo = db_fetch_assoc($result);
+
+            foreach ($submissionFieldLookup as $index => $value) {
+                $fieldName = $value['field_name'];
+
+                if ($userInfo[$fieldName]) {
+                    $submissionFieldLookup[$index]['value'] = $userInfo[$fieldName];
+                }
+            }
+
+            if ($this->getSystemSetting("save-token") !== null && $this->getSystemSetting('save-for-later')) {
+                $targetSavePID = $this->getProjectIdFromToken($this->getSystemSetting("save-token"));
+
+                // Get previously submitted budgets
+                $result = $this->query("
+                      SELECT
+                        record,
+                        event_id
+                      FROM redcap_data
+                      WHERE project_id = $targetSavePID
+                        AND field_name = 'username'
+                        AND value = '" . USERID . "'
+                    ");
+
+                $recordIds = array();
+
+                while ($row = db_fetch_assoc($result)) {
+                    array_push($recordIds, $row['record']);
+                    $eventId = $row['event_id'];
+                }
+
+                $getData = \REDCap::getData(
+                    array(
+                        'project_id' => $targetSavePID,
+                        'records' => $recordIds
+                    )
+                );
+
+//                $savedBudgetData = $getData;
+
+                $index = 0;
+
+                foreach ($getData as $record => $data) {
+                    $savedBudgetData[$record] = $data[$eventId];
+                    $savedBudgetData[$record]['repeat_instances'] = $data['repeat_instances'][$eventId]['service_info'];
+
+                    $savedBudgetLookup[$index]['label'] = $data[$eventId]['budget_title'];
+                    $savedBudgetLookup[$index]['value'] = $record;
+                    $index++;
+                }
+
+                // self::$smarty->assign('savedBudgetLookup', $savedBudgetLookup);//TODO add to the final result
+                $bcResult['savedBudgetLookup'] = $savedBudgetLookup;
+            }
+        }
+
+        //adding to the former Smarty values to the result
+        $bcResult['logo'] = $this->getUrl('/resources/logo.png');//URI
+        $bcResult['headerInfo'] = self::$headerInfo;
+        $bcResult['headerCounts'] = $headerCounts;
+        $bcResult['submitEnabled'] = $this->getSystemSetting('submission-target');
+        $bcResult['exportEnabled'] = $this->getSystemSetting('export-enabled');
+        $bcResult['saveEnabled'] = $this->getSystemSetting('save-for-later') && !isset($_GET['NOAUTH']);
+        $bcResult['submissionDialogBody'] = $this->getSystemSetting('submission-dialog');
+        $bcResult['welcomeDialogBody'] = $this->getSystemSetting('welcome-dialog');
+        $bcResult['termsText'] = $this->getSystemSetting('terms-text');
+        $bcResult['rateFields'] = $rateFieldLookup;
+
+
+        //adding to the former JS values to the result
+        $bcResult['servicesData'] = $servicesData;
+        $bcResult['servicesQuantityLabels'] = $servicesQuantityLabels;
+        $bcResult['rateFieldLookup'] = $rateFieldLookup;
+        $bcResult['savedBudgetData'] = $savedBudgetData;// TODO: not shown to produce anything (commented out) ... needs fixing?
+        $bcResult['submissionFieldLookup'] = $submissionFieldLookup;
+        $bcResult['USERID'] = USERID;// TODO: just produces a string of itself ... is this correct?
+        $bcResult['self_apiUrl'] = self::$apiUrl;//URI
+        $bcResult['requestHandlerUrl'] = $this->getUrl('requestHandler.php');//URI
+        
+
+
+
+        //remove this line of code
+        // $bcResult['targetSavePID'] = $targetSavePID;
+
+        return $bcResult;
+
+    }
 }
 ?>
