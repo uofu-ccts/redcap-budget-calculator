@@ -524,7 +524,7 @@ class BudgetCalculator extends AbstractExternalModule
             }
 
             // self::$smarty->assign('submissionFields', $submissionFieldLookup);//TODO add to the final result
-            $bcResult['submissionFieldLookup'] = $submissionFieldLookup;
+            $bcResult['submissionFieldLookup'] = $submissionFieldLookup; //TODO: Make accessible from API
         }
         
         // If logged in user, get info
@@ -590,41 +590,131 @@ class BudgetCalculator extends AbstractExternalModule
                 }
 
                 // self::$smarty->assign('savedBudgetLookup', $savedBudgetLookup);//TODO add to the final result
-                $bcResult['savedBudgetLookup'] = $savedBudgetLookup;
+                $bcResult['savedBudgetLookup'] = $savedBudgetLookup; //TODO: Make accessible from API
             }
         }
 
         //adding to the former Smarty values to the result
-        $bcResult['logo'] = $this->getUrl('/resources/logo.png');//URI
-        $bcResult['headerInfo'] = self::$headerInfo;
-        $bcResult['headerCounts'] = $headerCounts;
-        $bcResult['submitEnabled'] = $this->getSystemSetting('submission-target');
-        $bcResult['exportEnabled'] = $this->getSystemSetting('export-enabled');
-        $bcResult['saveEnabled'] = $this->getSystemSetting('save-for-later') && !isset($_GET['NOAUTH']);
-        $bcResult['submissionDialogBody'] = $this->getSystemSetting('submission-dialog');
-        $bcResult['welcomeDialogBody'] = $this->getSystemSetting('welcome-dialog');
-        $bcResult['termsText'] = $this->getSystemSetting('terms-text');
-        $bcResult['rateFields'] = $rateFieldLookup;
+        $bcResult['submitEnabled'] = $this->getSystemSetting('submission-target'); //TODO: Make accessible from API
+        $bcResult['exportEnabled'] = $this->getSystemSetting('export-enabled'); //TODO: Make accessible from API
+        $bcResult['saveEnabled'] = $this->getSystemSetting('save-for-later') && !isset($_GET['NOAUTH']); //TODO: Make accessible from API
+
+        $bcResult['rateFields'] = $rateFieldLookup; //TODO: Make accessible from API
 
 
         //adding to the former JS values to the result
+        $bcResult['rateFieldLookup'] = $rateFieldLookup; //TODO: Make accessible from API
+        $bcResult['savedBudgetData'] = $savedBudgetData;// TODO: not shown to produce anything (commented out) ... needs fixing? //TODO: Make accessible from API
+        $bcResult['submissionFieldLookup'] = $submissionFieldLookup; //TODO: Make accessible from API
+        $bcResult['USERID'] = USERID;// TODO: just produces a string of itself ... is this correct? //TODO: Make accessible from API
+
+
+        //////////////////
+        // Service catalog
+
         $bcResult['servicesData'] = $servicesData;
-        $bcResult['servicesQuantityLabels'] = $servicesQuantityLabels;
-        $bcResult['rateFieldLookup'] = $rateFieldLookup;
-        $bcResult['savedBudgetData'] = $savedBudgetData;// TODO: not shown to produce anything (commented out) ... needs fixing?
-        $bcResult['submissionFieldLookup'] = $submissionFieldLookup;
-        $bcResult['USERID'] = USERID;// TODO: just produces a string of itself ... is this correct?
-        $bcResult['self_apiUrl'] = self::$apiUrl;//URI
-        $bcResult['requestHandlerUrl'] = $this->getUrl('requestHandler.php');//URI
         
 
+        //////////////////
+        // UI values for Budget Calculator
+
+        $bcResult['submissionDialogBody'] = $this->getSystemSetting('submission-dialog');
+        $bcResult['welcomeDialogBody'] = $this->getSystemSetting('welcome-dialog');
+        $bcResult['termsText'] = $this->getSystemSetting('terms-text');
+
+        $bcResult['servicesQuantityLabels'] = $servicesQuantityLabels;
+
+        //clinical and non-clinical headers
+        $bcResult['headerInfo'] = self::$headerInfo;
+
+        //Literally the number of columns in the clinical and non-clinical budget tables
+        $bcResult['headerCounts'] = $headerCounts;
 
 
-        //remove this line of code
-        // $bcResult['targetSavePID'] = $targetSavePID;
+        ///////////////
+        // values for non-BC parts of app
+
+        //URIs
+        $bcResult['logo'] = $this->getUrl('/resources/logo.png');//URI
+        $bcResult['requestHandlerUrl'] = $this->getUrl('requestHandler.php');//URI
+        $bcResult['self_apiUrl'] = self::$apiUrl;//URI
+
 
         return $bcResult;
 
+    }
+
+    /**
+     * Returns the service catalog for use in APIs.
+     */
+    public function getServiceCatalog()
+    {
+        $sourcePID = $this->getSystemSetting("reference-pid");
+        $servicesData = \REDCap::getData($sourcePID, 'array');
+
+        return $servicesData;
+    }
+
+    /**
+     * Returns URIs of resources the client will need.
+     */
+    public function getResourceURIs()
+    {
+        $resources = array();
+
+        $resources['logo'] = $this->getUrl('/resources/logo.png');//URI
+        $resources['requestHandlerUrl'] = $this->getUrl('requestHandler.php');//URI //TODO: this should be an API URI (not sure if that will break something)
+        $resources['self_apiUrl'] = self::$apiUrl;//URI
+
+        return $resources;
+    }
+
+    /**
+     * Returns URIs of resources the client will need.
+     */
+    public function getUiText()
+    {
+        $uiresources = array();
+
+        $uiresources['submissionDialogBody'] = $this->getSystemSetting('submission-dialog');
+        $uiresources['welcomeDialogBody'] = $this->getSystemSetting('welcome-dialog');
+        $uiresources['termsText'] = $this->getSystemSetting('terms-text');
+
+        $sourcePID = $this->getSystemSetting("reference-pid");
+
+        $result = $this->query("
+                SELECT element_enum
+                FROM redcap_metadata
+                WHERE project_id = $sourcePID AND field_name = 'per_service'
+            ");
+
+            $servicesQuantityLabels = db_fetch_assoc($result);
+
+        $headerCounts = array(
+            'clinical' => 0,
+            'nonClinical' => 0
+        );
+
+        foreach (self::$headerInfo as $index => $tableHeaders) {
+            foreach ($tableHeaders as $header) {
+                if ($header['colspan']) {
+                    $headerCounts[$index] += $header['colspan'];
+                }
+                else {
+                    $headerCounts[$index] += 1;
+                }
+            }
+        }
+
+        $uiresources['servicesQuantityLabels'] = $servicesQuantityLabels;
+
+        //clinical and non-clinical headers ... Hard coded in this file, currently
+        $uiresources['headerInfo'] = self::$headerInfo;
+
+        //Literally the number of columns in the clinical and non-clinical budget tables
+        $uiresources['headerCounts'] = $headerCounts;
+
+        return $uiresources;
     }
 }
 ?>
