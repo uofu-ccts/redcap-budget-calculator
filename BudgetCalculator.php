@@ -411,6 +411,7 @@ class BudgetCalculator extends AbstractExternalModule
         return $verified;
     }
 
+//TODO: will remove getBudgetCalculatorData() method, as it smaller methods handle all of its tasks now.
     public function getBudgetCalculatorData()
     {
         $bcResult = array();
@@ -523,8 +524,7 @@ class BudgetCalculator extends AbstractExternalModule
                 array_push($submissionFieldLookup, $row);
             }
 
-            // self::$smarty->assign('submissionFields', $submissionFieldLookup);//TODO add to the final result
-            $bcResult['submissionFieldLookup'] = $submissionFieldLookup; //TODO: Make accessible from API
+            $bcResult['submissionFieldLookup'] = $submissionFieldLookup;
         }
         
         // If logged in user, get info
@@ -589,24 +589,23 @@ class BudgetCalculator extends AbstractExternalModule
                     $index++;
                 }
 
-                // self::$smarty->assign('savedBudgetLookup', $savedBudgetLookup);//TODO add to the final result
-                $bcResult['savedBudgetLookup'] = $savedBudgetLookup; //TODO: Make accessible from API
+                $bcResult['savedBudgetLookup'] = $savedBudgetLookup;
             }
         }
 
         //adding to the former Smarty values to the result
-        $bcResult['submitEnabled'] = $this->getSystemSetting('submission-target'); //TODO: Make accessible from API
-        $bcResult['exportEnabled'] = $this->getSystemSetting('export-enabled'); //TODO: Make accessible from API
-        $bcResult['saveEnabled'] = $this->getSystemSetting('save-for-later') && !isset($_GET['NOAUTH']); //TODO: Make accessible from API
+        $bcResult['submitEnabled'] = $this->getSystemSetting('submission-target');
+        $bcResult['exportEnabled'] = $this->getSystemSetting('export-enabled');
+        $bcResult['saveEnabled'] = $this->getSystemSetting('save-for-later') && !isset($_GET['NOAUTH']);
 
-        $bcResult['rateFields'] = $rateFieldLookup; //TODO: Make accessible from API
+        $bcResult['rateFields'] = $rateFieldLookup;
 
 
         //adding to the former JS values to the result
-        $bcResult['rateFieldLookup'] = $rateFieldLookup; //TODO: Make accessible from API
-        $bcResult['savedBudgetData'] = $savedBudgetData;// TODO: not shown to produce anything (commented out) ... needs fixing? //TODO: Make accessible from API
-        $bcResult['submissionFieldLookup'] = $submissionFieldLookup; //TODO: Make accessible from API
-        $bcResult['USERID'] = USERID;// TODO: just produces a string of itself ... is this correct? //TODO: Make accessible from API
+        $bcResult['rateFieldLookup'] = $rateFieldLookup;
+        $bcResult['savedBudgetData'] = $savedBudgetData;
+        $bcResult['submissionFieldLookup'] = $submissionFieldLookup;
+        $bcResult['USERID'] = USERID;// TODO: just produces a string of itself ... is this correct?
 
 
         //////////////////
@@ -715,6 +714,213 @@ class BudgetCalculator extends AbstractExternalModule
         $uiresources['headerCounts'] = $headerCounts;
 
         return $uiresources;
+    }
+
+    /**
+     * Returns submission fields the client will need as 'submissionFieldLookup'.
+     * Additions may happen in the getSavedBudget() function, so do not return
+     * to the API until that method is called.
+     */
+    private function getSubmissionFields()
+    {
+        $submissionFields = array();
+        $submissionFieldLookup = [];
+
+        // Prepare additional fields if project submission is enabled
+        if ($this->getSystemSetting("submission-pid") !== null && $this->getSystemSetting('submission-target') == 1) {
+            
+            $targetPID = $this->getSystemSetting("submission-pid");
+
+            $result = $this->query("
+                SELECT
+                  field_name,
+                  element_type,
+                  element_label,
+                  element_enum,
+                  element_note,
+                  element_validation_type,
+                  field_req,
+                  regex_js
+                FROM redcap_metadata AS m
+                LEFT JOIN redcap_validation_types AS v
+                  ON m.element_validation_type = v.validation_name
+                WHERE m.project_id = $targetPID
+                  AND m.form_name = 'requester_info'
+                  AND m.misc = '@USER-DEFINED'
+                ORDER BY field_order
+            ");
+
+            while ($row = db_fetch_assoc($result)) {
+
+                if ($row['element_type'] == 'yesno') {
+                    $row['element_type'] = 'radio';
+                    $row['element_enum'] = '1,Yes\n0,No';
+                }
+                else if ($row['element_type'] == 'truefalse') {
+                    $row['element_type'] = 'radio';
+                    $row['element_enum'] = '1,True\n0,False';
+                }
+
+                $formattedChoices = [];
+                $choices = explode('\n', $row['element_enum']);
+
+                foreach ($choices as $choiceStr) {
+                    $splitChoice = explode(',', $choiceStr);
+
+                    $newChoice = array(
+                        'value' => $splitChoice[0],
+                        'label' => $splitChoice[1]
+                    );
+
+                    array_push($formattedChoices, $newChoice);
+                }
+
+                $row['choices'] = $formattedChoices;
+
+                array_push($submissionFieldLookup, $row);
+            }
+
+            $submissionFields['submissionFieldLookup'] = $submissionFieldLookup;
+        }
+
+        return $submissionFields;
+    }
+
+    /**
+     * Saving budgets appears to have been disabled intentionally. We can revisit this after the
+     * UI/UX changes have been shown to work.
+     * 
+     * The way I've set it up here, the intial values of 'submissionFieldLookup' is taken care of and included in
+     * the returned array with 'savedBudgetLookup'. Some additions to 'submissionFieldLookup' could happen in this
+     * method, so it should be used to pass to the API.
+     * 
+     * I have not tested the budget portion of this method, but it should be close to a working state.
+     */
+    public function getSavedBudget()
+    {
+        $savedBudget = array();
+        $savedBudgetData = array();
+        $submissionFieldLookup = $this->getSubmissionFields()['submissionFieldLookup'];//carried over from submission fields function
+
+        $savedBudgetLookup = array();
+
+                
+        // If logged in user, get info
+        if (USERID) {
+            $result = $this->query("
+                  SELECT
+                      username AS 'username',
+                      user_firstname AS 'first_name',
+                      user_lastname AS 'last_name',
+                      user_email AS 'email'
+                  FROM redcap_user_information
+                  WHERE username = '" . USERID . "'
+                ");
+            $userInfo = db_fetch_assoc($result);
+
+            foreach ($submissionFieldLookup as $index => $value) {
+                $fieldName = $value['field_name'];
+
+                if ($userInfo[$fieldName]) {
+                    $submissionFieldLookup[$index]['value'] = $userInfo[$fieldName];
+                }
+            }
+
+            if ($this->getSystemSetting("save-token") !== null && $this->getSystemSetting('save-for-later')) {
+                $targetSavePID = $this->getProjectIdFromToken($this->getSystemSetting("save-token"));
+
+                // Get previously submitted budgets
+                $result = $this->query("
+                      SELECT
+                        record,
+                        event_id
+                      FROM redcap_data
+                      WHERE project_id = $targetSavePID
+                        AND field_name = 'username'
+                        AND value = '" . USERID . "'
+                    ");
+
+                $recordIds = array();
+
+                while ($row = db_fetch_assoc($result)) {
+                    array_push($recordIds, $row['record']);
+                    $eventId = $row['event_id'];
+                }
+
+                $getData = \REDCap::getData(
+                    array(
+                        'project_id' => $targetSavePID,
+                        'records' => $recordIds
+                    )
+                );
+
+//This appears to have been disabled intentially, ... perhaps it was part way through a change. Not sure about its working state.
+//                $savedBudgetData = $getData;
+
+                $index = 0;
+
+                foreach ($getData as $record => $data) {
+                    $savedBudgetData[$record] = $data[$eventId];
+                    $savedBudgetData[$record]['repeat_instances'] = $data['repeat_instances'][$eventId]['service_info'];
+
+                    $savedBudgetLookup[$index]['label'] = $data[$eventId]['budget_title'];
+                    $savedBudgetLookup[$index]['value'] = $record;
+                    $index++;
+                }
+
+                $savedBudget['savedBudgetLookup'] = $savedBudgetLookup;
+            }
+        }
+        
+        $savedBudget['submissionFieldLookup'] = $submissionFieldLookup;
+        $savedBudget['savedBudgetData'] = $savedBudgetData;// TODO: not shown to produce anything (commented out) ... needs fixing?
+
+        return $savedBudget;
+    }
+
+    public function getRateFields()
+    {
+        $rateFieldLookup = [];
+        $sourcePID = $this->getSystemSetting("reference-pid");
+
+        // Get rate fields
+        $result = $this->query("
+            SELECT
+              field_name,
+              element_label,
+              element_enum
+            FROM redcap_metadata AS m
+            WHERE project_id = $sourcePID
+            ORDER BY field_order
+        ");
+
+        while ($row = db_fetch_assoc($result)) {
+            $len = strlen($row['field_name']);
+
+            if (substr($row['field_name'], $len - 5, $len) == '_rate') {
+                $field = array(
+                    'value' => $row['field_name'],
+                    'label' => $row['element_label'],
+                    'calc' => $row['element_enum']
+                );
+
+                array_push($rateFieldLookup, $field);
+            }
+        }
+
+        return $rateFields['rateFields'] = $rateFieldLookup;
+    }
+
+    public function getSystemSettings($authSetting)
+    {
+        $theSettings = [];
+
+        $theSettings['submitEnabled'] = $this->getSystemSetting('submission-target');
+        $theSettings['exportEnabled'] = $this->getSystemSetting('export-enabled');
+        $theSettings['saveEnabled'] = $this->getSystemSetting('save-for-later') && !isset($authSetting);//TODO: need to revisit this logic for trusted third-party apps
+        $theSettings['USERID'] = USERID;// TODO: just produces a string of itself ... is this correct?
+
+        return $theSettings;
     }
 }
 ?>

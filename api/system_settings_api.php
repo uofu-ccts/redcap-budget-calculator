@@ -13,7 +13,7 @@ header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
 //setting up array of records for converting to JSON
-$response_arr = $module->getBudgetCalculatorData();
+$response_arr = $module->getSystemSettings($_GET['NOAUTH']);
 
 
 //Response code 200 ... OK
@@ -21,5 +21,3 @@ http_response_code(200);
 
 //JSON response
 echo json_encode($response_arr);
-
-//TODO: will remove this API, as it smaller APIs handle all of its tasks now.
