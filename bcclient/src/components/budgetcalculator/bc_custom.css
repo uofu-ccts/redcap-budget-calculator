@@ -1,0 +1,1874 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto|Varela+Round|Open+Sans");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url("https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css");
+
+body {
+  background: #FFFFFF;
+  font-family: "Open Sans",Helvetica,Arial,sans-serif;
+  font-size: 13px;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+}
+
+#pagecontainer {
+  margin: 0 auto;
+  max-height: 100%;
+  padding: 5px 0 10px;
+  text-align: left;
+  max-width: 900px;
+  background: #fff;
+  border: 0;
+}
+
+#container {
+  margin: 0 0 0 8px;
+  padding: 5px 15px 0px 15px;
+  text-align: left;
+}
+
+#footer {
+  color: #888;
+  font-size: 11px;
+  text-align: center;
+  margin: 0;
+  padding: 15px 0 5px;
+}
+
+#footer a {
+  color: #888;
+  text-decoration: none;
+  font-weight: normal;
+  font-size: 11px;
+  display: none;
+}
+
+#header {
+  margin-left: 50px;
+  margin-right: 37px;
+  position: relative;
+  text-align: left;
+  width: 791px;
+  z-index: 1;
+}
+
+#pagecontent {
+  margin: 0px;
+  margin-top: 70px;
+}
+
+#pagecontent table {
+  clear: both;
+}
+
+.p,p {
+  max-width: 800px;
+}
+
+/* Undo some Data Tables CSS */
+
+.dataTables_filter input {
+  padding: 2px 5px;
+  font-weight: normal;
+  font-size: 13px;
+  height: 24px;
+}
+
+/* Open Sans font */
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Open Sans Light'), local('OpenSans-Light'), url(./fonts/Open_Sans/OpenSans-Light.ttf) format('ttf');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(./fonts/Open_Sans/OpenSans-Regular.ttf) format('ttf');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: local('Open Sans Semibold'), local('OpenSans-Semibold'), url(./fonts/Open_Sans/OpenSans-SemiBold.ttf) format('ttf');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Open Sans Bold'), local('OpenSans-Bold'), url(./fonts/Open_Sans/OpenSans-Bold.ttf) format('ttf');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 300;
+  src: local('Open Sans Light Italic'), local('OpenSansLight-Italic'), url(./fonts/Open_Sans/OpenSans-LightItalic.ttf) format('ttf');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Open Sans Italic'), local('OpenSans-Italic'), url(./fonts/Open_Sans/OpenSans-Italic.ttf) format('ttf');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 600;
+  src: local('Open Sans Semibold Italic'), local('OpenSans-SemiboldItalic'), url(./fonts/Open_Sans/OpenSans-SemiBoldItalic.ttf) format('ttf');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Open Sans Bold Italic'), local('OpenSans-BoldItalic'), url(./fonts/Open_Sans/OpenSans-BoldItalic.ttf) format('ttf');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+.ui-widget {
+  font-family: "Open Sans",Helvetica,Verdana,Arial,sans-serif;
+  font-size: 14px;
+}
+
+.ui-widget input,.ui-widget select,.ui-widget textarea,.ui-widget button {
+  font-family: "Open Sans",Helvetica,Verdana,Arial,sans-serif;
+  font-size: 13px;
+}
+
+/*FLEXIGRID CSS */
+
+/* end toolbar*/
+
+/* novstripe adjustments */
+
+/* end novstripe */
+
+/* ie adjustments */
+
+/* REDCAP CSS */
+
+body {
+  font-family: "Open Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Helvetica,Arial,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  font-size: 13px;
+  -webkit-text-size-adjust: none;
+  color: #000000;
+  line-height: normal;
+}
+
+p,.p {
+  font-size: 13px;
+  text-align: left;
+  margin: 10px 0 10px 0;
+  line-height: 1.4em;
+  max-width: 800px;
+}
+
+th {
+  font-style: normal;
+  font-weight: normal;
+}
+
+th {
+  text-align: left;
+}
+
+A:link {
+  font-family: "Open Sans",Helvetica,Arial,sans-serif;
+  font-size: 13px;
+  color: #000066;
+  text-decoration: none;
+  text-align: left;
+}
+
+A:visited {
+  font-family: "Open Sans",Helvetica,Arial,sans-serif;
+  font-size: 13px;
+  color: #000066;
+  text-decoration: none;
+  text-align: left;
+}
+
+A:active {
+  font-family: "Open Sans",Helvetica,Arial,sans-serif;
+  font-size: 13px;
+  color: #000066;
+  text-decoration: none;
+  text-align: left;
+}
+
+A:hover {
+  font-family: "Open Sans",Helvetica,Arial,sans-serif;
+  font-size: 13px;
+  color: red;
+  text-decoration: underline;
+  text-align: left;
+}
+
+.required {
+  color: #ff0000;
+}
+
+.header {
+  background: #FFFFE0;
+  text-align: Left;
+  font-family: "Open Sans",Helvetica,Arial,Helvetica,sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  border: 1px solid #CCCCCC;
+  padding: 5px 5px 5px 5px;
+}
+
+.form_border {
+  border-width: 0;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+.label_1 {
+  font-family: Verdana;
+  font-size: 8pt;
+  background-color: #FAFAFA;
+  padding: 2px;
+  border: 1px solid #CCCCCC;
+  font-weight: bold;
+}
+
+.label_2 {
+  font-family: Verdana;
+  font-size: 8pt;
+  background-color: #F0F0F0;
+  padding: 2px;
+  border: 1px solid #CCCCCC;
+  font-weight: bold;
+}
+
+.data_1 {
+  font-family: Verdana;
+  font-size: 8pt;
+  background-color: #FAFAFA;
+  padding: 2px;
+  border: 1px solid #CCCCCC;
+}
+
+.data_2 {
+  font-family: Verdana;
+  font-size: 8pt;
+  background-color: #F0F0F0;
+  padding: 2px;
+  border: 1px solid #CCCCCC;
+}
+
+.row_1 {
+  font-family: Verdana;
+  font-size: 8pt;
+  background-color: #FAFAFA;
+  padding: 2px;
+  border: 0 solid #CCCCCC;
+}
+
+.row_2 {
+  font-family: Verdana;
+  font-size: 8pt;
+  background-color: #F0F0F0;
+  padding: 2px;
+  border: 0 solid #CCCCCC;
+}
+
+.data {
+  font-family: "Open Sans",Helvetica,Arial,Helvetica,sans-serif;
+  font-size: 13px;
+  background: #F8F8F8;
+  padding: 3px;
+  border: 1px solid #CCCCCC;
+}
+
+.data2 {
+  font-family: Verdana;
+  font-size: 8pt;
+  border: 1px solid #CCCCCC;
+  padding: 4px 10px;
+  font-weight: normal;
+  background: #fafafa;
+}
+
+.label_header {
+  background-color: #FFFFE0;
+  text-align: Center;
+  font-family: "Open Sans",Helvetica,Arial,Helvetica,sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  height: 18px;
+  border: 1px solid #CCCCCC;
+}
+
+.patient_name {
+  font-family: Verdana;
+  font-size: 14pt;
+  font-weight: bold;
+  background-color: #CC9797;
+  color: #000000;
+  border: 0;
+}
+
+.patient_info {
+  font-family: Verdana;
+  font-size: 8pt;
+}
+
+.visit_head {
+  font-family: Verdana;
+  font-size: 10pt;
+  font-weight: bold;
+  background-color: #CC9797;
+  color: #000000;
+  border: 0;
+}
+
+.visit_info {
+  font-family: Verdana;
+  font-size: 8pt;
+}
+
+tr.alt {
+  background: #F5FAFA;
+}
+
+/* DATATABLE */
+
+.ul {
+  text-decoration: underline;
+}
+
+.red {
+  font: normal 13px "Open Sans",Helvetica,Arial, Helvetica, sans-serif;
+  padding: 6px;
+  border: 1px solid red;
+  color: #800000;
+  max-width: 800px;
+  background-color: #FFE1E1;
+}
+
+.red a:link,.red a:visited,.red a:active,.red a:hover {
+  font: normal 13px "Open Sans",Helvetica,Arial, Helvetica, sans-serif;
+  text-decoration: underline;
+}
+
+.blue {
+  font: normal 13px "Open Sans",Helvetica,Arial, Helvetica, sans-serif;
+  padding: 6px;
+  border: 1px solid #A7C3F1;
+  color: #000066;
+  max-width: 800px;
+  background-color: #E2EAFA;
+}
+
+.blue a:link,.blue a:visited,.blue a:active,.blue a:hover {
+  font: normal 13px "Open Sans",Helvetica,Arial, Helvetica, sans-serif;
+  text-decoration: underline;
+}
+
+/***** tabbed navigation *****/
+
+#sub-nav {
+  background: url("./images/tab-line.gif") bottom repeat-x;
+  float: left;
+  width: 100%;
+}
+
+/*IE6*/
+
+#sub-nav {
+  margin-bottom: 1.5em;
+  font-size: 125%;
+  font-weight: bold;
+}
+
+#sub-nav br {
+  clear: both;
+}
+
+#sub-nav h2 {
+  background: none;
+  min-height: 15px;
+  margin-bottom: 0;
+}
+
+#sub-nav ul {
+  margin: 0.5em 0 0 0;
+  padding: 0 0 0 1em;
+  list-style: none;
+  font-size: 85%;
+}
+
+#sub-nav li {
+  margin: 0 1px 0 0;
+  padding: 0 3px 0 0;
+  background: url("./images/tab-back.png") 100% -100px;
+  float: left;
+  border-bottom: 1px solid #bbb;
+  text-align: center;
+}
+
+#sub-nav li a,#sub-nav li a:visited {
+  display: block;
+  float: left;
+  padding: 5px 11px 5px 16px;
+  text-align: center;
+  white-space: nowrap;
+  background: url("./images/tab-back.png") 0 -100px;
+  text-decoration: none;
+  min-height: 17px;
+  /* fixes FX/Mac issue */
+  color: #666;
+}
+
+/*IE6*/
+
+#sub-nav li:hover {
+  background-position: 100% -200px;
+}
+
+#sub-nav li:hover a {
+  background-position: 0 -200px;
+}
+
+#fade {
+  display: none;
+}
+
+/*for calendar */
+
+/*IE6*/
+
+/* Calendar style */
+
+/* jQuery Pop-up Calendar */
+
+/*jQuery dialog box */
+
+/* Project List */
+
+/* Rounded div corners */
+
+input.btn {
+  cursor: pointer;
+  font-size: 13px;
+  font-family: "Open Sans",Verdana,arial;
+  padding: 2px 6px 2px 6px;
+  margin: 0 3px 0 3px;
+  border: 1px solid;
+  border-color: #aaa #444 #444 #aaa;
+  color: #222;
+  background-color: #e3e3e3;
+}
+
+input.btn2 {
+  cursor: pointer;
+  padding: 1px 5px;
+  margin: 0 3px;
+  border: 1px solid;
+  border-color: #9FB3FF #365AB6 #365AB6 #9FB3FF;
+  color: #222;
+  background-color: #CBD5EF;
+  position: relative;
+  font-family: "Open Sans",arial;
+  font-size: 10px;
+}
+
+/**
+ * FILE: jquery.ptTileSelect.css
+ * 	Default style for the timeselect container.
+ *
+ *  LAST UPDATED:
+ *
+ * 		- $Date: 2009/04/12 20:23:02 $
+ * 		- $Author: paulinho4u $
+ * 		- $Revision: 1.1 $
+ */
+
+.x-form-field {
+  font-weight: normal;
+  margin: 0 0 0 0;
+}
+
+.x-form-text,textarea.x-form-field {
+  padding: 2px 5px;
+  border: 1px solid #c1c1c1;
+  background-color: #fff;
+  background-image: none;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+  -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+textarea.x-form-field {
+  padding: 2px 5px;
+  margin-bottom: -2px;
+}
+
+.x-form-text {
+  vertical-align: middle;
+}
+
+select.x-form-text {
+  padding: 1px 5px 1px 2px;
+  max-width: 300px;
+}
+
+textarea {
+  resize: none;
+}
+
+/* Overwrite some ExtJS-like style */
+
+.x-form-field {
+  font-family: "Open Sans",Helvetica,Arial,sans-serif;
+}
+
+/* Data Quality */
+
+/* Participant List */
+
+/* Customize some grids */
+
+/* Main viewport attributes */
+
+/** Adjust jQuery UI button style **/
+
+.ui-button-text-only .ui-button-text {
+  padding: 0.1em 0.3em;
+}
+
+/** Hide jQuery datepicker **/
+
+#ui-datepicker-div {
+  display: none;
+}
+
+/** Adjust grid panel CSS **/
+
+/* The message box */
+
+a.button {
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+/* Rounded corners */
+
+.round {
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+}
+
+.round2 {
+  -moz-border-radius: 7px;
+  -webkit-border-radius: 7px;
+  border-radius: 20px;
+}
+
+/* adjudication screen */
+
+/* tooltip styling */
+
+.tooltip1 {
+  display: none;
+  background-color: #ffa;
+  border: 1px solid #cc9;
+  padding: 4px;
+  -moz-box-shadow: 2px 2px 11px #666;
+  -webkit-box-shadow: 2px 2px 11px #666;
+  z-index: 20;
+}
+
+.tooltip2 {
+  display: none;
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  max-width: 400px;
+  -moz-box-shadow: 2px 2px 11px #666;
+  -webkit-box-shadow: 2px 2px 11px #666;
+  z-index: 20;
+}
+
+.tooltip3 {
+  display: none;
+  background-color: #000;
+  border: 1px solid #fff;
+  padding: 10px 15px;
+  color: #fff;
+  font-size: 13px;
+  /* outline radius for mozilla/firefox only */
+  -moz-box-shadow: 0 0 10px #000;
+  -webkit-box-shadow: 0 0 10px #000;
+  z-index: 20;
+}
+
+.tooltip4sm {
+  display: none;
+  background: url(./images/black_arrow_small.png);
+  padding: 10px;
+  width: 129px;
+  height: 73px;
+  font-size: 12px;
+  color: #fff;
+  z-index: 20;
+}
+
+.tooltip4 {
+  display: none;
+  background: transparent url(./images/black_arrow.gif);
+  padding: 20px 18px;
+  width: 209px;
+  height: 122px;
+  font-size: 12px;
+  color: #fff;
+  z-index: 20;
+}
+
+.tooltip4left {
+  display: none;
+  background: transparent url(./images/black_arrow_left.gif);
+  padding: 15px 18px 18px 28px;
+  width: 216px;
+  height: 108px;
+  font-size: 13px;
+  color: #fff;
+  z-index: 20;
+}
+
+/* css for timepicker */
+
+/* Adjust font for form fields inside jQuery dialogs */
+
+.ui-dialog-content,.ui-widget input,.ui-widget select,.ui-widget textarea {
+  font-size: 13px;
+  font-family: "Open Sans",Helvetica,Arial, Verdana, Helvetica, sans-serif;
+}
+
+.ui-dialog .ui-dialog-content {
+  text-align: left;
+}
+
+.clear {
+  clear: both;
+  height: 0;
+  line-height: 0;
+}
+
+#form #form_response_header {
+  display: none;
+}
+
+#div_add_field2,#div_add_field2 input,#div_add_field2 select,#div_add_field2 textarea {
+  font-size: 13px;
+}
+
+.nowrap {
+  white-space: nowrap !important;
+}
+
+.pre {
+  font-family: monospace;
+  white-space: pre;
+}
+
+.hidden {
+  display: none;
+}
+
+/* jQuery UI autocomplete CSS changes */
+
+/* IE 6 doesn't support max-height
+   * we use height instead, but this forces the menu to always be this tall
+   */
+
+/* DDP */
+
+@media print {
+  .hide_in_print {
+    display: none !important;
+  }
+
+  /* Override Bootstrap modification to display link URLs in print out */
+
+  a[href]:after {
+    content: none;
+  }
+
+  .row {
+    display: block;
+  }
+}
+
+@media screen {
+  .show_in_print_only {
+    display: none;
+  }
+}
+
+.ui-menu .ui-menu-item {
+  margin: 0;
+  padding: 3px 1em 3px .4em;
+}
+
+.ui-menu-item:hover {
+  background-color: #eee;
+}
+
+/* ACTION TAGS */
+
+.\@HIDDEN,.\@HIDDEN-FORM {
+  display: none;
+}
+
+.\@HIDDEN-SURVEY {
+  display: ;
+}
+
+form#form input[type="text"] {
+  width: 90%;
+  max-width: 90%;
+}
+
+form#form input[type="text"].date {
+  max-width: 82px;
+}
+
+form#form input[type="text"].time2 {
+  max-width: 70px;
+}
+
+/*todo-list */
+
+.request-container {
+  border: 1px solid grey;
+  margin: 0 0 0 0;
+  height: 30px;
+  overflow: hidden;
+  position: relative;
+}
+
+.request-container:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.request-container .type {
+  width: 145px;
+  line-height: 11px;
+  padding-bottom: 12px;
+  max-height: 30px;
+}
+
+.request-container .name {
+  width: 170px;
+}
+
+.request-container .request-time {
+  width: 135px;
+}
+
+.request-container .project-title {
+  display: block;
+  margin: 0 0 10px 5px;
+  color: black;
+}
+
+.request-container .project-title:hover {
+  text-decoration: none;
+}
+
+.cancel-request-dialog .confirm-btn {
+  position: absolute;
+  top: 92px;
+  left: 235px;
+  width: 70px;
+  height: 28px;
+  background: #e6e6e6;
+  border: 1px solid #d3d3d3;
+  color: #555;
+  border-radius: 3px;
+}
+
+.cancel-request-dialog .confirm-btn:hover {
+  color: 1px solid #212121;
+  background: #dadada;
+  border: 1px solid #999;
+}
+
+.request-container .show {
+  display: inline-block !important;
+}
+
+.request-container .hide {
+  display: none !important;
+}
+
+/*todo-list iframe*/
+
+/*vertical slider*/
+
+#project-menu-logo {
+  text-align: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Force placeholder attribute color for IE 10+ */
+
+:-ms-input-placeholder {
+  color: #aaa !important;
+}
+
+/* Make default bootstrap button more gray */
+
+.dropdown-menu>li>a:focus,.dropdown-menu>li>a:hover {
+  color: #111;
+  background-color: #dadada;
+}
+
+a.ui-button:active,.ui-button:active {
+  border: 1px solid #ccc;
+  background: #ddd;
+  text-decoration: none;
+  color: #000;
+}
+
+pre {
+  display: block;
+  padding: 9.5px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  color: #333;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.hide {
+  display: none!important;
+}
+
+.fa,.fas {
+  font-family: "Font Awesome 5 Free" !important;
+}
+
+@page {
+  size: auto;
+}
+
+/* MOBILE */
+
+@media screen and (max-width: 767px) {
+  /* Form elements */
+
+  form#form input[type="text"].date {
+    max-width: 90px;
+  }
+
+  /* collapsed sidebar styles */
+
+  /* Other specifics for mobile */
+
+  #project-menu-logo {
+    visibility: hidden;
+  }
+
+  .ui-dialog {
+    max-width: 99% !important;
+  }
+}
+
+
+/* messaging */
+
+.action-icons-wrapper .fas,.action-icons-wrapper .fa {
+  top: 3px;
+}
+
+.show-hide-action-icons {
+  display: block;
+  position: absolute;
+  top: 10px;
+  left: 195px;
+  text-decoration: underline;
+  cursor: pointer;
+  margin: 0;
+  color: #555;
+  padding: 10px 10px 4px 0;
+  font-size: 12px;
+}
+
+.info-item-text {
+  text-transform: none !important;
+}
+
+.required-red {
+  color: red;
+}
+
+.select-all-user-btn {
+  display: inline-block;
+  font-size: 12px;
+  margin: 0 0 0 10px;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.select-all-user-btn:hover {
+  text-decoration: underline;
+}
+
+.username-p {
+  display: inline-block;
+  margin: 5px 0;
+  font-size: 11px;
+  cursor: pointer;
+  border: 1px solid #BDBCBC;
+  padding: 1px;
+  background-color: #fff;
+  padding: 1px 5px;
+}
+
+.username-p .first-last {
+  color: #777;
+  font-size: 10px;
+  margin: 0 3px;
+}
+
+.username-p:hover {
+  background-color: #eaf0f5;
+  color: black;
+}
+
+
+/*! jQuery UI - v1.12.1 - 2018-07-08
+* http://jqueryui.com
+* Includes: draggable.css, core.css, resizable.css, selectable.css, sortable.css, accordion.css, autocomplete.css, menu.css, button.css, controlgroup.css, checkboxradio.css, datepicker.css, dialog.css, progressbar.css, selectmenu.css, slider.css, spinner.css, tabs.css, tooltip.css, theme.css
+* To view and modify this theme, visit http://jqueryui.com/themeroller/?scope=&folderName=base&cornerRadiusShadow=8px&offsetLeftShadow=0px&offsetTopShadow=0px&thicknessShadow=5px&opacityShadow=30&bgImgOpacityShadow=0&bgTextureShadow=flat&bgColorShadow=666666&opacityOverlay=30&bgImgOpacityOverlay=0&bgTextureOverlay=flat&bgColorOverlay=aaaaaa&iconColorError=cc0000&fcError=5f3f3f&borderColorError=f1a899&bgTextureError=flat&bgColorError=fddfdf&iconColorHighlight=777620&fcHighlight=777620&borderColorHighlight=dad55e&bgTextureHighlight=flat&bgColorHighlight=fffa90&iconColorActive=ffffff&fcActive=ffffff&borderColorActive=003eff&bgTextureActive=flat&bgColorActive=007fff&iconColorHover=555555&fcHover=2b2b2b&borderColorHover=cccccc&bgTextureHover=flat&bgColorHover=ededed&iconColorDefault=777777&fcDefault=454545&borderColorDefault=c5c5c5&bgTextureDefault=flat&bgColorDefault=f6f6f6&iconColorContent=444444&fcContent=333333&borderColorContent=dddddd&bgTextureContent=flat&bgColorContent=ffffff&iconColorHeader=444444&fcHeader=333333&borderColorHeader=dddddd&bgTextureHeader=flat&bgColorHeader=e9e9e9&cornerRadius=3px&fwDefault=normal&fsDefault=1em&ffDefault=Arial%2CHelvetica%2Csans-serif
+* Copyright jQuery Foundation and other contributors; Licensed MIT */
+
+.ui-helper-hidden {
+  display: none;
+}
+
+.ui-helper-hidden-accessible {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.ui-helper-clearfix:before,.ui-helper-clearfix:after {
+  content: "";
+  display: table;
+  border-collapse: collapse;
+}
+
+.ui-helper-clearfix:after {
+  clear: both;
+}
+
+.ui-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: -.25em;
+  position: relative;
+  text-indent: -99999px;
+  overflow: hidden;
+  background-repeat: no-repeat;
+}
+
+.ui-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: block;
+  outline: 0;
+}
+
+.ui-menu .ui-menu {
+  position: absolute;
+}
+
+.ui-menu .ui-menu-item {
+  margin: 0;
+  cursor: pointer;
+  list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
+}
+
+.ui-menu .ui-menu-item-wrapper {
+  position: relative;
+  padding: 3px 1em 3px .4em;
+}
+
+.ui-menu-icons {
+  position: relative;
+}
+
+.ui-menu-icons .ui-menu-item-wrapper {
+  padding-left: 2em;
+}
+
+.ui-menu .ui-icon {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: .2em;
+  margin: auto 0;
+}
+
+.ui-menu .ui-menu-icon {
+  left: auto;
+  right: 0;
+}
+
+.ui-button {
+  padding: .4em 1em;
+  display: inline-block;
+  position: relative;
+  line-height: normal;
+  margin-right: .1em;
+  cursor: pointer;
+  vertical-align: middle;
+  text-align: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  overflow: visible;
+}
+
+.ui-button,.ui-button:link,.ui-button:visited,.ui-button:hover,.ui-button:active {
+  text-decoration: none;
+}
+
+.ui-button-icon-only {
+  width: 2em;
+  box-sizing: border-box;
+  text-indent: -9999px;
+  white-space: nowrap;
+}
+
+input.ui-button.ui-button-icon-only {
+  text-indent: 0;
+}
+
+.ui-button-icon-only .ui-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -8px;
+  margin-left: -8px;
+}
+
+input.ui-button::-moz-focus-inner,button.ui-button::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+.ui-datepicker {
+  width: 17em;
+  padding: .2em .2em 0;
+  display: none;
+}
+
+.ui-datepicker .ui-datepicker-header {
+  position: relative;
+  padding: .2em 0;
+}
+
+.ui-datepicker .ui-datepicker-title {
+  margin: 0 2.3em;
+  line-height: 1.8em;
+  text-align: center;
+}
+
+.ui-datepicker .ui-datepicker-title select {
+  font-size: 1em;
+  margin: 1px 0;
+}
+
+.ui-datepicker table {
+  width: 100%;
+  font-size: .9em;
+  border-collapse: collapse;
+  margin: 0 0 .4em;
+}
+
+.ui-datepicker th {
+  padding: .7em .3em;
+  text-align: center;
+  font-weight: bold;
+  border: 0;
+}
+
+.ui-datepicker td {
+  border: 0;
+  padding: 1px;
+}
+
+.ui-datepicker td span,.ui-datepicker td a {
+  display: block;
+  padding: .2em;
+  text-align: right;
+  text-decoration: none;
+}
+
+.ui-datepicker .ui-icon {
+  display: block;
+  text-indent: -99999px;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  left: .5em;
+  top: .3em;
+}
+
+.ui-dialog {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: .2em;
+  outline: 0;
+}
+
+.ui-dialog .ui-dialog-title {
+  float: left;
+  margin: .1em 0;
+  white-space: nowrap;
+  width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ui-dialog .ui-dialog-content {
+  position: relative;
+  border: 0;
+  padding: .5em 1em;
+  background: none;
+  overflow: auto;
+}
+
+.ui-tooltip {
+  padding: 8px;
+  position: absolute;
+  z-index: 9999;
+  max-width: 300px;
+}
+
+body .ui-tooltip {
+  border-width: 2px;
+}
+
+.ui-widget {
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: 1em;
+}
+
+.ui-widget .ui-widget {
+  font-size: 1em;
+}
+
+.ui-widget input,.ui-widget select,.ui-widget textarea,.ui-widget button {
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: 1em;
+}
+
+.ui-widget.ui-widget-content {
+  border: 1px solid #c5c5c5;
+}
+
+.ui-widget-content {
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #333;
+}
+
+.ui-widget-content a {
+  color: #333;
+}
+
+.ui-widget-header {
+  border: 1px solid #ddd;
+  background: #e9e9e9;
+  color: #333;
+  font-weight: bold;
+}
+
+.ui-widget-header a {
+  color: #333;
+}
+
+.ui-button {
+  border: 1px solid #c5c5c5;
+  background: #f6f6f6;
+  font-weight: normal;
+  color: #454545;
+}
+
+a.ui-button,a:link.ui-button,a:visited.ui-button,.ui-button {
+  color: #454545;
+  text-decoration: none;
+}
+
+.ui-button:hover,.ui-button:focus {
+  border: 1px solid #ccc;
+  background: #ededed;
+  font-weight: normal;
+  color: #2b2b2b;
+}
+
+a.ui-button:hover,a.ui-button:focus {
+  color: #2b2b2b;
+  text-decoration: none;
+}
+
+a.ui-button:active,.ui-button:active {
+  border: 1px solid #003eff;
+  background: #007fff;
+  font-weight: normal;
+  color: #fff;
+}
+
+.ui-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.ui-icon,.ui-widget-content .ui-icon {
+  background-image: url("images/ui-icons_444444_256x240.png");
+}
+
+.ui-widget-header .ui-icon {
+  background-image: url("images/ui-icons_444444_256x240.png");
+}
+
+.ui-button:hover .ui-icon,.ui-button:focus .ui-icon {
+  background-image: url("images/ui-icons_555555_256x240.png");
+}
+
+.ui-button:active .ui-icon {
+  background-image: url("images/ui-icons_ffffff_256x240.png");
+}
+
+.ui-button .ui-icon {
+  background-image: url("images/ui-icons_777777_256x240.png");
+}
+
+.ui-icon-blank {
+  background-position: 16px 16px;
+}
+
+.ui-icon-arrow-1-e {
+  background-position: -32px -32px;
+}
+
+.ui-icon-arrow-1-w {
+  background-position: -96px -32px;
+}
+
+.ui-icon-arrow-2-e-w {
+  background-position: -160px -32px;
+}
+
+.ui-icon-arrow-4 {
+  background-position: 0 -80px;
+}
+
+.ui-icon-document {
+  background-position: -32px -96px;
+}
+
+.ui-icon-document-b {
+  background-position: -48px -96px;
+}
+
+.ui-icon-print {
+  background-position: -160px -96px;
+}
+
+.ui-icon-trash {
+  background-position: -176px -96px;
+}
+
+.ui-icon-cart {
+  background-position: -48px -112px;
+}
+
+.ui-icon-calculator {
+  background-position: -112px -112px;
+}
+
+.ui-icon-link {
+  background-position: -240px -112px;
+}
+
+.ui-icon-cancel {
+  background-position: 0 -128px;
+}
+
+.ui-icon-close {
+  background-position: -80px -128px;
+}
+
+.ui-icon-copy {
+  background-position: -176px -128px;
+}
+
+.ui-icon-info {
+  background-position: -16px -144px;
+}
+
+.ui-icon-check {
+  background-position: -64px -144px;
+}
+
+.ui-icon-radio-on {
+  background-position: -96px -144px;
+}
+
+.ui-icon-radio-off {
+  background-position: -112px -144px;
+}
+
+.ui-icon-power {
+  background-position: 0 -176px;
+}
+
+.ui-icon-circle-close {
+  background-position: -32px -192px;
+}
+
+.ui-icon-circle-arrow-e {
+  background-position: -112px -192px;
+}
+
+.ui-icon-circle-arrow-w {
+  background-position: -144px -192px;
+}
+
+.ui-icon-circle-check {
+  background-position: -208px -192px;
+}
+
+.ui-corner-all,.ui-corner-top,.ui-corner-left {
+  border-top-left-radius: 3px;
+}
+
+.ui-corner-all,.ui-corner-top,.ui-corner-right,.ui-corner-tr {
+  border-top-right-radius: 3px;
+}
+
+.ui-corner-all,.ui-corner-left {
+  border-bottom-left-radius: 3px;
+}
+
+.ui-corner-all,.ui-corner-right,.ui-corner-br {
+  border-bottom-right-radius: 3px;
+}
+
+/* Mobile first layout SmartMenus Core CSS (it's not recommended editing these rules)
+   You need this once per page no matter how many menu trees or different themes you use.
+-------------------------------------------------------------------------------------------*/
+
+.sm {
+  box-sizing: border-box;
+  position: relative;
+  z-index: 9999;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+.sm,.sm ul,.sm li {
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  line-height: normal;
+  direction: ltr;
+  text-align: left;
+}
+
+.sm>li>h1,.sm>li>h2,.sm>li>h3,.sm>li>h4,.sm>li>h5,.sm>li>h6 {
+  margin: 0;
+  padding: 0;
+}
+
+.sm ul {
+  display: none;
+}
+
+.sm li,.sm a {
+  position: relative;
+}
+
+.sm a {
+  display: block;
+}
+
+.sm a.disabled {
+  cursor: default;
+}
+
+.sm::after {
+  content: "";
+  display: block;
+  height: 0;
+  font: 0px/0 serif;
+  clear: both;
+  overflow: hidden;
+}
+
+.sm *,.sm *::before,.sm *::after {
+  box-sizing: inherit;
+}
+
+@import url(https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700);
+
+.sm-blue {
+  background: transparent;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sm-blue a,.sm-blue a:hover,.sm-blue a:focus,.sm-blue a:active {
+  padding: 10px 20px;
+  /* make room for the toggle button (sub indicator) */
+  padding-right: 58px;
+  background: #3092c0;
+  background-image: linear-gradient(to bottom, #3298c8, #2e8cb8);
+  color: #fff;
+  font-family: "PT Sans Narrow", "Arial Narrow", Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 23px;
+  text-decoration: none;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.sm-blue a.disabled {
+  color: #a1d1e8;
+}
+
+.sm-blue a .sub-arrow {
+  position: absolute;
+  top: 50%;
+  margin-top: -17px;
+  left: auto;
+  right: 4px;
+  width: 34px;
+  height: 34px;
+  overflow: hidden;
+  font: bold 16px/34px monospace !important;
+  text-align: center;
+  text-shadow: none;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.sm-blue a .sub-arrow::before {
+  content: '+';
+}
+
+.sm-blue > li:first-child > a,.sm-blue > li:first-child > :not(ul) a {
+  border-radius: 8px 8px 0 0;
+}
+
+.sm-blue > li:last-child > a,.sm-blue > li:last-child > *:not(ul) a,.sm-blue > li:last-child > ul,.sm-blue > li:last-child > ul > li:last-child > a,.sm-blue > li:last-child > ul > li:last-child > *:not(ul) a,.sm-blue > li:last-child > ul > li:last-child > ul,.sm-blue > li:last-child > ul > li:last-child > ul > li:last-child > a,.sm-blue > li:last-child > ul > li:last-child > ul > li:last-child > *:not(ul) a,.sm-blue > li:last-child > ul > li:last-child > ul > li:last-child > ul,.sm-blue > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > a,.sm-blue > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > *:not(ul) a,.sm-blue > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > ul,.sm-blue > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > a,.sm-blue > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > *:not(ul) a,.sm-blue > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > ul > li:last-child > ul {
+  border-radius: 0 0 8px 8px;
+}
+
+.sm-blue ul {
+  background: #fff;
+}
+
+.sm-blue ul ul {
+  background: rgba(102, 102, 102, 0.1);
+}
+
+.sm-blue ul a,.sm-blue ul a:hover,.sm-blue ul a:focus,.sm-blue ul a:active {
+  background: transparent;
+  color: #2b82ac;
+  font-size: 16px;
+  text-shadow: none;
+  border-left: 8px solid transparent;
+}
+
+.sm-blue ul a.disabled {
+  color: #b3b3b3;
+}
+
+.sm-blue ul ul a,.sm-blue ul ul a:hover,.sm-blue ul ul a:focus,.sm-blue ul ul a:active {
+  border-left: 16px solid transparent;
+}
+
+.sm-blue ul ul ul a,.sm-blue ul ul ul a:hover,.sm-blue ul ul ul a:focus,.sm-blue ul ul ul a:active {
+  border-left: 24px solid transparent;
+}
+
+.sm-blue ul ul ul ul a,.sm-blue ul ul ul ul a:hover,.sm-blue ul ul ul ul a:focus,.sm-blue ul ul ul ul a:active {
+  border-left: 32px solid transparent;
+}
+
+.sm-blue ul ul ul ul ul a,.sm-blue ul ul ul ul ul a:hover,.sm-blue ul ul ul ul ul a:focus,.sm-blue ul ul ul ul ul a:active {
+  border-left: 40px solid transparent;
+}
+
+.sm-blue ul li {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.sm-blue ul li:first-child {
+  border-top: 0;
+}
+
+@media (min-width: 768px) {
+  /* Switch to desktop layout
+  -----------------------------------------------
+     These transform the menu tree from
+     collapsible to desktop (navbar + dropdowns)
+  -----------------------------------------------*/
+
+  /* start... (it's not recommended editing these rules) */
+
+  .sm-blue ul {
+    position: absolute;
+    width: 12em;
+  }
+
+  .sm-blue li {
+    float: left;
+  }
+
+  .sm-blue ul li {
+    float: none;
+  }
+
+  .sm-blue a {
+    white-space: nowrap;
+  }
+
+  .sm-blue ul a {
+    white-space: normal;
+  }
+
+  .sm-blue .sm-nowrap > li > a,  .sm-blue .sm-nowrap > li > :not(ul) a {
+    white-space: nowrap;
+  }
+
+  /* ...end */
+
+  .sm-blue {
+    background: #3092c0;
+    background-image: linear-gradient(to bottom, #3298c8, #2e8cb8);
+    border-radius: 8px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  }
+
+  .sm-blue a,  .sm-blue a:hover,  .sm-blue a:focus,  .sm-blue a:active {
+    padding: 13px 24px;
+    background: #3092c0;
+    background-image: linear-gradient(to bottom, #3298c8, #2e8cb8);
+    color: #fff;
+  }
+
+  .sm-blue a:hover,  .sm-blue a:focus,  .sm-blue a:active {
+    background: #2b82ac;
+    background-image: linear-gradient(to bottom, #2d89b4, #297ca3);
+  }
+
+  .sm-blue a.disabled {
+    background: #3092c0;
+    background-image: linear-gradient(to bottom, #3298c8, #2e8cb8);
+    color: #a1d1e8;
+  }
+
+  .sm-blue a .sub-arrow {
+    top: auto;
+    margin-top: 0;
+    bottom: 2px;
+    left: 50%;
+    margin-left: -5px;
+    right: auto;
+    width: 0;
+    height: 0;
+    border-width: 5px;
+    border-style: solid dashed dashed dashed;
+    border-color: #a1d1e8 transparent transparent transparent;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  .sm-blue a .sub-arrow::before {
+    display: none;
+  }
+
+  .sm-blue > li:first-child > a,  .sm-blue > li:first-child > :not(ul) a {
+    border-radius: 8px 0 0 8px;
+  }
+
+  .sm-blue > li:last-child > a,  .sm-blue > li:last-child > :not(ul) a {
+    border-radius: 0 8px 8px 0 !important;
+  }
+
+  .sm-blue > li {
+    border-left: 1px solid #2b82ac;
+  }
+
+  .sm-blue > li:first-child {
+    border-left: 0;
+  }
+
+  .sm-blue ul {
+    border: 1px solid #a8a8a8;
+    padding: 7px 0;
+    background: #fff;
+    border-radius: 0 0 4px 4px !important;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .sm-blue ul ul {
+    border-radius: 4px !important;
+    background: #fff;
+  }
+
+  .sm-blue ul a,  .sm-blue ul a:hover,  .sm-blue ul a:focus,  .sm-blue ul a:active {
+    border: 0 !important;
+    padding: 9px 23px;
+    background: transparent;
+    color: #2b82ac;
+    border-radius: 0 !important;
+  }
+
+  .sm-blue ul a:hover,  .sm-blue ul a:focus,  .sm-blue ul a:active {
+    background: #3092c0;
+    background-image: linear-gradient(to bottom, #3298c8, #2e8cb8);
+    color: #fff;
+  }
+
+  .sm-blue ul a.disabled {
+    background: #fff;
+    color: #b3b3b3;
+  }
+
+  .sm-blue ul a .sub-arrow {
+    top: 50%;
+    margin-top: -5px;
+    bottom: auto;
+    left: auto;
+    margin-left: 0;
+    right: 10px;
+    border-style: dashed dashed dashed solid;
+    border-color: transparent transparent transparent #a1d1e8;
+  }
+
+  .sm-blue ul li {
+    border: 0;
+  }
+}
+
+/*# sourceMappingURL=sm-blue.css.map */
+
+@media (min-width: 768px) {
+  /* Switch to desktop layout
+  -----------------------------------------------
+     These transform the menu tree from
+     collapsible to desktop (navbar + dropdowns)
+  -----------------------------------------------*/
+
+  /* start... (it's not recommended editing these rules) */
+
+  /* ...end */
+}
+
+/*# sourceMappingURL=sm-clean.css.map */
+
+table {
+  table-layout: fixed;
+  font-size: 0.9vw;
+}
+
+.service-title > span {
+  font-size: 1vw;
+}
+
+#servicesTable th {
+  background-color: #9AC0E5;
+  text-align: center;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+#servicesTable td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.info {
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.subject-count,.qty-count {
+  width: 80%;
+}
+
+#pagecontainer {
+  max-width: 100%;
+}
+
+#logo {
+  max-width: 40%;
+  float: right;
+}
+
+#title {
+  float: left;
+}
+
+#nextVisitsBtn {
+  text-align: right;
+  float: right;
+}
+
+#prevVisitsBtn {
+  text-align: left;
+  float: left;
+}
+
+#disclaimer {
+  font-size: 1.5vw;
+  color: red;
+}
+
+.visit-header-row th {
+  height: 40px;
+  width: 40px;
+}
+
+.total-row {
+  border-style: hidden;
+  font-size: x-large;
+}
+
+th.hide-border {
+  border: none;
+}
+
+.non_clinical-blank {
+  background-color: lightgrey;
+}
+
+.dropdown-submenu {
+  position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -1px;
+}
+
+.dropdown-menu > li {
+  margin-left: 50px;
+}
+
+.action-button {
+  text-align: center;
+  padding: 5px;
+}
+
+.modal-body {
+  margin: auto 5%;
+}
+
+.modal {
+  z-index: 100001 !important;
+}
+
+.hide {
+  display: none;
+}
+
+#wrapper {
+  vertical-align: middle;
+}
+
+#title {
+  vertical-align: middle;
+}
+
+/*#logo:after {*/
+
+/*clear: both;*/
+
+/*}*/
+
+/*#title, #logo {*/
+
+/*border: 1px solid white;*/
+
+/*float: left;*/
+
+/*min-height: 450px;*/
+
+/*color: white;*/
+
+/*}*/
+
+/*#title {*/
+
+/*width: 250px;*/
+
+/*background-color: #111;*/
+
+/*}*/
+
+/*#logo {*/
+
+/*width: 750px;*/
+
+/*background-color: #777;*/
+
+/*}*/
+
+#pagecontent {
+  margin: 0px;
+}
+
+#footer {
+  display: none;
+}
