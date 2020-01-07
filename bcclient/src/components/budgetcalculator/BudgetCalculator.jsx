@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import './bc_custom.css';
+import './css/bc_custom.css';
 
 import BCWelcomeModal from './BCWelcomeModal';
 import BCJumbotron from './BCJumbotron';
