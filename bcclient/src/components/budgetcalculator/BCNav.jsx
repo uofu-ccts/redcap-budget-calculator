@@ -18,11 +18,11 @@ class BCNav extends Component {
 
   render() { 
     return (
-      <Navbar style={{backgroundColor: "#3092c0", borderRadius: "8px"}}>
-        <NavDropdown  title="Add Service" id="bc-add-service" style={{fontSize:"large", fontWeight: "bold", color: "white"}}></NavDropdown>
+      <Navbar href="#addservice" style={{backgroundColor: "#3092c0", borderRadius: "8px"}}>
+        <NavDropdown className="bc-nav-items" title="Add Service" id="bc-nav-items"></NavDropdown>
         <Nav className="mr-auto">
-          <Nav.Link href="#edit" style={{fontSize:"large", fontWeight: "bold", color: "white"}} onSelect={this.handleEditBudgetInfoClick}>Edit Budget Information</Nav.Link>
-          <Nav.Link href="#download" style={{fontSize:"large", fontWeight: "bold", color: "white"}}>Download as PDF</Nav.Link>
+          <Nav.Link href="#editbudgetinfo" className="bc-nav-items" onSelect={this.handleEditBudgetInfoClick}>Edit Budget Information</Nav.Link>
+          <Nav.Link href="#downloadaspdf" className="bc-nav-items">Download as PDF</Nav.Link>
         </Nav>
       </Navbar>
      );
