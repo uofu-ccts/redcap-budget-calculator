@@ -1,3 +1,8 @@
 vendor
 templates_c
 composer.phar
+**/.idea/
+
+# these are built by a npm script in the reactjs project
+bcclient.php
+resources/bcclient
