@@ -16,6 +16,19 @@ label.btn-budgetcalc:hover{
   color: white;
 }
 
+button.btn-budgetcalc{
+  float: left;
+  border-color: #3092c0;
+  background: #3092c0;
+  color: white;
+}
+
+button.btn-budgetcalc:hover{
+  background: #2588b6;
+  border-color: #2588b6;
+  color: white;
+}
+
 #bc-nav-items{
   font-size:large;
   font-weight: bold;

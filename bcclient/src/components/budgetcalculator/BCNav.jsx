@@ -5,6 +5,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import ToggleButton from 'react-bootstrap/ToggleButton'
+import Dropdown from 'react-bootstrap/Dropdown';
 
 class BCNav extends Component {
 
@@ -22,18 +23,18 @@ class BCNav extends Component {
   render() { 
     return (
       <>
-      <Navbar href="#addservice" style={{backgroundColor: "#3092c0", borderRadius: "8px"}}>
-        <NavDropdown className="bc-nav-items" title="Add Service" id="bc-nav-items"></NavDropdown>
-        <Nav className="mr-auto">
-          <Nav.Link href="#editbudgetinfo" className="bc-nav-items" onSelect={this.handleEditBudgetInfoClick}>Edit Budget Information</Nav.Link>
-          <Nav.Link href="#downloadaspdf" className="bc-nav-items">Download as PDF</Nav.Link>
-        </Nav>
-      </Navbar>
       <div className="d-flex mt-3 btn-group-budgetcalc">
       <ButtonGroup toggle className="btn-group">
-        <ToggleButton className="btn btn-lg font-weight-bolder btn-budgetcalc " type="radio" name="radio" value="1">
-          Add Service
-        </ToggleButton>
+        <Dropdown>
+          <Dropdown.Toggle className="btn btn-lg font-weight-bolder btn-budgetcalc " type="radio" name="radio" value="1">
+            Add Service
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
         <ToggleButton className="btn btn-default btn-lg font-weight-bolder btn-budgetcalc" type="radio" name="radio" value="2" onChange={this.handleEditBudgetInfoClick}>
           Edit Budget Information
         </ToggleButton>
