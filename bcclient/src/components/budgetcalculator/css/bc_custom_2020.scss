@@ -1,0 +1,47 @@
+div.btn-group-budgetcalc{
+  background: #3092c0;
+  border-radius: 8px;
+}
+
+label.btn-budgetcalc{
+  float: left;
+  border-color: #3092c0;
+  background: #3092c0;
+  color: white;
+}
+
+label.btn-budgetcalc:hover{
+  background: #2588b6;
+  border-color: #2588b6;
+  color: white;
+}
+
+#bc-nav-items{
+  font-size:large;
+  font-weight: bold;
+  color: white;
+}
+
+.navbar-light .navbar-nav a.bc-nav-items{
+  font-size:large;
+  font-weight: bold;
+  color: white;
+  background: #3092c0;
+  font-family: "Open Sans",Helvetica,Arial,sans-serif;
+  text-align: left;
+  text-decoration: none;
+  background: #3092c0;
+  background-image: linear-gradient(to bottom, #3298c8, #2e8cb8);
+}
+
+.navbar-light .navbar-nav a.bc-nav-items a:hover{
+  font-size:large;
+  font-weight: bold;
+  color: white;
+  background: #3092c0;
+  font-family: "Open Sans",Helvetica,Arial,sans-serif;
+  text-align: left;
+  text-decoration: none;
+  background: #3092c0;
+  background-image: linear-gradient(to bottom, #3298c8, #2e8cb8);
+}

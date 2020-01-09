@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import './css/bc_custom.css';
-import './css/bc_custom_2020.css';
+import './css/bc_custom_2020.scss';
 
 import BCWelcomeModal from './BCWelcomeModal';
 import BCJumbotron from './BCJumbotron';
