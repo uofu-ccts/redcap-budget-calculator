@@ -5,13 +5,12 @@ import React, { useState, useEffect } from 'react';
 import SearchBox from '../tools/SearchBox';
 
 import ServiceData from '../../js/ServiceData';
-import ServiceListing from './ServiceListing';
+import ServiceDDItem from './ServiceDDItem';
 
-import Container from 'react-bootstrap/Container'
 import NoData from '../tools/NoData';
 
 
-function Services() {
+function ServicesDDList() {
 
   const [data, setData] = useState('Loading Service Catalog ...');
   const [serviceDataObj] = useState(new ServiceData(data, setData));//don't need the setter for the ServiceData
@@ -34,8 +33,9 @@ function Services() {
   //TODO: refactor key in ServiceListing to be usable
   //TODO: refactor error message to be reusable, generic component
   //to use a context do something like this in return ... <pre>--&gt;{serviceCtx}&lt;--</pre>
-  return ( 
-    <Container>
+  return (
+    <>
+
       <div align='left'>
 
         <SearchBox searchFunction={serviceDataObj.filterServiceInstancesByKeyword} />
@@ -43,12 +43,12 @@ function Services() {
 
         {Array.from(data).length===0?<NoData />:""}
         {(Array.from(data).map(serviceobj => (
-          <ServiceListing key={Math.floor(Math.random() * 100000000)} {...serviceobj} />
+          <ServiceDDItem key={Math.floor(Math.random() * 100000000)} servicerecordid={Math.floor(Math.random() * 100000000)} {...serviceobj} />
         )))}
         
       </div>
-    </Container>
+    </>
   );
 }
  
-export default Services;
+export default ServicesDDList;

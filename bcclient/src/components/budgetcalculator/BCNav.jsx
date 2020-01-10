@@ -7,6 +7,8 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import ToggleButton from 'react-bootstrap/ToggleButton'
 import Dropdown from 'react-bootstrap/Dropdown';
 
+import ServiceCatalogDDMenu from '../servicecatalog/ServiceCatalogDDMenu';
+
 class BCNav extends Component {
 
   constructor(props) {
@@ -29,11 +31,13 @@ class BCNav extends Component {
           <Dropdown.Toggle className="btn btn-lg font-weight-bolder btn-budgetcalc " type="radio" name="radio" value="1">
             Add Service
           </Dropdown.Toggle>
-          <Dropdown.Menu>
+
+          <ServiceCatalogDDMenu />
+          {/* <Dropdown.Menu>
             <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
             <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
             <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-          </Dropdown.Menu>
+          </Dropdown.Menu> */}
         </Dropdown>
         <ToggleButton className="btn btn-default btn-lg font-weight-bolder btn-budgetcalc" type="radio" name="radio" value="2" onChange={this.handleEditBudgetInfoClick}>
           Edit Budget Information
