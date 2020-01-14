@@ -33,11 +33,7 @@ class BCNav extends Component {
           </Dropdown.Toggle>
 
           <ServiceCatalogDDMenu />
-          {/* <Dropdown.Menu>
-            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-          </Dropdown.Menu> */}
+
         </Dropdown>
         <ToggleButton className="btn btn-default btn-lg font-weight-bolder btn-budgetcalc" type="radio" name="radio" value="2" onChange={this.handleEditBudgetInfoClick}>
           Edit Budget Information

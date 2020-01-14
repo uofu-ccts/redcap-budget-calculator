@@ -9,6 +9,8 @@ import ServiceDDItem from './ServiceDDItem';
 
 import NoData from '../tools/NoData';
 
+import Dropdown from 'react-bootstrap/Dropdown'
+
 
 function ServicesDDList() {
 
@@ -37,16 +39,34 @@ function ServicesDDList() {
     <>
 
       <div align='left'>
-
         <SearchBox searchFunction={serviceDataObj.filterServiceInstancesByKeyword} />
-
-
-        {Array.from(data).length===0?<NoData />:""}
-        {(Array.from(data).map(serviceobj => (
-          <ServiceDDItem key={Math.floor(Math.random() * 100000000)} servicerecordid={Math.floor(Math.random() * 100000000)} {...serviceobj} />
-        )))}
-        
       </div>
+
+      <Dropdown.Divider />
+
+<ul className="nav navbar-nav"><li className="menu-item dropdown"><a href="#" className="dropdown-toggle" data-toggle="dropdown">Drop Down<b className="caret"></b></a>
+      <ul className="dropdown-menu">
+          <li className="menu-item dropdown dropdown-submenu">
+              <a href="#" className="dropdown-toggle" data-toggle="dropdown">Level 2</a>
+              <ul className="dropdown-menu">
+                  <li>
+                      <a href="#" className="bc-service-to-add">Link 3</a>
+                  </li>
+                  <li>
+                      <a href="#" className="bc-service-to-add">Link 4</a>
+                  </li>
+              </ul>
+          </li>
+      </ul>
+</li></ul>
+
+      <Dropdown.Divider />
+
+      {Array.from(data).length===0?<NoData />:""}
+      {(Array.from(data).map(serviceobj => (
+        <ServiceDDItem key={Math.floor(Math.random() * 100000000)} servicerecordid={Math.floor(Math.random() * 100000000)} {...serviceobj} />
+      )))}
+        
     </>
   );
 }

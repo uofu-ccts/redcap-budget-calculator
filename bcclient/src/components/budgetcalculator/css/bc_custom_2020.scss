@@ -34,3 +34,60 @@ button.btn-budgetcalc:hover{
   font-weight: bold;
   color: white;
 }
+
+.navbar-nav li:hover > ul.dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu {
+    position:relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top:-6px;
+}
+
+.dropdown-menu > li > a {
+    text-decoration: none;
+}
+
+.dropdown-menu > li > a:hover:after {
+  text-decoration: none;
+  transform: rotate(-90deg);
+}
+
+li a.dropdown-toggle, li a.bc-service-to-add {
+  text-decoration: none;
+  line-height: 23px;
+  font-size: 16px;
+  color: #2b82ac;
+  border: 0 !important;
+  list-style: none;
+  direction: ltr;
+  box-sizing: inherit;
+  text-align: left;
+  position: relative;
+  display: block;
+  font-family: "PT Sans Narrow", "Arial Narrow", Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  text-decoration: none;
+  text-shadow: none;
+  white-space: normal;
+  padding: 9px 23px;
+  background: transparent;
+  border-radius: 0 !important;
+  }
+
+li a.dropdown-toggle:hover, li a.bc-service-to-add:hover {
+  color: white;
+  background-color: #2b82ac;
+}
+
+li a:hover:after {
+  text-decoration: none;
+  transform: rotate(-90deg);
+  color: white;
+  background-color: #2b82ac;
+}

@@ -14,7 +14,7 @@ class ServiceCatalogDDMenu extends Component {
   //   super(props);
   // }
 
-//TODO: move the ServiceContextProvider hirer up the tree so its available to the datatables
+//TODO: move the ServiceContextProvider higher up the tree so its available to the datatables
   render() { 
     return (
       <Dropdown.Menu>
