@@ -34,7 +34,7 @@ class BCNav extends Component {
         <ServiceCatalogDDMenu />
       </li>
       <li className="nav-item">
-        <a className="nav-link btn btn-lg font-weight-bolder" id="bdgtcalc-nav" href="#">Edit Budget Information</a>
+        <a className="nav-link btn btn-lg font-weight-bolder" id="bdgtcalc-nav" href="#" onClick={this.handleEditBudgetInfoClick}>Edit Budget Information</a>
       </li>
       <li className="nav-item">
         <a className="nav-link btn btn-lg font-weight-bolder" id="bdgtcalc-nav" href="#">Download as PDF</a>
