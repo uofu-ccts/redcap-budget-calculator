@@ -17,11 +17,11 @@ class ServiceCatalogDDMenu extends Component {
 //TODO: move the ServiceContextProvider higher up the tree so its available to the datatables
   render() { 
     return (
-      <Dropdown.Menu>
+      //<Dropdown.Menu>
       <ServiceContextProvider>
         <Services />
       </ServiceContextProvider>
-      </Dropdown.Menu>
+      //</Dropdown.Menu>
      );
   }
 }

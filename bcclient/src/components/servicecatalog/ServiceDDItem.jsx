@@ -16,7 +16,7 @@ class ServiceDDItem extends Component {
 
   render() { 
     return (
-      <Dropdown.Item href={"#/"+this.props.servicerecordid}>{this.props.service}</Dropdown.Item>
+      <li id="bc-dropdown-li"><a className="dropdown-item" href={"#/"+this.props.servicerecordid}>{this.props.service}</a></li>
 
       // <div className="my-4">
       // <Card>

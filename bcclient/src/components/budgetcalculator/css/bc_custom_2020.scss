@@ -20,19 +20,6 @@ li>a#bdgtcalc-nav:hover, a.nav-link.dropdown-toggle:hover {
   color: white;
 }
 
-// button.btn-budgetcalc{
-//   float: left;
-//   border-color: #3092c0;
-//   background: #3092c0;
-//   color: white;
-// }
-
-// button.btn-budgetcalc:hover{
-//   background: #2588b6;
-//   border-color: #2588b6;
-//   color: white;
-// }
-
 #bc-nav-items{
   font-size:large;
   font-weight: bold;
@@ -44,11 +31,15 @@ li>a#bdgtcalc-nav:hover, a.nav-link.dropdown-toggle:hover {
     margin-top:0px;
 }
 
-li.dropdown-submenu {
+li.dropdown-submenu, li#bc-dropdown-li {
     position:relative;
     padding: 0px;
     border: 0px;
     margin: 0px;
+}
+
+li.bc-dropdown-li-search {
+  margin-left: 9px;
 }
 
 .dropdown-item {
@@ -77,7 +68,9 @@ li.dropdown-submenu {
   transform: rotate(-90deg);
 }
 
-li a.dropdown-toggle, li a.bc-service-to-add {
+li a.dropdown-toggle, 
+li a.bc-service-to-add, 
+li a.dropdown-item {
   text-decoration: none;
   line-height: 23px;
   font-size: 16px;
@@ -96,7 +89,14 @@ li a.dropdown-toggle, li a.bc-service-to-add {
   white-space: normal;
   padding-top: 9px;
   background: transparent;
-  // border-radius: 0 !important;
+  }
+
+li a.dropdown-toggle:hover, 
+li a.bc-service-to-add:hover, 
+li a.dropdown-item:hover 
+  {
+    background: #3092c0;
+    color: white;
   }
 
   nav#bc-main-nav {
@@ -117,15 +117,3 @@ li a.dropdown-toggle, li a.bc-service-to-add {
     border-radius: 8px;
     background: #3092c0;
   }
-
-// li a.dropdown-toggle:hover, li a.bc-service-to-add:hover {
-//   color: white;
-//   background-color: #2b82ac;
-// }
-
-// li a:hover:after {
-//   text-decoration: none;
-//   transform: rotate(-90deg);
-//   color: white;
-//   background-color: #2b82ac;
-// }

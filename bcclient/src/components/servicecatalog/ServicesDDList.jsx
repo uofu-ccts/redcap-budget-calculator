@@ -38,34 +38,35 @@ function ServicesDDList() {
   return (
     <>
 
-      <div align='left'>
-        <SearchBox searchFunction={serviceDataObj.filterServiceInstancesByKeyword} />
-      </div>
-
-      <Dropdown.Divider />
-
-<ul className="nav navbar-nav"><li className="menu-item dropdown"><a href="#" className="dropdown-toggle" data-toggle="dropdown">Drop Down<b className="caret"></b></a>
-      <ul className="dropdown-menu">
-          <li className="menu-item dropdown dropdown-submenu">
-              <a href="#" className="dropdown-toggle" data-toggle="dropdown">Level 2</a>
-              <ul className="dropdown-menu">
-                  <li>
-                      <a href="#" className="bc-service-to-add">Link 3</a>
-                  </li>
-                  <li>
-                      <a href="#" className="bc-service-to-add">Link 4</a>
-                  </li>
-              </ul>
+        <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <li className="bc-dropdown-li-search"><SearchBox searchFunction={serviceDataObj.filterServiceInstancesByKeyword} /></li>
+          <li id="bc-dropdown-li"><Dropdown.Divider /></li>
+          <li className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#">Core</a>
+            <ul className="dropdown-menu">
+              <li className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#">Category 1</a>
+                <ul className="dropdown-menu">
+                  <li id="bc-dropdown-li"><a className="dropdown-item" href="#">name1</a></li>
+                  <li id="bc-dropdown-li"><a className="dropdown-item" href="#">name2</a></li>
+                </ul>
+              </li>
+              <li className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#">Category 2</a>
+                <ul className="dropdown-menu">
+                  <li id="bc-dropdown-li"><a className="dropdown-item" href="#">name1</a></li>
+                  <li id="bc-dropdown-li"><a className="dropdown-item" href="#">name2</a></li>
+                </ul>
+              </li>
+            </ul>
           </li>
-      </ul>
-</li></ul>
 
-      <Dropdown.Divider />
 
-      {Array.from(data).length===0?<NoData />:""}
-      {(Array.from(data).map(serviceobj => (
-        <ServiceDDItem key={Math.floor(Math.random() * 100000000)} servicerecordid={Math.floor(Math.random() * 100000000)} {...serviceobj} />
-      )))}
+          <li id="bc-dropdown-li"><Dropdown.Divider /></li>
+
+          {Array.from(data).length===0?<NoData />:""}
+          {(Array.from(data).map(serviceobj => (
+            <ServiceDDItem key={Math.floor(Math.random() * 100000000)} servicerecordid={Math.floor(Math.random() * 100000000)} {...serviceobj} />
+          )))}
+        </ul>
+
         
     </>
   );

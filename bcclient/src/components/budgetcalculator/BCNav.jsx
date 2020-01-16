@@ -31,24 +31,7 @@ class BCNav extends Component {
         <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Add Service
         </a>
-        <ul className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <li className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#">Core</a>
-            <ul className="dropdown-menu">
-              <li className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#">Category 1</a>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">name1</a></li>
-                  <li><a className="dropdown-item" href="#">name2</a></li>
-                </ul>
-              </li>
-              <li className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#">Category 2</a>
-                <ul className="dropdown-menu">
-                  <li><a className="dropdown-item" href="#">name1</a></li>
-                  <li><a className="dropdown-item" href="#">name2</a></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-        </ul>
+        <ServiceCatalogDDMenu />
       </li>
       <li className="nav-item">
         <a className="nav-link btn btn-lg font-weight-bolder" id="bdgtcalc-nav" href="#">Edit Budget Information</a>
