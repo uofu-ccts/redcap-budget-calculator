@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import BudgetCalculator from './budgetcalculator/BudgetCalculator';
+import BudgetProvider from '../contexts/BudgetProvider';
 
 class BudgetCalculatorPage extends Component {
   constructor(props) {
@@ -8,9 +9,9 @@ class BudgetCalculatorPage extends Component {
   }
   render() { 
     return ( 
-      <div>
+      <BudgetProvider>
         <BudgetCalculator />
-      </div>
+      </BudgetProvider>
      );
   }
 }

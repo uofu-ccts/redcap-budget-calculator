@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-//import React, { useContext, useState, useEffect } from 'react';
-//import {ServiceContext} from '../../contexts/ServiceContext';//needed a named, rather than default, import here ... *sigh*
 import SearchBox from '../tools/SearchBox';
 
 import ServiceData from '../../js/ServiceData';
@@ -16,8 +14,6 @@ function ServicesDDList() {
 
   const [data, setData] = useState('Loading Service Catalog ...');
   const [serviceDataObj] = useState(new ServiceData(data, setData));//don't need the setter for the ServiceData
-  
-  //const serviceCtx = useContext(ServiceContext);
 
   // Passing the empty array as the second argument of
   // useEffect() forces it to behave like componentDidMount()

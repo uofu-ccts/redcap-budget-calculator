@@ -11,11 +11,13 @@ import BCSaveModal from './BCSaveModal';
 import BCNav from './BCNav';
 import BCServicesTable from './BCServicesTable';
 
+import BudgetClinicalRowsConsumer from '../../contexts/BudgetConsumerClinicalRows';
+
 class BudgetCalculator extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showWelcome: true,//TODO: Set to false for debugging. Set to true for production
+      showWelcome: false,//TODO: Set to false for debugging. Set to true for production
       showInfo: false,
       showSave: false,
       showInfoSubjectCount: "",
@@ -88,6 +90,8 @@ class BudgetCalculator extends Component {
             <div id="disclaimer">
               This is a work in progress and not representative of the final product. Pricing data is for testing purposes only.
             </div>
+
+            <BudgetClinicalRowsConsumer />
           </div>
         </div>
       </div>
