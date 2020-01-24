@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 
 import Services from './ServicesDDList';
-import Dropdown from 'react-bootstrap/Dropdown';
+import BudgetContext from '../../contexts/BudgetContext';
+
 
 /**
- * This component is the guts of the Add Service.
- * 
- * NOTE: This component used to do a lot more than it currently does. It may be refactored out at some point.
+ * This component is the guts of the Add Service. 
+ * A function for adding rows is provided from the BudgetContext.
  */
 class ServiceCatalogDDMenu extends Component {
   render() { 
     return (
-        <Services />
+      <BudgetContext.Consumer>
+        {context => (
+          <Services addBCService = {(e) => context.addBCService(e)} />
+        )}
+      </BudgetContext.Consumer>
      );
   }
 }

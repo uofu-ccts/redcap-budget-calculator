@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import BudgetContext from './BudgetContext';
 
 class BudgetProvider extends Component {
+  
   constructor(props) {
     super(props);
     this.state = { 
@@ -11,11 +12,25 @@ class BudgetProvider extends Component {
       }
      }
   }
+
+  addBCService = (e) => {
+            e.preventDefault();
+            console.log("was here !!!!");//TODO: remove this line
+            this.setState({
+              bcrows: 
+              { 
+                ...this.state.bcrows, 
+                anotherRow:{name: 'another_service', description: 'another service'}
+              }
+            })
+          }
+
   render() { 
     return ( 
       <BudgetContext.Provider
         value={{
-          bcrows: this.state.bcrows
+          bcrows: this.state.bcrows,
+          addBCService: this.addBCService 
         }}>
         {this.props.children}
       </BudgetContext.Provider>

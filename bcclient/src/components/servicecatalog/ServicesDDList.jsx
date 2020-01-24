@@ -10,7 +10,7 @@ import NoData from '../tools/NoData';
 import Dropdown from 'react-bootstrap/Dropdown'
 
 
-function ServicesDDList() {
+function ServicesDDList(props) {
 
   const [data, setData] = useState('Loading Service Catalog ...');
   const [serviceDataObj] = useState(new ServiceData(data, setData));//don't need the setter for the ServiceData
@@ -41,7 +41,7 @@ function ServicesDDList() {
             <ul className="dropdown-menu">
               <li className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#">Category 1</a>
                 <ul className="dropdown-menu">
-                  <li id="bc-dropdown-li"><a className="dropdown-item" href="#">name1</a></li>
+                  <li id="bc-dropdown-li"><a className="dropdown-item" href="#" onClick={props.addBCService}>this one's live</a></li>
                   <li id="bc-dropdown-li"><a className="dropdown-item" href="#">name2</a></li>
                 </ul>
               </li>
