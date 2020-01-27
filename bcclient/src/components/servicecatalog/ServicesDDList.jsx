@@ -8,6 +8,7 @@ import ServiceDDItem from './ServiceDDItem';
 import NoData from '../tools/NoData';
 
 import Dropdown from 'react-bootstrap/Dropdown'
+import ServiceMenuItem from './ServiceMenuItem';
 
 
 function ServicesDDList(props) {
@@ -41,7 +42,7 @@ function ServicesDDList(props) {
             <ul className="dropdown-menu">
               <li className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#">Category 1</a>
                 <ul className="dropdown-menu">
-                  <li id="bc-dropdown-li"><a className="dropdown-item" href="#" onClick={props.addBCService}>this one's live</a></li>
+                  <ServiceMenuItem addBCService={props.addBCService} />
                   <li id="bc-dropdown-li"><a className="dropdown-item" href="#">name2</a></li>
                 </ul>
               </li>
