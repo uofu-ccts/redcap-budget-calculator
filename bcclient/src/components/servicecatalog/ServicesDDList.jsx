@@ -42,7 +42,7 @@ function ServicesDDList(props) {
             <ul className="dropdown-menu">
               <li className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#">Category 1</a>
                 <ul className="dropdown-menu">
-                  <ServiceMenuItem addBCService={props.addBCService} />
+                  <ServiceMenuItem addBCService={props.addBCService} service={{serviceversion: 'niftyversion2', name: 'my service2', description: 'my description2'}} />
                   <li id="bc-dropdown-li"><a className="dropdown-item" href="#">name2</a></li>
                 </ul>
               </li>

@@ -8,7 +8,7 @@ class ClinicalRow extends Component {
   render() { 
     return ( 
       <p>
-        id = {this.props.id}; name = {this.props.name}; description = {this.props.description} 
+        id = {this.props.id}; name = {this.props.name}; description = {this.props.description}; serviceversion = {this.props.serviceversion} 
       </p>
      );
   }

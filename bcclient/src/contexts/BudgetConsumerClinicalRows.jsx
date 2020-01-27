@@ -15,6 +15,7 @@ class BudgetClinicalRowsConsumer extends Component {
                           id={rowID}
                           name={context.bcrows[rowID].name}
                           description={context.bcrows[rowID].description}
+                          serviceversion={context.bcrows[rowID].serviceversion}
                       />
                   ))}
               </>

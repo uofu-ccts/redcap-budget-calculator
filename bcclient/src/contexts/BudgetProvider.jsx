@@ -13,14 +13,14 @@ class BudgetProvider extends Component {
      }
   }
 
-  addBCService = (e) => {
+  addBCService = (e, serviceRow) => {
+            e.persist();
             e.preventDefault();
-            console.log("was here !!!!");//TODO: remove this line
             this.setState({
               bcrows: 
               { 
                 ...this.state.bcrows, 
-                anotherRow:{name: 'another_service', description: 'another service'}
+                anotherRow:{name: serviceRow.name, description: serviceRow.description, serviceversion: serviceRow.serviceversion}
               }
             })
           }

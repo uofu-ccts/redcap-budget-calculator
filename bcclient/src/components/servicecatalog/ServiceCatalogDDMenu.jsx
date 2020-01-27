@@ -13,7 +13,7 @@ class ServiceCatalogDDMenu extends Component {
     return (
       <BudgetContext.Consumer>
         {context => (
-          <Services addBCService = {(e) => context.addBCService(e)} />
+          <Services addBCService = {(e, service) => context.addBCService(e, service)} />
         )}
       </BudgetContext.Consumer>
      );
