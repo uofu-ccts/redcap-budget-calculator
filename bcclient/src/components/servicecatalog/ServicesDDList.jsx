@@ -3,13 +3,10 @@ import React, { useState, useEffect } from 'react';
 import SearchBox from '../tools/SearchBox';
 
 import ServiceData from '../../js/ServiceData';
-import ServiceDDItem from './ServiceDDItem';
-
-import NoData from '../tools/NoData';
 
 import Dropdown from 'react-bootstrap/Dropdown'
 import ServiceMenuItem from './ServiceMenuItem';
-
+import ServiceSubMenus from './ServiceSubMenus';
 
 function ServicesDDList(props) {
 
@@ -58,10 +55,7 @@ function ServicesDDList(props) {
 
           <li id="bc-dropdown-li"><Dropdown.Divider /></li>
 
-          {Array.from(data).length===0?<NoData />:""}
-          {(Array.from(data).map(serviceobj => (
-            <ServiceDDItem key={Math.floor(Math.random() * 100000000)} servicerecordid={Math.floor(Math.random() * 100000000)} {...serviceobj} />
-          )))}
+          <ServiceSubMenus addBCService={props.addBCService} bcServiceData={data} />
         </ul>
 
         
