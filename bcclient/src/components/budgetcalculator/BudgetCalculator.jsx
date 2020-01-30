@@ -12,6 +12,7 @@ import BCNav from './BCNav';
 import BCServicesTable from './BCServicesTable';
 
 import BudgetClinicalRowsConsumer from '../../contexts/BudgetConsumerClinicalRows';
+import BudgetNONClinicalRowsConsumer from '../../contexts/BudgetNONClinicalRowsConsumer';
 
 class BudgetCalculator extends Component {
   constructor(props) {
@@ -92,6 +93,7 @@ class BudgetCalculator extends Component {
             </div>
 
             <BudgetClinicalRowsConsumer />
+            <BudgetNONClinicalRowsConsumer />
           </div>
         </div>
       </div>

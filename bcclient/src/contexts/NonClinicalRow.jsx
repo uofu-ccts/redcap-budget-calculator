@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class ClinicalRow extends Component {
+class NonClinicalRow extends Component {
   constructor(props) {
     super(props);
     this.state = {  }
@@ -21,4 +21,4 @@ class ClinicalRow extends Component {
   }
 }
  
-export default ClinicalRow;
+export default NonClinicalRow;

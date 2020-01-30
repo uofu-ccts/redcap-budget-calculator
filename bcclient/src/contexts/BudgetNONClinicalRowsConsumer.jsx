@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import BudgetContext from './BudgetContext';
-import ClinicalRow from './ClinicalRow';
+import NonClinicalRow from './NonClinicalRow';
 
-class BudgetClinicalRowsConsumer extends Component {
+class BudgetNONClinicalRowsConsumer extends Component {
 
-  isClinical = obj => {
-      return parseInt(obj.clinical);
+  isNonClinical = obj => {
+      return parseInt(obj.clinical) == 0;
   }
 
   render() { 
@@ -13,10 +13,10 @@ class BudgetClinicalRowsConsumer extends Component {
       <BudgetContext.Consumer>
           {context => (
               <>
-                  <h4>Clinical Rows:</h4>
+                  <h4>Non-Clinical Rows:</h4>
                   {/* {console.log("test1...",context.bcrows)} */}
-                  {Object.values(context.bcrows).filter(this.isClinical).map(obj => (
-                      <ClinicalRow
+                  {Object.values(context.bcrows).filter(this.isNonClinical).map(obj => (
+                      <NonClinicalRow
                           key={obj.key}
                           id={obj.id}
                           core={obj.core}
@@ -35,4 +35,4 @@ class BudgetClinicalRowsConsumer extends Component {
   }
 }
  
-export default BudgetClinicalRowsConsumer;
+export default BudgetNONClinicalRowsConsumer;
