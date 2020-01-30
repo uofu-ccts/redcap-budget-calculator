@@ -245,7 +245,7 @@ class BCServicesTable extends Component {
                             <input type="hidden" name="redcap_csrf_token" value="" />
                         </form>
                         <div className="action-button">
-                            <Button type="submit" variant="success" id="submit" onClick={this.handleSubmitButtonClick}>Submit</Button>
+                            {/* <Button type="submit" variant="success" id="submit" onClick={this.handleSubmitButtonClick}>Submit</Button> */}
                         </div>
 
                         <BCSubmitModal showBCSubmit={this.state.showBCSubmit} handleBCSubmitCallback={this.handleBCSubmitCallback} handleBCSubmitHide={this.handleBCSubmitHide} />

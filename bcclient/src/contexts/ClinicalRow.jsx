@@ -6,9 +6,16 @@ class ClinicalRow extends Component {
     this.state = {  }
   }
   render() { 
+    console.log("test2...");
+
     return ( 
       <p>
-        id = {this.props.id}; name = {this.props.name}; description = {this.props.description}; serviceversion = {this.props.serviceversion} 
+        id={this.props.id}; 
+        service={this.props.service}; 
+        description={this.props.description}; 
+        industryrate={this.props.industryrate}; 
+        federalrate={this.props.federalrate}; 
+        clinical={this.props.clinical}; 
       </p>
      );
   }

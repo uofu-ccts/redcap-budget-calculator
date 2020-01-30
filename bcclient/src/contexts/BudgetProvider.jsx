@@ -6,21 +6,27 @@ class BudgetProvider extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      bcrows: {
-        abc123: {name: 'service1', description: 'first service'},
-        xyz789: {name: 'service2', description: 'second service'}
-      }
+      bcrows: {}
      }
   }
 
   addBCService = (e, serviceRow) => {
             e.persist();
             e.preventDefault();
+
+            // Good for a few thousand budget items without worrying about collisions.
+            let oneTimeUseId = '_' + Math.random().toString(36).substr(2, 9);
+
+            let serviceObj = JSON.parse(serviceRow)[0];
+            {console.log("test serviceObj...",serviceObj)}
+            serviceObj["id"] = oneTimeUseId;
+            serviceObj["key"] = oneTimeUseId;
+
             this.setState({
               bcrows: 
               { 
                 ...this.state.bcrows, 
-                anotherRow:{name: serviceRow.name, description: serviceRow.description, serviceversion: serviceRow.serviceversion}
+                [oneTimeUseId]:serviceObj
               }
             })
           }

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import ServiceMenuItem from './ServiceMenuItem';
-import ServiceDDItem from './ServiceDDItem';
 import NoData from '../tools/NoData';
 
 class ServiceSubMenus extends Component {
@@ -54,7 +53,7 @@ class ServiceSubMenus extends Component {
                     <ul className="dropdown-menu">
                       {
                       Object.entries(categoryobj[1]).map(serviceobj => (
-                      <ServiceMenuItem key={serviceobj} serviceobj={JSON.stringify(serviceobj[1])} servicename={serviceobj[0]} />
+                      <ServiceMenuItem key={serviceobj} addBCService={this.props.addBCService} serviceobj={JSON.stringify(serviceobj[1])} servicename={serviceobj[0]} />
                       ))}
                     </ul>
                   </li>))
