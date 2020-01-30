@@ -12,12 +12,6 @@ class ServiceSubMenus extends Component {
   }
 
   reduceToTree = (serviceTree, serviceobj) => {
-    // console.log("serviceobj.core=", serviceobj.core)
-    // console.log("serviceobj.category=", serviceobj.category)
-    // console.log("serviceobj.service=", serviceobj.service)
-
-
-    // console.log("-->", Object.keys(serviceobj));
 
     if (! (serviceobj.core && serviceobj.category && serviceobj.service))
     {
@@ -45,48 +39,36 @@ class ServiceSubMenus extends Component {
     serviceTree[coreKey][categoryKey][serviceKey].push(serviceobj);
 
     return serviceTree;
-
-    // if (! serviceMap.has(serviceobj.core))
-    // {
-    //   serviceMap.set(serviceobj.core, new Map());
-    // }
-
-    // let coremap = serviceMap.get(serviceobj.core);
-    // // console.log("serviceobj.core...",serviceobj.core);
-    // // console.log("serviceMap.get(serviceobj.core)...",serviceMap.get(serviceobj.core));
-    // if (! coremap.has(serviceobj.category))
-    // {
-    //   serviceMap.get(serviceobj.core).set(serviceobj.category,  new Map());
-    // }
-
-    // serviceMap.get(serviceobj.core).get(serviceobj.category).set(serviceobj.service, {...serviceobj});
-
-    // return serviceMap.set(serviceobj.core, {...serviceobj});//[serviceobj.category][serviceobj.service] = {...serviceobj}
   }
 
   createMenuTree = (data) => {
     let menuTreeObj = Object.values(data).reduce(this.reduceToTree, {});
-    console.log( "menuTreeObj ... ", menuTreeObj );
-    console.log( "menuTreeObj size ... ", Object.entries(menuTreeObj).length );
-    // console.log( "---------------" );
-    // console.log( "data size ... ", Object.values(data).length );
-    // console.log( "data size ... ", Object.values(data)[0].service );
 
-    return Object.entries(menuTreeObj).map(serviceobj => (
-          <>
-            {/* <ServiceDDItem key={Math.floor(Math.random() * 100000000)} serviceTree={menuTreeObj} /> */}
-            <ServiceMenuItem key={Math.floor(Math.random() * 100000000)} serviceobj={serviceobj} />
-          </>
+    //NOTE: The names of submenus are unique so can be used as keys. Service names could be non-unique, but in practice generally are so for now are used for keys
+    return Object.entries(menuTreeObj).map(coreobj => (
+            <li key={coreobj} className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#">{coreobj[0]}</a>
+              <ul className="dropdown-menu">
+                {
+                  Object.entries(coreobj[1]).map(categoryobj => (
+                  <li key={categoryobj} className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#">{categoryobj[0]}</a>
+                    <ul className="dropdown-menu">
+                      {
+                      Object.entries(categoryobj[1]).map(serviceobj => (
+                      <ServiceMenuItem key={serviceobj} serviceobj={JSON.stringify(serviceobj[1])} servicename={serviceobj[0]} />
+                      ))}
+                    </ul>
+                  </li>))
+                }
+              </ul>
+            </li>
         ));
-  }//addBCService={this.props.addBCService} service={{serviceversion: 'niftyversion2', name: 'my service2', description: 'my description3'}} 
+  }
+  //TODO: keeping for reference for a short time, then removing this comment
+  //addBCService={this.props.addBCService} service={{serviceversion: 'niftyversion2', name: 'my service2', description: 'my description3'}} 
 
 
   render() {
     const data = {...this.props.bcServiceData};
-    // console.log( "data ... ", data );
-    // console.log( "data[0] ... ", data[0] );
-    // console.log( "data[0].service ... ", data[0].service );
-    // console.log( "Object.values(data) ... ", Object.values(data) );
 
     return ( 
       <>

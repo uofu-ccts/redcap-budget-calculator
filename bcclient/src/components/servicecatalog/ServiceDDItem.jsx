@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 
-class ServiceDDItem extends Component {
+class ServiceDDItem extends Component {//TODO: Deprecated. Remove at some point.
   constructor(props) {
     super(props);
     this.state = { serviceObj: this.props.service }

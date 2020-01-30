@@ -17,7 +17,7 @@ class BudgetCalculator extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showWelcome: false,//TODO: Set to false for debugging. Set to true for production
+      showWelcome: true,//TODO: Set to false for debugging. Set to true for production
       showInfo: false,
       showSave: false,
       showInfoSubjectCount: "",
