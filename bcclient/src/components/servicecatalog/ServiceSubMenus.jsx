@@ -72,13 +72,13 @@ class ServiceSubMenus extends Component {
     // console.log( "data size ... ", Object.values(data).length );
     // console.log( "data size ... ", Object.values(data)[0].service );
 
-    return Object.entries(data).map(serviceobj => (
+    return Object.entries(menuTreeObj).map(serviceobj => (
           <>
-            <ServiceDDItem key={Math.floor(Math.random() * 100000000)} servicerecordid={Math.floor(Math.random() * 100000000)} {...serviceobj} />
-            <ServiceMenuItem addBCService={this.props.addBCService} service={{serviceversion: 'niftyversion2', name: 'my service2', description: 'my description3'}} />
+            {/* <ServiceDDItem key={Math.floor(Math.random() * 100000000)} serviceTree={menuTreeObj} /> */}
+            <ServiceMenuItem key={Math.floor(Math.random() * 100000000)} serviceobj={serviceobj} />
           </>
         ));
-  }
+  }//addBCService={this.props.addBCService} service={{serviceversion: 'niftyversion2', name: 'my service2', description: 'my description3'}} 
 
 
   render() {

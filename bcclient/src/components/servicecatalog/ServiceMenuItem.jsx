@@ -3,13 +3,16 @@ class ServiceMenuItem extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      service: this.props.service
+      serviceobj: this.props.serviceobj
      }
   }
 
-  render() { 
+  render() {
+    console.log("service object ...",this.state.serviceobj);
+    // let oneService = Object.values(this.state.serviceTree)[0];
+
     return ( 
-      <li id="bc-dropdown-li"><a className="dropdown-item" href="#" onClick={(e) => this.props.addBCService(e, this.state.service)}>this one's live!!</a></li>
+      <li id="bc-dropdown-li"><a className="dropdown-item" href="#" onClick={(e) => this.props.addBCService(e, this.state.serviceTree)}>this one's live!!</a></li>
      );
   }
 }
