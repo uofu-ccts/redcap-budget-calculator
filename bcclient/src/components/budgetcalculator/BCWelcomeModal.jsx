@@ -11,7 +11,8 @@ class BCWelcomeModal extends Component {
     this.state = {
       showWelcome: props.showWelcome,
       welcomeCallback: props.welcomeCallback,
-      buttonActive: false
+      buttonActive: false,
+      setFundingType: props.setFundingType
     }
     this.selection = React.createRef();
   }
@@ -20,13 +21,14 @@ class BCWelcomeModal extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    this.state.setFundingType(e, this.selection.current.value);
     this.state.welcomeCallback( this.selection.current.value );
     this.setState({showWelcome: false})
 
   }
 
   render() { 
-    return ( 
+    return (
       <Modal id="welcomeModal" centered backdrop="static" show={this.props.showWelcome} aria-labelledby="welcomeModal" aria-hidden="true">
           <div role="document">
             <Form id="welcomeForm" onSubmit={this.handleSubmit}>

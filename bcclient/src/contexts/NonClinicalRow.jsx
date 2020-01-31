@@ -13,13 +13,21 @@ class NonClinicalRow extends Component {
     this.props.removeBCService(e, this.props.id)
   }
 
+  toDollars = dollars => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2
+    }).format(dollars);
+  }
+
   render() { 
     return ( 
       <tr className="service-line-item" onInput={this.handleUpdateTotals}>
         <td style={{borderRightStyle:'hidden'}}> <span> <button className="delete btn btn-link" title="Delete" data-toggle="tooltip" onClick={this.handleTrash}><TrashIcon /></button> </span> </td>
         <td className="service-title"> <small>{this.props.core} &gt; {this.props.category} </small> <br /><span> {this.props.service} </span> <InfoCircleIcon description={this.props.description} /> </td>
-        <td className="base-cost">${this.props.industryrate}</td>
-        <td className="your-cost">${this.props.federalrate}  </td>
+          <td className="base-cost">{this.toDollars(this.props.industryrate)}</td>
+          <td className="your-cost">{(this.props.fundingType=='federal_rate') ? this.toDollars(this.props.federalrate) : this.toDollars(this.props.industryrate)}  </td>
         <td>
             <input className="qty-count" type="number" min="1" value="1" onChange={this.handleQtyCountChange}/>
         </td>

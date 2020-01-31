@@ -6,8 +6,16 @@ class BudgetProvider extends Component {
   constructor(props) {
     super(props);
     this.state = { 
+      fundingType: '',
       bcrows: {}
      }
+  }
+
+  setFundingType = (e, fundingType) => {
+        //TODO: finish this method
+    console.log("welcomeCallback ... funding type2: " + fundingType);
+
+    this.setState({ fundingType: fundingType });
   }
 
   removeBCService = (e, serviceId) => {
@@ -43,8 +51,10 @@ class BudgetProvider extends Component {
       <BudgetContext.Provider
         value={{
           bcrows: this.state.bcrows,
+          fundingType: this.state.fundingType,
           addBCService: this.addBCService, 
-          removeBCService: this.removeBCService 
+          removeBCService: this.removeBCService,
+          setFundingType: this.setFundingType 
         }}>
         {this.props.children}
       </BudgetContext.Provider>

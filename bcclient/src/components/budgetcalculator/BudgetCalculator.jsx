@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import './css/bc_custom.css';
 import './css/bc_custom_2020.scss';
 
-import BCWelcomeModal from './BCWelcomeModal';
 import BCJumbotron from './BCJumbotron';
 import BCInfoModal from './BCInfoModal';
 import BCSaveModal from './BCSaveModal';
@@ -15,7 +14,6 @@ class BudgetCalculator extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showWelcome: false,//TODO: Set to false for debugging. Set to true for production
       showInfo: false,
       showSave: false,
       showInfoSubjectCount: "",
@@ -50,12 +48,6 @@ class BudgetCalculator extends Component {
 
   handleHideWelcome = () => this.setState({showWelcome: false});
 
-  welcomeCallback = (fundingType) => {
-    //TODO: finish this method
-    console.log("welcomeCallback ... funding type: " + fundingType);
-    this.setState({showWelcome: false})
-  }
-
   render() { 
     return ( 
       <div id="pagecontainer" className="container-fluid" role="main">
@@ -64,9 +56,6 @@ class BudgetCalculator extends Component {
             <BCJumbotron />
             <br />
             <br />
-
-            <BCWelcomeModal showWelcome={this.state.showWelcome} welcomeCallback={this.welcomeCallback} hideWelcome={this.handleHideWelcome} />
-
             <BCInfoModal
               showInfo={this.state.showInfo}
               showInfoSubjectCount={this.state.showInfoSubjectCount}
