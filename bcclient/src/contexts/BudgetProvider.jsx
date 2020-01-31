@@ -10,6 +10,14 @@ class BudgetProvider extends Component {
      }
   }
 
+  removeBCService = (e, serviceId) => {
+    let updatedBCRows = {...this.state.bcrows};
+    delete updatedBCRows[serviceId];
+    this.setState({
+              bcrows: updatedBCRows
+            });
+  }
+
   addBCService = (e, serviceRow) => {
             e.persist();
             e.preventDefault();
@@ -18,7 +26,6 @@ class BudgetProvider extends Component {
             let oneTimeUseId = '_' + Math.random().toString(36).substr(2, 9);
 
             let serviceObj = JSON.parse(serviceRow)[0];
-            {console.log("test serviceObj...",serviceObj)}
             serviceObj["id"] = oneTimeUseId;
             serviceObj["key"] = oneTimeUseId;
 
@@ -36,7 +43,8 @@ class BudgetProvider extends Component {
       <BudgetContext.Provider
         value={{
           bcrows: this.state.bcrows,
-          addBCService: this.addBCService 
+          addBCService: this.addBCService, 
+          removeBCService: this.removeBCService 
         }}>
         {this.props.children}
       </BudgetContext.Provider>

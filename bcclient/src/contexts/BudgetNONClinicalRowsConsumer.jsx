@@ -41,6 +41,7 @@ class BudgetNONClinicalRowsConsumer extends Component {
                           industryrate={obj.industry_rate}
                           federalrate={obj.federal_rate}
                           clinical={obj.clinical}
+                          removeBCService={context.removeBCService}
                       />
                   ))}
               </>
