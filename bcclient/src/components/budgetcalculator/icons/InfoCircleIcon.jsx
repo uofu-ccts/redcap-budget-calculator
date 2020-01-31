@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
+import Popover from 'react-bootstrap/Popover'
+
+
 class InfoCircleIcon extends Component {
   constructor(props) {
     super(props);
@@ -9,7 +14,15 @@ class InfoCircleIcon extends Component {
   }
   render() { 
     return ( 
-      <FontAwesomeIcon icon={faInfoCircle} color='#3E72A8' />
+      <OverlayTrigger
+            placement="right"
+            delay={{ show: 250, hide: 400 }}
+            overlay={<Popover id={`popover-positioned-right`}>
+          <Popover.Content>
+            {this.props.description}
+          </Popover.Content>
+        </Popover>}
+          ><FontAwesomeIcon icon={faInfoCircle} color='#3E72A8' /></OverlayTrigger>
      );
   }
 }

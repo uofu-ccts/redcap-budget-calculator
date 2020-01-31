@@ -14,12 +14,10 @@ class NonClinicalRow extends Component {
   }
 
   render() { 
-    // console.log("test2...");
-
     return ( 
       <tr className="service-line-item" onInput={this.handleUpdateTotals}>
         <td style={{borderRightStyle:'hidden'}}> <span> <button className="delete btn btn-link" title="Delete" data-toggle="tooltip" onClick={this.handleTrash}><TrashIcon /></button> </span> </td>
-        <td className="service-title"> <small>{this.props.core} &gt; {this.props.category} </small> <br /><span> {this.props.service} </span> <InfoCircleIcon data-toggle="tooltip" title={this.props.description} /> </td>
+        <td className="service-title"> <small>{this.props.core} &gt; {this.props.category} </small> <br /><span> {this.props.service} </span> <InfoCircleIcon description={this.props.description} /> </td>
         <td className="base-cost">${this.props.industryrate}</td>
         <td className="your-cost">${this.props.federalrate}  </td>
         <td>
