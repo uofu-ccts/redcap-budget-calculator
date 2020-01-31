@@ -11,9 +11,6 @@ import BCSaveModal from './BCSaveModal';
 import BCNav from './BCNav';
 import BCServicesTable from './BCServicesTable';
 
-import BudgetClinicalRowsConsumer from '../../contexts/BudgetConsumerClinicalRows';
-import BudgetNONClinicalRowsConsumer from '../../contexts/BudgetNONClinicalRowsConsumer';
-
 class BudgetCalculator extends Component {
   constructor(props) {
     super(props);
@@ -91,9 +88,6 @@ class BudgetCalculator extends Component {
             <div id="disclaimer">
               This is a work in progress and not representative of the final product. Pricing data is for testing purposes only.
             </div>
-
-            <BudgetClinicalRowsConsumer />
-            <BudgetNONClinicalRowsConsumer />
           </div>
         </div>
       </div>

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import TrashIcon from '../components/budgetcalculator/icons/TrashIcon';
+import InfoCircleIcon from '../components/budgetcalculator/icons/InfoCircleIcon';
 
 class NonClinicalRow extends Component {
   constructor(props) {
@@ -9,14 +11,19 @@ class NonClinicalRow extends Component {
     // console.log("test2...");
 
     return ( 
-      <p>
-        id={this.props.id}; 
-        service={this.props.service}; 
-        description={this.props.description}; 
-        industryrate={this.props.industryrate}; 
-        federalrate={this.props.federalrate}; 
-        clinical={this.props.clinical}; 
-      </p>
+      <tr id={this.props.id} className="service-line-item" onInput={this.handleUpdateTotals}>
+        <td style={{borderRightStyle:'hidden'}}> <span> <button className="delete btn btn-link" title="Delete" data-toggle="tooltip"><TrashIcon /></button> </span> </td>
+        <td className="service-title"> <small>{this.props.core} &gt; {this.props.category} </small> <br /><span> {this.props.service} </span> <InfoCircleIcon data-toggle="tooltip" title={this.props.description} /> </td>
+        <td className="base-cost">${this.props.industryrate}</td>
+        <td className="your-cost">${this.props.federalrate}  </td>
+        <td>
+            <input className="qty-count" type="number" min="1" value="1" onChange={this.handleQtyCountChange}/>
+        </td>
+        <td>Hours</td>
+        <td className="non_clinical-blank" colSpan="7"></td>
+        <td className="line-total">$100.00</td>
+      </tr>
+
      );
   }
 }

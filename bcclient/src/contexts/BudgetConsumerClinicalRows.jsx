@@ -8,13 +8,28 @@ class BudgetClinicalRowsConsumer extends Component {
       return parseInt(obj.clinical);
   }
 
+  displayRows = rows => {
+    
+    if (rows > 0) {
+        return;
+    }
+
+    return (
+        <tr id="clinicalEmpty">
+            <td colSpan="14">No services added</td>
+        </tr>
+    );
+  }
+
   render() { 
     return ( 
       <BudgetContext.Consumer>
           {context => (
               <>
-                  <h4>Clinical Rows:</h4>
-                  {/* {console.log("test1...",context.bcrows)} */}
+                  {
+                    this.displayRows( Object.values(context.bcrows).filter(this.isClinical).length )
+                  }
+
                   {Object.values(context.bcrows).filter(this.isClinical).map(obj => (
                       <ClinicalRow
                           key={obj.key}

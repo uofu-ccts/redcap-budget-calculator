@@ -8,13 +8,28 @@ class BudgetNONClinicalRowsConsumer extends Component {
       return parseInt(obj.clinical) == 0;
   }
 
+  displayRows = rows => {
+    
+    if (rows > 0) {
+        return;
+    }
+
+    return (
+        <tr id="clinicalEmpty">
+  <td colSpan="14">No services added</td>
+        </tr>
+    );
+  }
+
   render() { 
     return ( 
       <BudgetContext.Consumer>
           {context => (
               <>
-                  <h4>Non-Clinical Rows:</h4>
-                  {/* {console.log("test1...",context.bcrows)} */}
+                  {
+                    this.displayRows( Object.values(context.bcrows).filter(this.isNonClinical).length )
+                  }
+
                   {Object.values(context.bcrows).filter(this.isNonClinical).map(obj => (
                       <NonClinicalRow
                           key={obj.key}

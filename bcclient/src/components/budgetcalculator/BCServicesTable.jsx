@@ -11,6 +11,8 @@ import BCSubmitSuccessModal from './BCSubmitSuccessModal';
 
 import Button from "react-bootstrap/Button";
 
+import BudgetClinicalRowsConsumer from '../../contexts/BudgetConsumerClinicalRows';
+import BudgetNONClinicalRowsConsumer from '../../contexts/BudgetNONClinicalRowsConsumer';
 
 class BCServicesTable extends Component {
 
@@ -145,39 +147,8 @@ class BCServicesTable extends Component {
                                 </tr>
                             </tbody>
                             <tbody id="clinical">
-                                <tr id="clinicalEmpty" style={{display: 'none'}}>
-                                    <td colSpan="14">No services added</td>
-                                </tr>
-                                <tr className="service-line-item" onInput={this.handleUpdateTotals}>
-                                    <td style={{borderRightStyle:'hidden'}}> <span> <button className="delete btn btn-link" title="Delete" data-toggle="tooltip"><TrashIcon /></button> </span> </td>
-                                    <td className="service-title"> <small>Clinical Research Unit &gt; Bionutrition </small> <br /><span> Beverage Service </span> <InfoCircleIcon data-toggle="tooltip" title=" Meal service for 1 beverage (soda pop, juice, coffee, tea). " /> </td>
-                                    <td className="base-cost">$70.00</td>
-                                    <td className="your-cost">$70.00  </td>
-                                    <td>
-                                        <input className="qty-count" type="number" min="1" value="20" onChange={this.handleSubjectsChange} />
-                                    </td>
-                                    <td>Beverages</td>
-                                    <td className="allVisits">
-                                        <button className="btn btn-success check-row-button" style={{width: '40px'}} value="all"><CheckIcon /></button>
-                                    </td>
-                                    <td className="visit-column">
-                                        <input type="checkbox" className="visit-checkbox" data-id="0" />
-                                    </td>
-                                    <td className="visit-column">
-                                        <input type="checkbox" className="visit-checkbox" data-id="1" />
-                                    </td>
-                                    <td className="visit-column">
-                                        <input type="checkbox" className="visit-checkbox" data-id="2" />
-                                    </td>
-                                    <td className="visit-column">
-                                        <input type="checkbox" className="visit-checkbox" data-id="3" />
-                                    </td>
-                                    <td className="visit-column">
-                                        <input type="checkbox" className="visit-checkbox" data-id="4" />
-                                    </td>
-                                    <td className="line-total-per-patient">$0.00</td>
-                                    <td className="line-total">$0.00</td>
-                                </tr>
+            <BudgetClinicalRowsConsumer />
+                                
                             </tbody>
                             <tbody>
                                 <tr className="bg-secondary text-white">
@@ -202,33 +173,7 @@ class BCServicesTable extends Component {
                                 </tr>
                             </tbody>
                             <tbody id="non_clinical">
-                                <tr id="non_clinicalEmpty" style={{display: 'none'}}>
-                                    <td colSpan="14">No services added</td>
-                                </tr>
-                                <tr className="service-line-item" onInput={this.handleUpdateTotals}>
-                                    <td style={{borderRightStyle:'hidden'}}> <span> <button className="delete btn btn-link" title="Delete" data-toggle="tooltip"><TrashIcon /></button> </span> </td>
-                                    <td className="service-title"> <small>Clinical Research Coordination and Study Management &gt; Coordinator Core </small> <br /><span> Budget and Contract Development Services </span> <InfoCircleIcon data-toggle="tooltip" title=" Experienced staff will assist with the  industry contract, prepare a budget in accordance with institutional and funding entity guidelines; assist with budget negotiation; create a study-tracking; and perform periodic post-award financial monitoring. " /> </td>
-                                    <td className="base-cost">$100.00</td>
-                                    <td className="your-cost">$100.00  </td>
-                                    <td>
-                                        <input className="qty-count" type="number" min="1" value="1" onChange={this.handleQtyCountChange}/>
-                                    </td>
-                                    <td>Hours</td>
-                                    <td className="non_clinical-blank" colSpan="7"></td>
-                                    <td className="line-total">$100.00</td>
-                                </tr>
-                                <tr className="service-line-item" onInput={this.handleUpdateTotals}>
-                                    <td style={{borderRightStyle:'hidden'}}> <span> <button className="delete btn btn-link" title="Delete" data-toggle="tooltip"><TrashIcon /></button> </span> </td>
-                                    <td className="service-title"> <small>Biomedical Informatics Core &gt; REDCap (Research Electronic Data Capture) </small> <br /><span> REDCap ICON Course (Training) </span> <InfoCircleIcon data-toggle="tooltip" title=" Take our self paced online REDCap training in ICON.     The REDCap course prepares you for the basics of form and survey design in REDCap.     A certificate of completion is awarded upon successful completion of the course. " /> </td>
-                                    <td className="base-cost">$0.00</td>
-                                    <td className="your-cost">$0.00  </td>
-                                    <td>
-                                        <input className="qty-count" type="number" min="1" value="1" onChange={this.handleQtyCountChange}/>
-                                    </td>
-                                    <td>Consult</td>
-                                    <td className="non_clinical-blank" colSpan="7"></td>
-                                    <td className="line-total">$0.00</td>
-                                </tr>
+            <BudgetNONClinicalRowsConsumer />
                             </tbody>
                             <tbody>
                                 <tr className="bg-secondary text-white">
