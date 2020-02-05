@@ -7,7 +7,12 @@ class BudgetProvider extends Component {
     super(props);
     this.state = { 
       fundingType: '',
-      bcrows: {}
+      bcrows: {},
+      nonclinicalRowTotals: [],
+      clinicalRowsTotal: [],
+      nonclinicalTotals: 0,
+      clinicalTotals: 0,
+      grandTotal: 0 
      }
   }
 
@@ -52,6 +57,11 @@ class BudgetProvider extends Component {
         value={{
           bcrows: this.state.bcrows,
           fundingType: this.state.fundingType,
+
+          nonclinicalTotals: this.state.nonclinicalTotals,
+          clinicalTotals: this.state.clinicalTotals,
+          grandTotal: this.state.grandTotal,
+
           addBCService: this.addBCService, 
           removeBCService: this.removeBCService,
           setFundingType: this.setFundingType 

@@ -13,6 +13,8 @@ import Button from "react-bootstrap/Button";
 
 import BudgetClinicalRowsConsumer from '../../contexts/BudgetConsumerClinicalRows';
 import BudgetNONClinicalRowsConsumer from '../../contexts/BudgetNONClinicalRowsConsumer';
+import BudgetTotal from '../../contexts/BudgetTotal';
+
 
 class BCServicesTable extends Component {
 
@@ -153,7 +155,7 @@ class BCServicesTable extends Component {
                             <tbody>
                                 <tr className="bg-secondary text-white">
                                     <td colSpan="13" style={{textAlign: 'right', borderRightStyle:'hidden'}}>Clinical Total:</td>
-                                    <td id="clinicalTotal">$0.00</td>
+                                    <td id="clinicalTotal"><BudgetTotal clinical /></td>
                                 </tr>
                                 <tr className="nonClinicalHeaders">
                                     <th style={{borderRightStyle:'hidden', width: '3%'}}> </th>
@@ -178,11 +180,11 @@ class BCServicesTable extends Component {
                             <tbody>
                                 <tr className="bg-secondary text-white">
                                     <td colSpan="13" style={{textAlign: 'right', borderRightStyle:'hidden'}}>Non-Clinical Total:</td>
-                                    <td id="non_clinicalTotal">$100.00</td>
+                                    <td id="non_clinicalTotal"><BudgetTotal nonclinical /></td>
                                 </tr>
                                 <tr className="total-row">
                                     <td className="total-header" colSpan="13" style={{textAlign: 'right', borderRightStyle:'hidden'}}>Grand Total:</td>
-                                    <td className="total">$100.00</td>
+                                    <td className="total"><BudgetTotal grand /></td>
                                 </tr>
                             </tbody>
                         </table>
