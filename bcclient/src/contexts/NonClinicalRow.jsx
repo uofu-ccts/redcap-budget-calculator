@@ -14,19 +14,23 @@ class NonClinicalRow extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      totalcost: this.validateTotalCost(this.state.yourcost * this.state.quantity)
-    });
-
-    //TODO: add total cost for non-clinical total
-
+    // add total cost for non-clinical total
+    this.setState(
+      (state, props)=>{
+        return {totalcost: this.validateTotalCost(state.yourcost * state.quantity)}
+      },
+      ()=>{
+        this.props.addNonclinicalCost(this.state.id, this.state.totalcost);
+      }
+    );
   }
 
   handleTrash = (e) => {
     e.persist();
     this.props.removeBCService(e, this.props.id)
 
-    //TODO: remove total cost from non-clinical total
+    //remove total cost from non-clinical total
+    this.props.removeNonclinicalCost(this.props.id)
   }
 
   toDollars = dollars => {
@@ -48,7 +52,8 @@ class NonClinicalRow extends Component {
       quantity: event.target.value, 
       totalcost: actualTotal});
 
-    //TODO: update total cost for non-clinical total
+    //update total cost for non-clinical total
+    this.props.addNonclinicalCost(this.props.id, actualTotal)
 
   }
 
