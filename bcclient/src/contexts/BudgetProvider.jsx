@@ -14,9 +14,42 @@ class BudgetProvider extends Component {
 
       nonclinicalTotals: 0,
       clinicalTotals: 0,
-      grandTotal: 0 
+      grandTotal: 0,
+
+      chsLeftNavState: 'disabled', //nav states, ... 'active' and 'disabled'
+      chsRightNavState: 'disabled',
+      chsBtnStates: ['disabled','disabled','disabled','disabled','disabled'], //button states, ... 'select', 'deselect' and 'disabled'
+      chsVisitIndex: 1, //base index is 1, not 0. Changes in increments of 5
+      chsVisitLength: 0 //number of columns of visits that can be selected
      }
   }
+
+  //////////////////////////////////////////
+  //
+  // BEGIN: Clinical Services Header Context (CSH)
+
+  cshNavLeft = () => {
+    console.log("cshNavLeft clicked")
+  }
+
+  cshNavRight = () => {
+    console.log("cshNavRight clicked")
+  }
+
+  /**
+   * Five displayed buttons in the clinical services header 
+   */
+  cshButtonClicked = (btnIndex) => {
+    console.log("Button "+btnIndex+" clicked")
+  }
+
+  // END:  Clinical Services Header Context
+  //
+  //////////////////////////////////////////
+
+
+
+
 
   calculateGrandTotals = () => {
     this.setState((state, props) => {return {
@@ -104,7 +137,14 @@ class BudgetProvider extends Component {
 
           addBCService: this.addBCService, 
           removeBCService: this.removeBCService,
-          setFundingType: this.setFundingType 
+          setFundingType: this.setFundingType,
+
+          chsLeftNavState: this.state.chsLeftNavState,
+          chsRightNavState: this.state.chsRightNavState,
+          chsBtnStates: this.state.chsBtnStates,
+          chsVisitIndex: this.state.chsVisitIndex,
+          chsVisitAllSelected: this.state.chsVisitAllSelected
+
         }}>
         {this.props.children}
       </BudgetContext.Provider>
