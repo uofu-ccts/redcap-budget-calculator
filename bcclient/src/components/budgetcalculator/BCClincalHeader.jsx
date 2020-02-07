@@ -21,7 +21,7 @@ class BCClincalHeader extends Component {
     this.state = {  }
   }
 
-  getColumButtons = (buttonStates) => {
+  getColumButtons = (buttonStates, callback) => {
     let retval = [];
     let rowCount = buttonStates.length;
 
@@ -45,7 +45,12 @@ class BCClincalHeader extends Component {
         disabled = true;
         icon = <MinusIcon />;
       }
-      retval.push(<td key={i}><Button variant={variant} disabled={disabled} className="check-column-button" style={{width: '40px'}}>{icon}</Button></td>);
+      retval.push(<td key={i}><Button 
+      variant={variant} 
+      disabled={disabled} 
+      className="check-column-button" 
+      style={{width: '40px'}} 
+      onClick={()=>{callback(i+1);}}>{icon}</Button></td>);
     }
     
     return retval;
@@ -76,13 +81,13 @@ class BCClincalHeader extends Component {
                   <th rowSpan="3"> Quantity Type </th>
                   <th className="hide-border">
                       <div>
-                        <Button variant="primary" disabled={context.chsLeftNavState === 'disabled' ? true : false}><ArrowLeftIcon /></Button>
+                        <Button variant="primary" disabled={context.chsLeftNavState === 'disabled' ? true : false} onClick={context.cshNavLeft}><ArrowLeftIcon /></Button>
                       </div>
                   </th>
                   <th className="hide-border" colSpan="4">Visits</th>
                   <th className="hide-border">
                       <div>
-                        <Button variant="primary" disabled={context.chsRightNavState === 'disabled' ? true : false}><ArrowRightIcon /></Button>
+                        <Button variant="primary" disabled={context.chsRightNavState === 'disabled' ? true : false} onClick={context.cshNavRight}><ArrowRightIcon /></Button>
                       </div>
                   </th>
                   <th rowSpan="3"> Cost Per Subject </th>
@@ -93,7 +98,7 @@ class BCClincalHeader extends Component {
                     {this.getColumNumbers(context.chsVisitIndex)}
                 </tr>
                 <tr>
-                    {this.getColumButtons(context.chsBtnStates)}
+                    {this.getColumButtons(context.chsBtnStates, context.cshButtonClicked)}
                 </tr>
               </>
           )}

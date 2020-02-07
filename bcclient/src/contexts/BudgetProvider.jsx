@@ -29,18 +29,19 @@ class BudgetProvider extends Component {
   // BEGIN: Clinical Services Header Context (CSH)
 
   cshNavLeft = () => {
-    console.log("cshNavLeft clicked")
+    console.log("cshNavLeft clicked");
   }
 
   cshNavRight = () => {
-    console.log("cshNavRight clicked")
+    console.log("cshNavRight clicked");
   }
 
   /**
-   * Five displayed buttons in the clinical services header 
+   * Five displayed buttons in the clinical services header.
+   * The first is 1 and the 5th is 5, ... not 0 based.
    */
   cshButtonClicked = (btnIndex) => {
-    console.log("Button "+btnIndex+" clicked")
+    console.log("Button "+btnIndex+" clicked", btnIndex);
   }
 
   // END:  Clinical Services Header Context
@@ -143,7 +144,11 @@ class BudgetProvider extends Component {
           chsRightNavState: this.state.chsRightNavState,
           chsBtnStates: this.state.chsBtnStates,
           chsVisitIndex: this.state.chsVisitIndex,
-          chsVisitAllSelected: this.state.chsVisitAllSelected
+          chsVisitAllSelected: this.state.chsVisitAllSelected,
+
+          cshNavLeft: this.cshNavLeft,
+          cshNavRight: this.cshNavRight,
+          cshButtonClicked: this.cshButtonClicked
 
         }}>
         {this.props.children}
