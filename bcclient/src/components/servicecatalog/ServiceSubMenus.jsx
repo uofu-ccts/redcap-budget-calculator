@@ -62,8 +62,6 @@ class ServiceSubMenus extends Component {
             </li>
         ));
   }
-  //TODO: keeping for reference for a short time, then removing this comment
-  //addBCService={this.props.addBCService} service={{serviceversion: 'niftyversion2', name: 'my service2', description: 'my description3'}} 
 
 
   render() {

@@ -31,7 +31,7 @@ class ClinicalRow extends Component {
           <td className="base-cost">{this.toDollars(this.props.industryrate)}</td>
           <td className="your-cost">{(this.props.fundingType=='federal_rate') ? this.toDollars(this.props.federalrate) : this.toDollars(this.props.industryrate)}  </td>
           <td>
-              <input className="qty-count" type="number" min="1" value="20" onChange={this.handleSubjectsChange} />
+              <input className="qty-count" type="number" min="1" value={this.props.subjectCount} onChange={this.handleSubjectsChange} />
           </td>
           <td>Q. Type</td>
           <td className="allVisits">
@@ -52,7 +52,7 @@ class ClinicalRow extends Component {
           <td className="visit-column">
               <input type="checkbox" className="visit-checkbox" data-id="4" />
           </td>
-          <td className="line-total-per-patient">$0.00</td>
+          <td className="line-total-per-patient">{(this.props.fundingType=='federal_rate') ? this.toDollars(this.props.federalrate) : this.toDollars(this.props.industryrate)}</td>
           <td className="line-total">$0.00</td>
       </tr>
      );

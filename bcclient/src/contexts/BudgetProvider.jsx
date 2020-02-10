@@ -5,16 +5,23 @@ class BudgetProvider extends Component {
   
   constructor(props) {
     super(props);
-    this.state = { 
-      fundingType: '',
-      bcrows: {},
-      
-      nonclinicalRowTotals: {},
-      clinicalRowsTotal: {},
+    this.state = {
+      bcInfoModalUsedOnce: false,
+      bcimShowInfo: false,
+      bcimShowSave: false,
+      bcimShowInfoSubjectCount: "",
+      bcimShowInfoVisitCount: "",
+      bcInfoModalNeeded: false, // when needed, the ID of the row that needs the info is populated in this attribute.
 
-      nonclinicalTotals: 0,
-      clinicalTotals: 0,
-      grandTotal: 0,
+      fundingType: '', //determines the "Your Cost" column
+      bcrows: {}, // All clinical and non-clinical rows for virtual DOM to display. State is **NOT** preserved in the row components.
+      
+      nonclinicalRowTotals: {}, // calculated totals associated with rows' ID (for speed)
+      clinicalRowsTotal: {}, // calculated totals associated with rows' ID (for speed)
+
+      nonclinicalTotals: 0, // for display in UI
+      clinicalTotals: 0, // for display in UI
+      grandTotal: 0, // for display in UI
 
       chsLeftNavState: 'disabled', //nav states, ... 'active' and 'disabled'
       chsRightNavState: 'disabled',
@@ -45,6 +52,35 @@ class BudgetProvider extends Component {
   }
 
   // END:  Clinical Services Header Context
+  //
+  //////////////////////////////////////////
+
+
+
+
+  //////////////////////////////////////////
+  //
+  // BEGIN: Clinical Services (CS) section
+
+  cshSubjectsAndVisitsNeeded = (id) => {
+    console.log("cshSubjectsAndVisitsNeeded called with "+id);
+    this.setState({
+      bcInfoModalUsedOnce:true,
+      bcimShowInfo:true,
+      bcInfoModalNeeded:id
+      });
+  }
+  
+  bcimInfoCallback = (values) => {
+    //TODO: finish this method
+    console.log("infoCallback ... Subject Count: " + values.subjectCount + "; Subject Count: " + values.visitCount);
+    this.setState({bcimShowInfo: false, bcimShowInfoSubjectCount:values.subjectCount, bcimShowInfoVisitCount:values.visitCount})
+  }
+
+  bcimHandleHideInfo = () => this.setState({bcimShowInfo: false});
+
+
+  // END:  Clinical Services (CS) section
   //
   //////////////////////////////////////////
 
@@ -113,13 +149,26 @@ class BudgetProvider extends Component {
             serviceObj["id"] = oneTimeUseId;
             serviceObj["key"] = oneTimeUseId;
 
-            this.setState({
-              bcrows: 
-              { 
-                ...this.state.bcrows, 
-                [oneTimeUseId]:serviceObj
-              }
-            })
+            // The first time a clinical row is added a modal asks for the subject and visit count.
+            if ((! this.state.bcInfoModalUsedOnce) && parseInt(serviceObj["clinical"])) {
+              this.setState({
+                bcrows: 
+                { 
+                  ...this.state.bcrows, 
+                  [oneTimeUseId]:serviceObj
+                }
+              }, ()=>{this.cshSubjectsAndVisitsNeeded(oneTimeUseId);}); 
+            }
+            else {
+              this.setState({
+                bcrows: 
+                { 
+                  ...this.state.bcrows, 
+                  [oneTimeUseId]:serviceObj
+                }
+              }); 
+            }
+
           }
 
   render() { 
@@ -148,7 +197,14 @@ class BudgetProvider extends Component {
 
           cshNavLeft: this.cshNavLeft,
           cshNavRight: this.cshNavRight,
-          cshButtonClicked: this.cshButtonClicked
+          cshButtonClicked: this.cshButtonClicked,
+
+          bcimShowInfo: this.state.bcimShowInfo,
+          bcimShowInfoSubjectCount: this.state.bcimShowInfoSubjectCount,
+          bcimShowInfoVisitCount: this.state.bcimShowInfoVisitCount,
+          bcimInfoCallback: this.bcimInfoCallback,
+          bcimHandleHideInfo: this.bcimHandleHideInfo
+
 
         }}>
         {this.props.children}

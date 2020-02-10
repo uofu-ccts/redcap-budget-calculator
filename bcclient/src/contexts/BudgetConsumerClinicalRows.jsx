@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import BudgetContext from './BudgetContext';
 import ClinicalRow from './ClinicalRow';
+import BCInfoModal from '../components/budgetcalculator/BCInfoModal';
+
 
 class BudgetClinicalRowsConsumer extends Component {
 
@@ -43,8 +45,16 @@ class BudgetClinicalRowsConsumer extends Component {
                           clinical={obj.clinical}
                           removeBCService={context.removeBCService}
                           fundingType={context.fundingType}
+                          subjectCount={context.bcimShowInfoSubjectCount}
                       />
                   ))}
+
+                <BCInfoModal
+                    showInfo={context.bcimShowInfo}
+                    showInfoSubjectCount={context.bcimShowInfoSubjectCount}
+                    showInfoVisitCount={context.bcimShowInfoVisitCount}
+                    infoCallback={context.bcimInfoCallback}
+                    hideInfoCallback={context.bcimHandleHideInfo} />
               </>
           )}
       </BudgetContext.Consumer>
