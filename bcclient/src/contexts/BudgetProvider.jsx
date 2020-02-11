@@ -9,12 +9,12 @@ class BudgetProvider extends Component {
       bcInfoModalUsedOnce: false,
       bcimShowInfo: false,
       bcimShowSave: false,
-      bcimShowInfoSubjectCount: "",
-      bcimShowInfoVisitCount: "",
+      bcimShowInfoSubjectCount: "", //the info modal populates this field
+      bcimShowInfoVisitCount: "", //the info modal populates this field
       bcInfoModalNeeded: false, // when needed, the ID of the row that needs the info is populated in this attribute.
 
       fundingType: '', //determines the "Your Cost" column
-      bcrows: {}, // All clinical and non-clinical rows for virtual DOM to display. State is **NOT** preserved in the row components.
+      bcrows: {}, // All clinical and non-clinical rows for virtual DOM to display. //TODO: State **SHOULD BE** preserved in the row components.
       
       nonclinicalRowTotals: {}, // calculated totals associated with rows' ID (for speed)
       clinicalRowsTotal: {}, // calculated totals associated with rows' ID (for speed)
@@ -71,14 +71,45 @@ class BudgetProvider extends Component {
       });
   }
   
+  /**
+   * This method should only be called once, just after the creation of the
+   * first clinical service row.
+   */
   bcimInfoCallback = (values) => {
-    //TODO: finish this method
-    console.log("infoCallback ... Subject Count: " + values.subjectCount + "; Subject Count: " + values.visitCount);
-    this.setState({bcimShowInfo: false, bcimShowInfoSubjectCount:values.subjectCount, bcimShowInfoVisitCount:values.visitCount})
+    // console.log("infoCallback ... Subject Count: " + values.subjectCount + "; visit Count: " + values.visitCount);//TODO: remove this log
+    this.setState({
+      bcimShowInfo: false, 
+      bcimShowInfoSubjectCount:values.subjectCount, 
+      bcimShowInfoVisitCount:values.visitCount
+      }, ()=>{this.bcimUpdateAllSubjectCountsAndVisitCounts( values.subjectCount, values.visitCount);});
   }
 
   bcimHandleHideInfo = () => this.setState({bcimShowInfo: false});
 
+  isClinical = obj => {//TODO: move to *.js library
+      return parseInt(obj.clinical);
+  }
+
+
+  bcimUpdateAllSubjectCountsAndVisitCounts = (subjectCount, visitCount) => {
+    // console.log("subjectCount should be " + this.state.bcimShowInfoSubjectCount + " and vist counts should be "+this.state.bcimShowInfoVisitCount);
+    let bcrowsCopy = {...this.state.bcrows};
+
+    Object.values(bcrowsCopy).filter(this.isClinical).forEach(obj => {
+      bcrowsCopy[obj.id].subjectCount = subjectCount;
+      //TODO: update the visit counts too
+    });
+
+    this.setState({ bcrowsCopy });
+  }
+
+  csUpdateSubjectCountById = (e, id) => {
+    // console.log("subjectCount: " + e.target.value + " for id: " + id);
+
+    let bcrowsCopy = {...this.state.bcrows};
+    bcrowsCopy[id].subjectCount = e.target.value;
+    this.setState({ bcrowsCopy });
+  }
 
   // END:  Clinical Services (CS) section
   //
@@ -138,6 +169,9 @@ class BudgetProvider extends Component {
             });
   }
 
+  /**
+   * ServiceMenuItems call this context method to add instances of service rows to state.bcrows for display in the UI.
+   */
   addBCService = (e, serviceRow) => {
             e.persist();
             e.preventDefault();
@@ -148,6 +182,7 @@ class BudgetProvider extends Component {
             let serviceObj = JSON.parse(serviceRow)[0];
             serviceObj["id"] = oneTimeUseId;
             serviceObj["key"] = oneTimeUseId;
+            serviceObj["subjectCount"] = this.state.bcimShowInfoSubjectCount;
 
             // The first time a clinical row is added a modal asks for the subject and visit count.
             if ((! this.state.bcInfoModalUsedOnce) && parseInt(serviceObj["clinical"])) {
@@ -203,8 +238,9 @@ class BudgetProvider extends Component {
           bcimShowInfoSubjectCount: this.state.bcimShowInfoSubjectCount,
           bcimShowInfoVisitCount: this.state.bcimShowInfoVisitCount,
           bcimInfoCallback: this.bcimInfoCallback,
-          bcimHandleHideInfo: this.bcimHandleHideInfo
+          bcimHandleHideInfo: this.bcimHandleHideInfo,
 
+          csUpdateSubjectCountById: this.csUpdateSubjectCountById
 
         }}>
         {this.props.children}

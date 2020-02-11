@@ -7,7 +7,11 @@ import CheckIcon from '../components/budgetcalculator/icons/CheckIcon';
 class ClinicalRow extends Component {
   constructor(props) {
     super(props);
-    this.state = {   }
+    this.state = {
+      id: props.id,
+      yourcost: ((props.fundingType=='federal_rate') ? props.federalrate : props.industryrate),
+      totalcost: 0
+    }
   }
 
   handleTrash = (e) => {
@@ -23,6 +27,23 @@ class ClinicalRow extends Component {
     }).format(dollars);
   }
 
+  handleSubjectCountChange = event => {
+
+    event.persist();
+    this.props.csUpdateSubjectCountById(event, this.state.id);
+
+    //let total = this.state.yourcost * event.target.value;//TODO: uncomment
+    //let actualTotal = this.validateTotalCost(total);//TODO: uncomment
+    //this.setState({
+      //subjectCount: event.target.value//, //TODO: set callback value in budget context
+      //totalcost: actualTotal//TODO: uncomment
+      //});
+
+    //update total cost for non-clinical total
+    //this.props.addNonclinicalCost(this.props.id, actualTotal)//TODO: uncomment
+    // console.log("changed state of ClincalRow.state.subjectCount to "+event.target.value)
+  }
+
   render() { 
     return ( 
       <tr className="service-line-item" onInput={this.handleUpdateTotals}>
@@ -31,7 +52,7 @@ class ClinicalRow extends Component {
           <td className="base-cost">{this.toDollars(this.props.industryrate)}</td>
           <td className="your-cost">{(this.props.fundingType=='federal_rate') ? this.toDollars(this.props.federalrate) : this.toDollars(this.props.industryrate)}  </td>
           <td>
-              <input className="qty-count" type="number" min="1" value={this.props.subjectCount} onChange={this.handleSubjectsChange} />
+              <input className="qty-count" type="number" min="1" value={this.props.subjectCount} onChange={this.handleSubjectCountChange} />
           </td>
           <td>Q. Type</td>
           <td className="allVisits">
@@ -52,7 +73,7 @@ class ClinicalRow extends Component {
           <td className="visit-column">
               <input type="checkbox" className="visit-checkbox" data-id="4" />
           </td>
-          <td className="line-total-per-patient">{(this.props.fundingType=='federal_rate') ? this.toDollars(this.props.federalrate) : this.toDollars(this.props.industryrate)}</td>
+          <td className="line-total-per-patient">$0.00</td>
           <td className="line-total">$0.00</td>
       </tr>
      );

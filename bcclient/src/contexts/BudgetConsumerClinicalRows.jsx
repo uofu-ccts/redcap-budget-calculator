@@ -6,7 +6,7 @@ import BCInfoModal from '../components/budgetcalculator/BCInfoModal';
 
 class BudgetClinicalRowsConsumer extends Component {
 
-  isClinical = obj => {
+  isClinical = obj => {//TODO: move to *.js library
       return parseInt(obj.clinical);
   }
 
@@ -45,9 +45,11 @@ class BudgetClinicalRowsConsumer extends Component {
                           clinical={obj.clinical}
                           removeBCService={context.removeBCService}
                           fundingType={context.fundingType}
-                          subjectCount={context.bcimShowInfoSubjectCount}
+                          subjectCount={obj.subjectCount}
+                          csUpdateSubjectCountById={context.csUpdateSubjectCountById}
                       />
                   ))}
+                  {console.log("context.bcimShowInfoSubjectCount="+context.bcimShowInfoSubjectCount)}
 
                 <BCInfoModal
                     showInfo={context.bcimShowInfo}
