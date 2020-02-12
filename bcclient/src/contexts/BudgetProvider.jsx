@@ -9,8 +9,8 @@ class BudgetProvider extends Component {
       bcInfoModalUsedOnce: false,
       bcimShowInfo: false,
       bcimShowSave: false,
-      bcimShowInfoSubjectCount: "", //the info modal populates this field
-      bcimShowInfoVisitCount: "", //the info modal populates this field
+      bcimShowInfoSubjectCount: 1, // The info modal populates this field.
+      bcimShowInfoVisitCount: 1, // Number of columns of visits that can be selected. The info modal populates this field.
       bcInfoModalNeeded: false, // when needed, the ID of the row that needs the info is populated in this attribute.
 
       fundingType: '', //determines the "Your Cost" column
@@ -26,8 +26,7 @@ class BudgetProvider extends Component {
       chsLeftNavState: 'disabled', //nav states, ... 'active' and 'disabled'
       chsRightNavState: 'disabled',
       chsBtnStates: ['disabled','disabled','disabled','disabled','disabled'], //button states, ... 'select', 'deselect' and 'disabled'
-      chsVisitIndex: 1, //base index is 1, not 0. Changes in increments of 5
-      chsVisitLength: 0 //number of columns of visits that can be selected
+      chsVisitIndex: 1, //Current index being display (the visit page we're on). Base index is 1, not 0. Changes in increments of 5
      }
   }
 
@@ -36,11 +35,23 @@ class BudgetProvider extends Component {
   // BEGIN: Clinical Services Header Context (CSH)
 
   cshNavLeft = () => {
-    console.log("cshNavLeft clicked");
+    //console.log("cshNavLeft clicked");
+    let visitIndex = this.state.chsVisitIndex;
+    visitIndex = visitIndex-5;
+
+    this.setState(
+      {chsVisitIndex:visitIndex},
+      this.csHeaderUpdate);
   }
 
   cshNavRight = () => {
-    console.log("cshNavRight clicked");
+    // console.log("cshNavRight clicked");
+    let visitIndex = this.state.chsVisitIndex;
+    visitIndex = visitIndex+5;
+
+    this.setState(
+      {chsVisitIndex:visitIndex},
+      this.csHeaderUpdate);
   }
 
   /**
@@ -91,16 +102,61 @@ class BudgetProvider extends Component {
   }
 
 
+  /**
+   * updates each row in bcrows with a subject count and visit count array
+   */
   bcimUpdateAllSubjectCountsAndVisitCounts = (subjectCount, visitCount) => {
     // console.log("subjectCount should be " + this.state.bcimShowInfoSubjectCount + " and vist counts should be "+this.state.bcimShowInfoVisitCount);
     let bcrowsCopy = {...this.state.bcrows};
 
     Object.values(bcrowsCopy).filter(this.isClinical).forEach(obj => {
       bcrowsCopy[obj.id].subjectCount = subjectCount;
-      //TODO: update the visit counts too
+
+      //update the visit counts in each clinical services row
+      let vcArray = [];
+      for (let i=0; i<visitCount; i++) {
+        vcArray.push(false);
+      }
+      bcrowsCopy[obj.id].visitCount = vcArray;
+
     });
 
     this.setState({ bcrowsCopy });
+
+    //now, ... update the visits header
+    this.csHeaderUpdate();
+  }
+
+  /**
+   * Updates all the buttons in the Visits header
+   */
+  csHeaderUpdate = () => {
+    //update arrows
+    let leftArrow = "disabled";
+    let rightArrow = "disabled";
+
+    if (this.state.chsVisitIndex > 5) {
+      leftArrow = "active";
+    }
+
+    let hasMoreVisitsToNavigate = ((this.state.bcimShowInfoVisitCount - this.state.chsVisitIndex) >= 5);
+    if (hasMoreVisitsToNavigate) {
+      rightArrow = "active";
+    }
+
+    //update check buttons
+    let btnStates = [];
+    btnStates.push('select');
+    btnStates.push('select');
+    btnStates.push('select');
+    btnStates.push('select');
+    btnStates.push('select');
+
+    //okay, ... technically this is where the real update happens
+    this.setState({
+      chsLeftNavState:leftArrow,
+      chsRightNavState:rightArrow,
+      chsBtnStates:btnStates});
   }
 
   csUpdateSubjectCountById = (e, id) => {

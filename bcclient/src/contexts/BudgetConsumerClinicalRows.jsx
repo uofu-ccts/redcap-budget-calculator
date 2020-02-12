@@ -46,6 +46,7 @@ class BudgetClinicalRowsConsumer extends Component {
                           removeBCService={context.removeBCService}
                           fundingType={context.fundingType}
                           subjectCount={obj.subjectCount}
+                          visitCount={obj.visitCount}
                           csUpdateSubjectCountById={context.csUpdateSubjectCountById}
                       />
                   ))}

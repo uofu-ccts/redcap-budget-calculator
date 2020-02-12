@@ -56,12 +56,12 @@ class BCClincalHeader extends Component {
     return retval;
   }
 
-  getColumNumbers = (baseIndex) => {
+  getColumNumbers = (baseIndex, maxIndex) => {
     let retval = [];
     let rowCount = 5;
 
     for (let i=0; i<rowCount; i++) {
-      retval.push(<td key={i}><b className="visit-header">{baseIndex + i}</b></td>);
+      retval.push(<td key={i}><b className="visit-header">{((baseIndex + i) <= maxIndex) ? (baseIndex + i) : ' '}</b></td>);
     }
     
     return retval;
@@ -95,7 +95,7 @@ class BCClincalHeader extends Component {
                 </tr>
                 <tr className="visit-header-row">
                     <td rowSpan="2"></td>
-                    {this.getColumNumbers(context.chsVisitIndex)}
+                    {this.getColumNumbers(context.chsVisitIndex, context.bcimShowInfoVisitCount)}
                 </tr>
                 <tr>
                     {this.getColumButtons(context.chsBtnStates, context.cshButtonClicked)}
