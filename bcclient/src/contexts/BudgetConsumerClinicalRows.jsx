@@ -48,6 +48,8 @@ class BudgetClinicalRowsConsumer extends Component {
                           subjectCount={obj.subjectCount}
                           visitCount={obj.visitCount}
                           csUpdateSubjectCountById={context.csUpdateSubjectCountById}
+                          chsVisitIndex={context.chsVisitIndex}
+                          bcimShowInfoVisitCount={context.bcimShowInfoVisitCount}
                       />
                   ))}
                   {console.log("context.bcimShowInfoSubjectCount="+context.bcimShowInfoSubjectCount)}

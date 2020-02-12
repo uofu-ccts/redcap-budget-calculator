@@ -44,6 +44,28 @@ class ClinicalRow extends Component {
     // console.log("changed state of ClincalRow.state.subjectCount to "+event.target.value)
   }
 
+  chooseCheckboxType = (index, visitIndex, visitCount) => {
+    if ((visitIndex + index) <= visitCount) {
+      return(<input type="checkbox" className="visit-checkbox" />);
+    } 
+    else {
+      return ' ';
+    }
+  }
+
+  getCheckboxes = (visitIndex, visitCount) => {
+    // console.log("m1 visitIndex="+visitIndex+"; visitCount="+visitCount);
+    let cells = [];
+    for (let i=0; i<5; i++) {
+      cells.push(
+        <td className="visit-column">
+          {this.chooseCheckboxType(i, visitIndex, visitCount)}
+        </td>
+      );
+    }
+    return cells;
+  }
+
   render() { 
     return ( 
       <tr className="service-line-item" onInput={this.handleUpdateTotals}>
@@ -58,21 +80,7 @@ class ClinicalRow extends Component {
           <td className="allVisits">
               <button className="btn btn-success check-row-button" style={{width: '40px'}} value="all"><CheckIcon /></button>
           </td>
-          <td className="visit-column">
-              <input type="checkbox" className="visit-checkbox" data-id="0" />
-          </td>
-          <td className="visit-column">
-              <input type="checkbox" className="visit-checkbox" data-id="1" />
-          </td>
-          <td className="visit-column">
-              <input type="checkbox" className="visit-checkbox" data-id="2" />
-          </td>
-          <td className="visit-column">
-              <input type="checkbox" className="visit-checkbox" data-id="3" />
-          </td>
-          <td className="visit-column">
-              <input type="checkbox" className="visit-checkbox" data-id="4" />
-          </td>
+          {this.getCheckboxes(this.props.chsVisitIndex, this.props.bcimShowInfoVisitCount)}
           <td className="line-total-per-patient">$0.00</td>
           <td className="line-total">$0.00</td>
       </tr>

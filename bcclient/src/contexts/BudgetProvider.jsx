@@ -128,6 +128,27 @@ class BudgetProvider extends Component {
   }
 
   /**
+   * Check for selection status of each column of checkboxes AND check for no column, too.
+   */
+  cshUpdateCheckButtons = () => {
+    let btnStates = [];
+
+    for (let i=0; i<5; i++) {
+      let columnExists = (this.state.bcimShowInfoVisitCount >= (this.state.chsVisitIndex + i));
+
+      if (columnExists) {
+        btnStates.push('select');
+      }
+      else {
+        btnStates.push('disabled');
+      }
+      
+    }
+
+    return btnStates;
+  }
+
+  /**
    * Updates all the buttons in the Visits header
    */
   csHeaderUpdate = () => {
@@ -145,12 +166,7 @@ class BudgetProvider extends Component {
     }
 
     //update check buttons
-    let btnStates = [];
-    btnStates.push('select');
-    btnStates.push('select');
-    btnStates.push('select');
-    btnStates.push('select');
-    btnStates.push('select');
+    let btnStates = this.cshUpdateCheckButtons();
 
     //okay, ... technically this is where the real update happens
     this.setState({
