@@ -9,8 +9,8 @@ class BudgetProvider extends Component {
       bcInfoModalUsedOnce: false,
       bcimShowInfo: false,
       bcimShowSave: false,
-      bcimShowInfoSubjectCount: 1, // The info modal populates this field.
-      bcimShowInfoVisitCount: 1, // Number of columns of visits that can be selected. The info modal populates this field.
+      bcimShowInfoSubjectCount: 0, // The info modal populates this field.
+      bcimShowInfoVisitCount: 0, // Number of columns of visits that can be selected. The info modal populates this field.
       bcInfoModalNeeded: false, // when needed, the ID of the row that needs the info is populated in this attribute.
 
       fundingType: '', //determines the "Your Cost" column
@@ -74,7 +74,7 @@ class BudgetProvider extends Component {
   // BEGIN: Clinical Services (CS) section
 
   cshSubjectsAndVisitsNeeded = (id) => {
-    console.log("cshSubjectsAndVisitsNeeded called with "+id);
+    //console.log("cshSubjectsAndVisitsNeeded called with "+id);
     this.setState({
       bcInfoModalUsedOnce:true,
       bcimShowInfo:true,
@@ -87,7 +87,6 @@ class BudgetProvider extends Component {
    * first clinical service row.
    */
   bcimInfoCallback = (values) => {
-    // console.log("infoCallback ... Subject Count: " + values.subjectCount + "; visit Count: " + values.visitCount);//TODO: remove this log
     this.setState({
       bcimShowInfo: false, 
       bcimShowInfoSubjectCount:values.subjectCount, 
@@ -137,6 +136,7 @@ class BudgetProvider extends Component {
       let columnExists = (this.state.bcimShowInfoVisitCount >= (this.state.chsVisitIndex + i));
 
       if (columnExists) {
+        //TODO: check for select and deselect
         btnStates.push('select');
       }
       else {
@@ -183,6 +183,18 @@ class BudgetProvider extends Component {
     this.setState({ bcrowsCopy });
   }
 
+  /**
+   * Called when a visit checkbox is clicked.
+   */
+  csVisitChanged = (id, visitIndex, value) => {
+
+    //console.log("id="+id+ "; visitIndex="+visitIndex+"; value="+value);
+
+    let bcrowsCopy = {...this.state.bcrows};
+    bcrowsCopy[id].visitCount[visitIndex] = value;
+    this.setState({ bcrowsCopy });//TODO: update header check buttons and update row check button
+  }
+
   // END:  Clinical Services (CS) section
   //
   //////////////////////////////////////////
@@ -198,11 +210,9 @@ class BudgetProvider extends Component {
   }
 
   calculateNonclinicalTotals = () => {
-    //console.log("calculateNonclinicalTotals()", this.state);//TODO: remove this log
     let reducer = (acc, cur) => {return acc + cur;}
     let ncrt = {...this.state.nonclinicalRowTotals};
     let newClinicalTotal = Object.values( ncrt ).reduce( reducer, 0 );
-    //console.log("newClinicalTotal="+newClinicalTotal);//TODO: remove this log
 
     this.setState({nonclinicalTotals: newClinicalTotal},this.calculateGrandTotals);
   }
@@ -255,6 +265,12 @@ class BudgetProvider extends Component {
             serviceObj["id"] = oneTimeUseId;
             serviceObj["key"] = oneTimeUseId;
             serviceObj["subjectCount"] = this.state.bcimShowInfoSubjectCount;
+            
+            serviceObj["visitCount"] = [];
+            for (let i=0; i<this.state.bcimShowInfoVisitCount; i++) 
+            {
+              serviceObj["visitCount"].push(false);
+            }
 
             // The first time a clinical row is added a modal asks for the subject and visit count.
             if ((! this.state.bcInfoModalUsedOnce) && parseInt(serviceObj["clinical"])) {
@@ -312,7 +328,8 @@ class BudgetProvider extends Component {
           bcimInfoCallback: this.bcimInfoCallback,
           bcimHandleHideInfo: this.bcimHandleHideInfo,
 
-          csUpdateSubjectCountById: this.csUpdateSubjectCountById
+          csUpdateSubjectCountById: this.csUpdateSubjectCountById,
+          csVisitChanged: this.csVisitChanged
 
         }}>
         {this.props.children}

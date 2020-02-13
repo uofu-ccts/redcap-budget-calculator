@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 
 import TrashIcon from '../components/budgetcalculator/icons/TrashIcon';
 import InfoCircleIcon from '../components/budgetcalculator/icons/InfoCircleIcon';
+
+import Button from 'react-bootstrap/Button';
+import TimesIcon from '../components/budgetcalculator/icons/TimesIcon';
 import CheckIcon from '../components/budgetcalculator/icons/CheckIcon';
+import Form from 'react-bootstrap/Form';
 
 class ClinicalRow extends Component {
   constructor(props) {
@@ -31,22 +35,44 @@ class ClinicalRow extends Component {
 
     event.persist();
     this.props.csUpdateSubjectCountById(event, this.state.id);
-
-    //let total = this.state.yourcost * event.target.value;//TODO: uncomment
-    //let actualTotal = this.validateTotalCost(total);//TODO: uncomment
-    //this.setState({
-      //subjectCount: event.target.value//, //TODO: set callback value in budget context
-      //totalcost: actualTotal//TODO: uncomment
-      //});
-
-    //update total cost for non-clinical total
-    //this.props.addNonclinicalCost(this.props.id, actualTotal)//TODO: uncomment
-    // console.log("changed state of ClincalRow.state.subjectCount to "+event.target.value)
   }
 
-  chooseCheckboxType = (index, visitIndex, visitCount) => {
+  chooseCheckboxType = (index, visitIndex, visitCount) => {//TODO: populate based off the context bcrow[<id>].visitCount
+
+    //first, check to see if the current checkbox falls in the range of visits count, otherwise display a space instead of a checkbox
     if ((visitIndex + index) <= visitCount) {
-      return(<input type="checkbox" className="visit-checkbox" />);
+      let checkOrNotCheck = [];
+      let isChecked = false;
+
+      let checkedStatusIndex = visitIndex + index - 1;
+
+      try {
+        if (
+          (typeof this.props.bcrows !== 'undefined') && 
+          (typeof this.props.bcrows[this.state.id] !== 'undefined') && 
+          (typeof this.props.bcrows[this.state.id].visitCount !== 'undefined') ) {
+          isChecked = this.props.bcrows[this.state.id].visitCount[checkedStatusIndex];
+        }
+      } catch(error) {
+        console.log(error);
+      }
+
+      if (isChecked) {
+        checkOrNotCheck.push(<Form.Check 
+        key={index} 
+        className="visit-checkbox" 
+        checked={true} 
+        onChange={() => this.props.csVisitChanged(this.state.id, checkedStatusIndex, false)}
+        />);
+      }
+      else {
+        checkOrNotCheck.push(<Form.Check 
+        key={index} 
+        className="visit-checkbox" 
+        checked={false} 
+        onChange={() => this.props.csVisitChanged(this.state.id, checkedStatusIndex, true)} />);
+      }
+      return checkOrNotCheck;
     } 
     else {
       return ' ';
@@ -54,11 +80,10 @@ class ClinicalRow extends Component {
   }
 
   getCheckboxes = (visitIndex, visitCount) => {
-    // console.log("m1 visitIndex="+visitIndex+"; visitCount="+visitCount);
     let cells = [];
     for (let i=0; i<5; i++) {
       cells.push(
-        <td className="visit-column">
+        <td key={i} className="visit-column">
           {this.chooseCheckboxType(i, visitIndex, visitCount)}
         </td>
       );
@@ -78,7 +103,7 @@ class ClinicalRow extends Component {
           </td>
           <td>Q. Type</td>
           <td className="allVisits">
-              <button className="btn btn-success check-row-button" style={{width: '40px'}} value="all"><CheckIcon /></button>
+              <Button variant="success" className="check-row-button" style={{width: '40px'}}><CheckIcon /></Button>
           </td>
           {this.getCheckboxes(this.props.chsVisitIndex, this.props.bcimShowInfoVisitCount)}
           <td className="line-total-per-patient">$0.00</td>
