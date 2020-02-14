@@ -37,7 +37,7 @@ class ClinicalRow extends Component {
     this.props.csUpdateSubjectCountById(event, this.state.id);
   }
 
-  chooseCheckboxType = (index, visitIndex, visitCount) => {//TODO: populate based off the context bcrow[<id>].visitCount
+  chooseCheckboxType = (index, visitIndex, visitCount) => {//populate based off the context bcrow[<id>].visitCount
 
     //first, check to see if the current checkbox falls in the range of visits count, otherwise display a space instead of a checkbox
     if ((visitIndex + index) <= visitCount) {
@@ -91,12 +91,25 @@ class ClinicalRow extends Component {
     return cells;
   }
 
+  handleVisitButton = (select) =>{
+    //For speed, only set the checkbox state if it is different than requested
+    //      this prevents wasted cycles re-checking the column buttons' state
+    //TODO: Optimization bonus points, ... only update the row button view when all 
+    //      the visits have been changed
+
+    for (let i=0; i<this.props.visitCount.length; i++) {
+      if (this.props.visitCount[i] != select) {
+        this.props.csVisitChanged(this.state.id, i, select);
+      }
+    }
+  }
+
   getCheckButton = () => {
     if (this.props.anyVistsNotSelected) {
-      return (<Button variant="success" className="check-row-button" style={{width: '40px'}}><CheckIcon /></Button>);//TODO: add onClicked
+      return (<Button variant="success" className="check-row-button" style={{width: '40px'}} onClick={()=>{this.handleVisitButton(true)}}><CheckIcon /></Button>);//TODO: add onClicked
     }
     else {
-      return (<Button variant="danger" className="check-row-button" style={{width: '40px'}}><TimesIcon /></Button>);//TODO: add onClicked
+      return (<Button variant="danger" className="check-row-button" style={{width: '40px'}} onClick={()=>{this.handleVisitButton(false)}}><TimesIcon /></Button>);//TODO: add onClicked
     }
   }
 
