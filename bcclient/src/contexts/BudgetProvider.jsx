@@ -183,16 +183,35 @@ class BudgetProvider extends Component {
     this.setState({ bcrowsCopy });
   }
 
+  csUpdateColumnCheckButtonState = (visitIndex) => {
+    //TODO: implement me!
+    console.log("csUpdateColumnCheckButtonState ... "+visitIndex)
+  }
+
+  csUpdateRowCheckButtonState = (rowId) => {
+    //TODO: implement me!
+    console.log("csUpdateRowCheckButtonState ... "+rowId)
+  }
+
   /**
-   * Called when a visit checkbox is clicked.
+   * Called when a visit checkbox is clicked. After the checkbox state is updated, 
+   * the check buttons on the column and row are updated if updateButtonsState=true.
    */
-  csVisitChanged = (id, visitIndex, value) => {
+  csVisitChanged = (id, visitIndex, value, updateButtonsState=true) => {
 
     //console.log("id="+id+ "; visitIndex="+visitIndex+"; value="+value);
 
     let bcrowsCopy = {...this.state.bcrows};
     bcrowsCopy[id].visitCount[visitIndex] = value;
-    this.setState({ bcrowsCopy });//TODO: update header check buttons and update row check button
+    if (updateButtonsState) {
+      this.setState(
+        { bcrowsCopy }, 
+        ()=>{this.csUpdateColumnCheckButtonState(id); this.csUpdateRowCheckButtonState(visitIndex)});//update header check buttons and update row check button.
+    }
+    else {
+      this.setState(
+        { bcrowsCopy });// Not updating header check buttons and update row check button. Used when updating multiple checkbox states before updating buttons.
+    }
   }
 
   // END:  Clinical Services (CS) section
