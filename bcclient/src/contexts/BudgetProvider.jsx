@@ -189,8 +189,25 @@ class BudgetProvider extends Component {
   }
 
   csUpdateRowCheckButtonState = (rowId) => {
-    //TODO: implement me!
     console.log("csUpdateRowCheckButtonState ... "+rowId)
+
+    //check what the current state is vs what it should be before consuming cycles on creating a copy of bcrows
+    let visitsArray = this.state.bcrows[rowId].visitCount;
+    let foundNotSelected = false;
+
+    for (let i=0; i<visitsArray.length; i++) {
+      if (! visitsArray[i]) {
+        foundNotSelected = true;
+        break;
+      }
+    }
+
+    if (foundNotSelected != this.state.bcrows[rowId].anyVistsNotSelected) {
+      let bcrowsCopy = {...this.state.bcrows};
+      bcrowsCopy[rowId].anyVistsNotSelected = foundNotSelected;
+      this.setState({ bcrowsCopy});
+    }
+
   }
 
   /**
@@ -206,7 +223,7 @@ class BudgetProvider extends Component {
     if (updateButtonsState) {
       this.setState(
         { bcrowsCopy }, 
-        ()=>{this.csUpdateColumnCheckButtonState(id); this.csUpdateRowCheckButtonState(visitIndex)});//update header check buttons and update row check button.
+        ()=>{this.csUpdateColumnCheckButtonState(visitIndex); this.csUpdateRowCheckButtonState(id)});//update header check buttons and update row check button.
     }
     else {
       this.setState(
@@ -290,6 +307,8 @@ class BudgetProvider extends Component {
             {
               serviceObj["visitCount"].push(false);
             }
+
+            serviceObj["anyVistsNotSelected"] = true;
 
             // The first time a clinical row is added a modal asks for the subject and visit count.
             if ((! this.state.bcInfoModalUsedOnce) && parseInt(serviceObj["clinical"])) {

@@ -91,6 +91,15 @@ class ClinicalRow extends Component {
     return cells;
   }
 
+  getCheckButton = () => {
+    if (this.props.anyVistsNotSelected) {
+      return (<Button variant="success" className="check-row-button" style={{width: '40px'}}><CheckIcon /></Button>);//TODO: add onClicked
+    }
+    else {
+      return (<Button variant="danger" className="check-row-button" style={{width: '40px'}}><TimesIcon /></Button>);//TODO: add onClicked
+    }
+  }
+
   render() { 
     return ( 
       <tr className="service-line-item" onInput={this.handleUpdateTotals}>
@@ -103,7 +112,7 @@ class ClinicalRow extends Component {
           </td>
           <td>Q. Type</td>
           <td className="allVisits">
-              <Button variant="success" className="check-row-button" style={{width: '40px'}}><CheckIcon /></Button>
+              {this.getCheckButton()}
           </td>
           {this.getCheckboxes(this.props.chsVisitIndex, this.props.bcimShowInfoVisitCount)}
           <td className="line-total-per-patient">$0.00</td>
