@@ -342,16 +342,16 @@ class BudgetProvider extends Component {
     let oneTimeUseId = '_' + Math.random().toString(36).substr(2, 9);
 
     let serviceObj = JSON.parse(serviceRow)[0];
-    let needsSubjectsAndVisits = (! this.state.bcInfoModalUsedOnce) && parseInt(serviceObj["clinical"]);
+    let needsSubjectsAndVisits = (! this.state.bcInfoModalUsedOnce) && parseInt(serviceObj["clinical"]);//use of this.state not causing issues
 
     this.setState((state, props) => {
 
       serviceObj["id"] = oneTimeUseId;
       serviceObj["key"] = oneTimeUseId;
-      serviceObj["subjectCount"] = this.state.bcimShowInfoSubjectCount;
+      serviceObj["subjectCount"] = state.bcimShowInfoSubjectCount;
       
       serviceObj["visitCount"] = [];
-      for (let i=0; i<this.state.bcimShowInfoVisitCount; i++) 
+      for (let i=0; i<state.bcimShowInfoVisitCount; i++) 
       {
         serviceObj["visitCount"].push(false);
       }
@@ -361,7 +361,7 @@ class BudgetProvider extends Component {
       return ({
         bcrows: 
         { 
-          ...this.state.bcrows, 
+          ...state.bcrows, 
           [oneTimeUseId]:serviceObj
         }
       });
