@@ -14,7 +14,8 @@ class ServiceSubMenus extends Component {
 
     if (! (serviceobj.core && serviceobj.category && serviceobj.service))
     {
-      console.log("A service missing core ("+serviceobj.category+"), category ("+serviceobj.core+"), or service ("+serviceobj.service+") property was omited.");
+      // Keep this log, even if commented out. Very useful for debugging problems in REDCap project.
+      // console.log("A service missing core ("+serviceobj.category+"), category ("+serviceobj.core+"), or service ("+serviceobj.service+") property was omited.");
       return serviceTree;
     }
 

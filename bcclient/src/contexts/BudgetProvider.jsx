@@ -140,15 +140,14 @@ class BudgetProvider extends Component {
       let columnExists = (state.bcimShowInfoVisitCount >= (state.chsVisitIndex + i));
 
       if (columnExists) {
-        //TODO: check for select and deselect
-        // state.chsBtnStates[(state.chsVisitIndex + i)]
-        console.log("selecting ....");
-        console.log("state.chsVisitIndex + i ...."+(state.chsVisitIndex + i));
-        console.log("state.chsBtnStates["+ i +"] ...."+state.chsBtnStates[(state.chsVisitIndex + i)]);
-        let stateToPush = 'select';
-        if (state.chsBtnStates[(state.chsVisitIndex + i)] == 'deselect') {
-          console.log("deselecting ....");
-          stateToPush = 'deselect';
+        //check for select and deselect
+        //TODO: if display optimization is needed, improve perfomance by finding any 'false' instead of all 'false' visitCount
+        let visitCountIndex = state.chsVisitIndex + i - 1;
+        let deselectedCheckboxFound = Object.values(state.bcrows).filter(obj=>{return (! obj.visitCount[ visitCountIndex ]);}).length > 0;
+
+        let stateToPush = 'deselect';
+        if (deselectedCheckboxFound) {
+          stateToPush = 'select';
         }
         btnStates.push(stateToPush);
       }
