@@ -332,6 +332,22 @@ class BudgetProvider extends Component {
   }
 
   /**
+   * Take care of updates related to adding a service, such as updating the visits header selection buttons.
+   */
+  addServiceUpdates = (needsSubjectsAndVisits, serviceObj, oneTimeUseId) => {
+    //first time a clinical service is added, we need to get the visit count and the subject count
+    if (needsSubjectsAndVisits) {
+      this.cshSubjectsAndVisitsNeeded(oneTimeUseId);
+    }
+    else {
+      //update header buttons if clinical service added
+      if (serviceObj.clinical == "1") {
+        this.csHeaderUpdate();
+      }
+    }
+  }
+
+  /**
    * ServiceMenuItems call this context method to add instances of service rows to state.bcrows for display in the UI.
    */
   addBCService = (e, serviceRow) => {
@@ -365,7 +381,7 @@ class BudgetProvider extends Component {
           [oneTimeUseId]:serviceObj
         }
       });
-    }, needsSubjectsAndVisits ? ()=>{this.cshSubjectsAndVisitsNeeded(oneTimeUseId);} : null);
+    }, () => {this.addServiceUpdates(needsSubjectsAndVisits, serviceObj, oneTimeUseId);});
   }
 
   render() { 
