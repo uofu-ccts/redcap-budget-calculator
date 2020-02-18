@@ -50,7 +50,7 @@ class BCClincalHeader extends Component {
       disabled={disabled} 
       className="check-column-button" 
       style={{width: '40px'}} 
-      onClick={()=>{callback(i+1);}}>{icon}</Button></td>);
+      onClick={()=>{callback(i,buttonStates[i]);}}>{icon}</Button></td>);
     }
     
     return retval;

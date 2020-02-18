@@ -14,7 +14,7 @@ class BudgetProvider extends Component {
       bcInfoModalNeeded: false, // when needed, the ID of the row that needs the info is populated in this attribute.
 
       fundingType: '', //determines the "Your Cost" column
-      bcrows: {}, // All clinical and non-clinical rows for virtual DOM to display. //TODO: State **SHOULD BE** preserved in the row components.
+      bcrows: {}, // All clinical and non-clinical rows for virtual DOM to display. Authoritative row state **SHOULD BE** preserved here, and not in the row components.
       
       nonclinicalRowTotals: {}, // calculated totals associated with rows' ID (for speed)
       clinicalRowsTotal: {}, // calculated totals associated with rows' ID (for speed)
@@ -62,8 +62,31 @@ class BudgetProvider extends Component {
    * Five displayed buttons in the clinical services header.
    * The first is 1 and the 5th is 5, ... not 0 based.
    */
-  cshButtonClicked = (btnIndex) => {
-    console.log("Button "+btnIndex+" clicked", btnIndex);//TODO: implement me!!!
+  cshButtonClicked = (btnIndex, buttonState) => {//TODO: implement me!!!
+    console.log("Button "+btnIndex+" clicked", btnIndex);
+
+    let newVisitState = false;
+
+    if (buttonState === "select") {
+      newVisitState = true;
+    }
+
+    this.setState((state,props)=>{
+      let columnIndex = state.chsVisitIndex+btnIndex-1;
+      console.log("columnIndex="+columnIndex);
+
+      let bcrowsCopy = {...state.bcrows};
+      Object.values(bcrowsCopy).filter(this.isClinical).forEach(obj => {
+
+        bcrowsCopy[obj.id].visitCount[columnIndex] = newVisitState;
+
+        //check if row button needs updating and update it
+        bcrowsCopy[obj.id].anyVistsNotSelected = (obj.visitCount.filter(v=>(!v)).length > 0);
+      });
+
+      return { bcrows:bcrowsCopy };
+    }, 
+    ()=>{this.csHeaderUpdate(); });//update header check buttons and update row check button.
   }
 
   // END:  Clinical Services Header Context
@@ -273,7 +296,6 @@ class BudgetProvider extends Component {
     }, 
     ()=>{this.csUpdateColumnCheckButtonState(visitIndex); this.csUpdateRowCheckButtonState(id)});//update header check buttons and update row check button.
   }
-
 
   handleVisitRowButtonClicked = (id, select) => {
     console.log("handleVisitRowButtonClicked...");
