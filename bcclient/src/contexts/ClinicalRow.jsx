@@ -99,7 +99,7 @@ class ClinicalRow extends Component {
 
     for (let i=0; i<this.props.visitCount.length; i++) {
       if (this.props.visitCount[i] != select) {
-        this.props.csVisitChanged(this.state.id, i, select);
+        this.props.csVisitChanged(this.state.id, i, select);//TODO: fix race condition
       }
     }
   }

@@ -36,22 +36,26 @@ class BudgetProvider extends Component {
 
   cshNavLeft = () => {
     //console.log("cshNavLeft clicked");
-    let visitIndex = this.state.chsVisitIndex;
-    visitIndex = visitIndex-5;
+    this.setState((state, props)=>{
 
-    this.setState(
-      {chsVisitIndex:visitIndex},
-      this.csHeaderUpdate);
+      let visitIndex = state.chsVisitIndex;
+      visitIndex = visitIndex-5;
+      return {chsVisitIndex:visitIndex};
+
+    },
+    this.csHeaderUpdate);
   }
 
   cshNavRight = () => {
     // console.log("cshNavRight clicked");
-    let visitIndex = this.state.chsVisitIndex;
-    visitIndex = visitIndex+5;
+    this.setState((state, props)=>{
+      let visitIndex = state.chsVisitIndex;
+      visitIndex = visitIndex+5;
 
-    this.setState(
-      {chsVisitIndex:visitIndex},
-      this.csHeaderUpdate);
+      return {chsVisitIndex:visitIndex};
+    },
+    this.csHeaderUpdate);
+
   }
 
   /**
@@ -129,15 +133,24 @@ class BudgetProvider extends Component {
   /**
    * Check for selection status of each column of checkboxes AND check for no column, too.
    */
-  cshUpdateCheckButtons = () => {
+  cshUpdateCheckButtons = (state) => {
     let btnStates = [];
 
     for (let i=0; i<5; i++) {
-      let columnExists = (this.state.bcimShowInfoVisitCount >= (this.state.chsVisitIndex + i));
+      let columnExists = (state.bcimShowInfoVisitCount >= (state.chsVisitIndex + i));
 
       if (columnExists) {
         //TODO: check for select and deselect
-        btnStates.push('select');
+        // state.chsBtnStates[(state.chsVisitIndex + i)]
+        console.log("selecting ....");
+        console.log("state.chsVisitIndex + i ...."+(state.chsVisitIndex + i));
+        console.log("state.chsBtnStates["+ i +"] ...."+state.chsBtnStates[(state.chsVisitIndex + i)]);
+        let stateToPush = 'select';
+        if (state.chsBtnStates[(state.chsVisitIndex + i)] == 'deselect') {
+          console.log("deselecting ....");
+          stateToPush = 'deselect';
+        }
+        btnStates.push(stateToPush);
       }
       else {
         btnStates.push('disabled');
@@ -152,27 +165,30 @@ class BudgetProvider extends Component {
    * Updates all the buttons in the Visits header
    */
   csHeaderUpdate = () => {
-    //update arrows
-    let leftArrow = "disabled";
-    let rightArrow = "disabled";
+    this.setState((state,props)=>{
+      //update arrows
+      let leftArrow = "disabled";
+      let rightArrow = "disabled";
 
-    if (this.state.chsVisitIndex > 5) {
-      leftArrow = "active";
-    }
+      if (state.chsVisitIndex > 5) {
+        leftArrow = "active";
+      }
 
-    let hasMoreVisitsToNavigate = ((this.state.bcimShowInfoVisitCount - this.state.chsVisitIndex) >= 5);
-    if (hasMoreVisitsToNavigate) {
-      rightArrow = "active";
-    }
+      let hasMoreVisitsToNavigate = ((state.bcimShowInfoVisitCount - state.chsVisitIndex) >= 5);
+      if (hasMoreVisitsToNavigate) {
+        rightArrow = "active";
+      }
 
-    //update check buttons
-    let btnStates = this.cshUpdateCheckButtons();
+      //update check buttons
+      let btnStates = this.cshUpdateCheckButtons(state);
 
-    //okay, ... technically this is where the real update happens
-    this.setState({
-      chsLeftNavState:leftArrow,
-      chsRightNavState:rightArrow,
-      chsBtnStates:btnStates});
+      //okay, ... technically this is where the real update happens
+      return {
+        chsLeftNavState:leftArrow,
+        chsRightNavState:rightArrow,
+        chsBtnStates:btnStates};
+
+    });
   }
 
   csUpdateSubjectCountById = (e, id) => {
@@ -184,29 +200,62 @@ class BudgetProvider extends Component {
   }
 
   csUpdateColumnCheckButtonState = (visitIndex) => {
-    //TODO: implement me!
-    console.log("csUpdateColumnCheckButtonState ... "+visitIndex)
+    // console.log("csUpdateColumnCheckButtonState ... "+visitIndex)
+
+    this.setState((state, props) => {
+      let rowsArray = Object.values(state.bcrows);
+      let foundNotSelected = false;
+
+      for (let i=0; i<rowsArray.length; i++) {
+        if (! rowsArray[i].visitCount[visitIndex]) {
+          foundNotSelected = true;
+          // console.log("rowsArray[i].visitCount[visitIndex] ... i="+i+"; visitIndex="+visitIndex)
+          break;
+        }
+      }
+
+      let visibleColumn = visitIndex % 5;
+      if (foundNotSelected != state.chsBtnStates[visibleColumn]) {
+        // console.log("state.chsBtnStates=", state.chsBtnStates);
+        // console.log("column button "+visibleColumn+" needs redraw ... visitIndex="+visitIndex);
+        let chsBtnStatesCopy = [...state.chsBtnStates];
+
+        chsBtnStatesCopy[visibleColumn] = (foundNotSelected ? 'select' : 'deselect');
+        return { chsBtnStates:chsBtnStatesCopy};
+      }
+      else {
+        return {};
+      }
+
+    });
+
   }
 
   csUpdateRowCheckButtonState = (rowId) => {
-    console.log("csUpdateRowCheckButtonState ... "+rowId)
+    // console.log("csUpdateRowCheckButtonState ... "+rowId)
 
     //check what the current state is vs what it should be before consuming cycles on creating a copy of bcrows
-    let visitsArray = this.state.bcrows[rowId].visitCount;
-    let foundNotSelected = false;
+    this.setState((state, props) => {
+      let visitsArray = state.bcrows[rowId].visitCount;
+      let foundNotSelected = false;
 
-    for (let i=0; i<visitsArray.length; i++) {
-      if (! visitsArray[i]) {
-        foundNotSelected = true;
-        break;
+      for (let i=0; i<visitsArray.length; i++) {
+        if (! visitsArray[i]) {
+          foundNotSelected = true;
+          break;
+        }
       }
-    }
 
-    if (foundNotSelected != this.state.bcrows[rowId].anyVistsNotSelected) {
-      let bcrowsCopy = {...this.state.bcrows};
-      bcrowsCopy[rowId].anyVistsNotSelected = foundNotSelected;
-      this.setState({ bcrowsCopy});
-    }
+      if (foundNotSelected != state.bcrows[rowId].anyVistsNotSelected) {
+        let bcrowsCopy = {...state.bcrows};
+        bcrowsCopy[rowId].anyVistsNotSelected = foundNotSelected;
+        return { bcrowsCopy};
+      }
+      else {
+        return {};
+      }
+    });
+
 
   }
 
@@ -214,21 +263,16 @@ class BudgetProvider extends Component {
    * Called when a visit checkbox is clicked. After the checkbox state is updated, 
    * the check buttons on the column and row are updated if updateButtonsState=true.
    */
-  csVisitChanged = (id, visitIndex, value, updateButtonsState=true) => {
+  csVisitChanged = (id, visitIndex, value) => {
 
     //console.log("id="+id+ "; visitIndex="+visitIndex+"; value="+value);
 
-    let bcrowsCopy = {...this.state.bcrows};
-    bcrowsCopy[id].visitCount[visitIndex] = value;
-    if (updateButtonsState) {
-      this.setState(
-        { bcrowsCopy }, 
-        ()=>{this.csUpdateColumnCheckButtonState(visitIndex); this.csUpdateRowCheckButtonState(id)});//update header check buttons and update row check button.
-    }
-    else {
-      this.setState(
-        { bcrowsCopy });// Not updating header check buttons and update row check button. Used when updating multiple checkbox states before updating buttons.
-    }
+    this.setState((state, props) => {
+      let bcrowsCopy = {...state.bcrows};
+      bcrowsCopy[id].visitCount[visitIndex] = value;
+      return { bcrowsCopy } 
+    }, 
+    ()=>{this.csUpdateColumnCheckButtonState(visitIndex); this.csUpdateRowCheckButtonState(id)});//update header check buttons and update row check button.
   }
 
   // END:  Clinical Services (CS) section
@@ -291,46 +335,38 @@ class BudgetProvider extends Component {
    * ServiceMenuItems call this context method to add instances of service rows to state.bcrows for display in the UI.
    */
   addBCService = (e, serviceRow) => {
-            e.persist();
-            e.preventDefault();
+    e.persist();
+    e.preventDefault();
 
-            // Good for a few thousand budget items without worrying about collisions.
-            let oneTimeUseId = '_' + Math.random().toString(36).substr(2, 9);
+    // Good for a few thousand budget items without worrying about collisions.
+    let oneTimeUseId = '_' + Math.random().toString(36).substr(2, 9);
 
-            let serviceObj = JSON.parse(serviceRow)[0];
-            serviceObj["id"] = oneTimeUseId;
-            serviceObj["key"] = oneTimeUseId;
-            serviceObj["subjectCount"] = this.state.bcimShowInfoSubjectCount;
-            
-            serviceObj["visitCount"] = [];
-            for (let i=0; i<this.state.bcimShowInfoVisitCount; i++) 
-            {
-              serviceObj["visitCount"].push(false);
-            }
+    let serviceObj = JSON.parse(serviceRow)[0];
+    let needsSubjectsAndVisits = (! this.state.bcInfoModalUsedOnce) && parseInt(serviceObj["clinical"]);
 
-            serviceObj["anyVistsNotSelected"] = true;
+    this.setState((state, props) => {
 
-            // The first time a clinical row is added a modal asks for the subject and visit count.
-            if ((! this.state.bcInfoModalUsedOnce) && parseInt(serviceObj["clinical"])) {
-              this.setState({
-                bcrows: 
-                { 
-                  ...this.state.bcrows, 
-                  [oneTimeUseId]:serviceObj
-                }
-              }, ()=>{this.cshSubjectsAndVisitsNeeded(oneTimeUseId);}); 
-            }
-            else {
-              this.setState({
-                bcrows: 
-                { 
-                  ...this.state.bcrows, 
-                  [oneTimeUseId]:serviceObj
-                }
-              }); 
-            }
+      serviceObj["id"] = oneTimeUseId;
+      serviceObj["key"] = oneTimeUseId;
+      serviceObj["subjectCount"] = this.state.bcimShowInfoSubjectCount;
+      
+      serviceObj["visitCount"] = [];
+      for (let i=0; i<this.state.bcimShowInfoVisitCount; i++) 
+      {
+        serviceObj["visitCount"].push(false);
+      }
 
-          }
+      serviceObj["anyVistsNotSelected"] = true;
+
+      return ({
+        bcrows: 
+        { 
+          ...this.state.bcrows, 
+          [oneTimeUseId]:serviceObj
+        }
+      });
+    }, needsSubjectsAndVisits ? ()=>{this.cshSubjectsAndVisitsNeeded(oneTimeUseId);} : null);
+  }
 
   render() { 
     return ( 
