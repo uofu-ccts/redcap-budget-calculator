@@ -96,12 +96,7 @@ class ClinicalRow extends Component {
     //      this prevents wasted cycles re-checking the column buttons' state
     //TODO: Optimization bonus points, ... only update the row button view when all 
     //      the visits have been changed
-
-    for (let i=0; i<this.props.visitCount.length; i++) {
-      if (this.props.visitCount[i] != select) {
-        this.props.csVisitChanged(this.state.id, i, select);//TODO: fix race condition
-      }
-    }
+    this.props.handleVisitRowButtonClicked(this.state.id, select);
   }
 
   getCheckButton = () => {

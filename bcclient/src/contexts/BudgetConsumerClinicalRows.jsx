@@ -53,6 +53,7 @@ class BudgetClinicalRowsConsumer extends Component {
                           chsVisitIndex={context.chsVisitIndex}
                           bcimShowInfoVisitCount={context.bcimShowInfoVisitCount}
                           csVisitChanged={context.csVisitChanged}
+                          handleVisitRowButtonClicked={context.handleVisitRowButtonClicked}
                       />
                   ))}
                   {console.log("context.bcimShowInfoSubjectCount="+context.bcimShowInfoSubjectCount)}

@@ -63,7 +63,7 @@ class BudgetProvider extends Component {
    * The first is 1 and the 5th is 5, ... not 0 based.
    */
   cshButtonClicked = (btnIndex) => {
-    console.log("Button "+btnIndex+" clicked", btnIndex);
+    console.log("Button "+btnIndex+" clicked", btnIndex);//TODO: implement me!!!
   }
 
   // END:  Clinical Services Header Context
@@ -274,6 +274,26 @@ class BudgetProvider extends Component {
     ()=>{this.csUpdateColumnCheckButtonState(visitIndex); this.csUpdateRowCheckButtonState(id)});//update header check buttons and update row check button.
   }
 
+
+  handleVisitRowButtonClicked = (id, select) => {
+    console.log("handleVisitRowButtonClicked...");
+
+    this.setState((state, props)=>{
+      let visitCountLength = state.bcrows[id].visitCount.length;
+      let bcrowsCopy = {...state.bcrows};
+
+
+      for (let i=0; i<visitCountLength; i++) {
+        if (state.bcrows[id].visitCount[i] != select) {
+          bcrowsCopy[id].visitCount[i] = select;
+        }
+      }
+      return { bcrowsCopy };
+    }, 
+    ()=>{this.csHeaderUpdate(); this.csUpdateRowCheckButtonState(id)});//update header check buttons and update row check button.
+
+  }
+
   // END:  Clinical Services (CS) section
   //
   //////////////////////////////////////////
@@ -418,7 +438,8 @@ class BudgetProvider extends Component {
           bcimHandleHideInfo: this.bcimHandleHideInfo,
 
           csUpdateSubjectCountById: this.csUpdateSubjectCountById,
-          csVisitChanged: this.csVisitChanged
+          csVisitChanged: this.csVisitChanged,
+          handleVisitRowButtonClicked: this.handleVisitRowButtonClicked
 
         }}>
         {this.props.children}
