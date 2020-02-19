@@ -340,15 +340,7 @@ class BudgetProvider extends Component {
     let clinicalRows = Object.values(bcrowsCopy).filter(this.isClinical);
     let newClinicalTotal = clinicalRows.reduce( reducer, 0 );
 
-    console.log("clinicalRows=",clinicalRows);
-    console.log("newClinicalTotal="+newClinicalTotal);
-
     return newClinicalTotal;
-
-    // let crt = {...this.state.clinicalRowsTotal};
-    // let newClinicalTotal = Object.values( crt ).reduce( reducer, 0 );
-
-    // this.setState({clinicalTotals: newClinicalTotal},);
   }
 
   csUpdateClinicalTotals = (rowId) => {
