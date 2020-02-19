@@ -16,8 +16,8 @@ class BudgetProvider extends Component {
       fundingType: '', //determines the "Your Cost" column
       bcrows: {}, // All clinical and non-clinical rows for virtual DOM to display. Authoritative row state **SHOULD BE** preserved here, and not in the row components.
       
-      nonclinicalRowTotals: {}, // calculated totals associated with rows' ID (for speed)
-      clinicalRowsTotal: {}, // calculated totals associated with rows' ID (for speed)
+      nonclinicalRowTotals: {}, // calculated totals associated with rows' ID //TODO: Old design. Planning to refactor into bcrows
+      clinicalRowsTotal: {}, // calculated totals associated with rows' ID //TODO: Old design. Planning to refactor into bcrows
 
       nonclinicalTotals: 0, // for display in UI
       clinicalTotals: 0, // for display in UI
@@ -147,7 +147,7 @@ class BudgetProvider extends Component {
 
     });
 
-    this.setState({ bcrowsCopy });
+    this.setState({ bcrows:bcrowsCopy });
 
     //now, ... update the visits header
     this.csHeaderUpdate();
@@ -218,7 +218,7 @@ class BudgetProvider extends Component {
 
     let bcrowsCopy = {...this.state.bcrows};
     bcrowsCopy[id].subjectCount = e.target.value;
-    this.setState({ bcrowsCopy });
+    this.setState({ bcrows:bcrowsCopy });
   }
 
   csUpdateColumnCheckButtonState = (visitIndex) => {
@@ -274,12 +274,12 @@ class BudgetProvider extends Component {
       if (foundNotSelected != state.bcrows[rowId].anyVistsNotSelected) {
         let bcrowsCopy = {...state.bcrows};
         bcrowsCopy[rowId].anyVistsNotSelected = foundNotSelected;
-        return { bcrowsCopy};
+        return { bcrows:bcrowsCopy};
       }
       else {
         return {};
       }
-    }, ()=>{this.csTotalPerSubject(rowId);});//TODO: Add line total too
+    }, ()=>{this.csTotalPerSubject(rowId);});
 
 
   }
@@ -295,7 +295,7 @@ class BudgetProvider extends Component {
     this.setState((state, props) => {
       let bcrowsCopy = {...state.bcrows};
       bcrowsCopy[id].visitCount[visitIndex] = value;
-      return { bcrowsCopy } 
+      return { bcrows:bcrowsCopy } 
     }, 
     ()=>{this.csUpdateColumnCheckButtonState(visitIndex); this.csUpdateRowCheckButtonState(id)});//update header check buttons and update row check button.
   }
@@ -313,22 +313,29 @@ class BudgetProvider extends Component {
           bcrowsCopy[id].visitCount[i] = select;
         }
       }
-      return { bcrowsCopy };
+      return { bcrows:bcrowsCopy };
     }, 
     ()=>{this.csHeaderUpdate(); this.csUpdateRowCheckButtonState(id)});//update header check buttons and update row check button.
 
   }
 
-  csSetCostPerSubject = (state, rowId, cost) => {
-    let bcrowsCopy = {...state.bcrows};
-    bcrowsCopy[rowId].costPerSubject = cost;
-    return { bcrows:bcrowsCopy } 
+  setRowTotal = (rowId, bcrowsCopy) => {
+      let numberOfVisits = bcrowsCopy[rowId].visitCount.filter(v=>(v)).length;
+      let rowCostPerSubject = bcrowsCopy[rowId].costPerSubject;
+      let subjectCount = bcrowsCopy[rowId].subjectCount;
+
+      let totalRowCost = rowCostPerSubject * numberOfVisits * subjectCount;
+
+      // console.log("costPerSubject="+rowCostPerSubject+"; numberOfVisits="+numberOfVisits);
+
+      bcrowsCopy[rowId].totalCost = totalRowCost;
+      return bcrowsCopy;
   }
 
   csTotalPerSubject = (rowId) => {
 
     this.setState((state,props) => {
-      let retval = {};
+      let bcrowsCopy = {...state.bcrows};
 
       let costPerSubject = 0.00;
       let currentRow = state.bcrows[rowId];
@@ -336,10 +343,14 @@ class BudgetProvider extends Component {
       let numberOfVisits = currentRow.visitCount.filter(obj => {return obj;}).length;
 
       costPerSubject = yourCost * numberOfVisits;
-      retval = this.csSetCostPerSubject(state, rowId, costPerSubject);
 
-      return retval;
-    });
+      bcrowsCopy[rowId].costPerSubject = costPerSubject;
+
+      bcrowsCopy = this.setRowTotal(rowId, bcrowsCopy)
+      // console.log("M1_costPerSubject="+costPerSubject);
+
+      return { bcrows:bcrowsCopy } 
+    }, );
   }
 
   // END:  Clinical Services (CS) section
@@ -349,13 +360,19 @@ class BudgetProvider extends Component {
 
 
 
-
+  /**
+   * Grand Total for Budget
+   */
   calculateGrandTotals = () => {
     this.setState((state, props) => {return {
       grandTotal: (state.nonclinicalTotals + state.clinicalTotals)
     }});
   }
 
+
+  /**
+   * Non-Clinical Totals for Budget
+   */
   calculateNonclinicalTotals = () => {
     let reducer = (acc, cur) => {return acc + cur;}
     let ncrt = {...this.state.nonclinicalRowTotals};
@@ -383,6 +400,39 @@ class BudgetProvider extends Component {
               nonclinicalRowTotals: updatedNCRT
             }, this.calculateNonclinicalTotals);
   }
+
+
+  /**
+   * Clinical Totals for Budget
+   */
+  calculateClinicalTotals = () => {
+    let reducer = (acc, cur) => {return acc + cur;}
+    let crt = {...this.state.clinicalRowTotals};
+    let newClinicalTotal = Object.values( crt ).reduce( reducer, 0 );
+
+    this.setState({clinicalTotals: newClinicalTotal},this.calculateGrandTotals);
+  }
+
+  addClinicalCost = (id, cost) => {
+    let addedToCC = {clinicalRowTotals: 
+        {
+          ...this.state.clinicalRowTotals,
+        [id]:cost}}
+
+    this.setState(
+      addedToCC,
+      this.calculateClinicalTotals
+    );
+  }
+
+  removeNonclinicalCost = (id) => {
+    let updatedNCRT = {...this.state.clinicalRowTotals};
+    delete updatedNCRT[id];
+    this.setState({
+              clinicalRowTotals: updatedNCRT
+            }, this.calculateClinicalTotals);
+  }
+
 
 
 
@@ -441,6 +491,7 @@ class BudgetProvider extends Component {
 
       serviceObj["anyVistsNotSelected"] = true;
       serviceObj["costPerSubject"] = 0.00;
+      serviceObj["totalCost"] = 0.00;
 
       return ({
         bcrows: 

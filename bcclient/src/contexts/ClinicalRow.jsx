@@ -14,7 +14,6 @@ class ClinicalRow extends Component {
     this.state = {
       id: props.id,
       yourcost: ((props.fundingType=='federal_rate') ? props.federalrate : props.industryrate),
-      totalcost: 0
     }
   }
 
@@ -108,12 +107,6 @@ class ClinicalRow extends Component {
     }
   }
 
-  rowTotal = () => {//TODO: store current total in the budget provider for printing
-    let totalServiceCost = 0.00;
-
-    return this.toDollars(totalServiceCost);
-  }
-
   render() { 
     return ( 
       <tr className="service-line-item" onInput={this.handleUpdateTotals}>
@@ -130,7 +123,7 @@ class ClinicalRow extends Component {
           </td>
           {this.getCheckboxes(this.props.chsVisitIndex, this.props.bcimShowInfoVisitCount)}
           <td className="line-total-per-patient">{this.toDollars(this.props.costPerSubject)}</td>
-          <td className="line-total">{this.rowTotal()}</td>
+          <td className="line-total">{this.toDollars(this.props.totalCost)}</td>
       </tr>
      );
   }

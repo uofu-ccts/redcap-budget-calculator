@@ -49,16 +49,15 @@ class BudgetClinicalRowsConsumer extends Component {
                           visitCount={obj.visitCount}
                           anyVistsNotSelected={obj.anyVistsNotSelected}
                           costPerSubject={obj.costPerSubject}
+                          totalCost={obj.totalCost}
                           bcrows={context.bcrows}
                           csUpdateSubjectCountById={context.csUpdateSubjectCountById}
                           chsVisitIndex={context.chsVisitIndex}
                           bcimShowInfoVisitCount={context.bcimShowInfoVisitCount}
                           csVisitChanged={context.csVisitChanged}
                           handleVisitRowButtonClicked={context.handleVisitRowButtonClicked}
-                          csTotalPerSubject={context.csTotalPerSubject}
                       />
                   ))}
-                  {console.log("context.bcimShowInfoSubjectCount="+context.bcimShowInfoSubjectCount)}
 
                 <BCInfoModal
                     showInfo={context.bcimShowInfo}

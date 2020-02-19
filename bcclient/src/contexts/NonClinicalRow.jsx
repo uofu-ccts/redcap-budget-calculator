@@ -33,7 +33,7 @@ class NonClinicalRow extends Component {
     this.props.removeNonclinicalCost(this.props.id)
   }
 
-  toDollars = dollars => {
+  toDollars = dollars => {//TODO:move to an external *.js library
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
