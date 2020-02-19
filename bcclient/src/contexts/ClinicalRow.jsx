@@ -129,7 +129,7 @@ class ClinicalRow extends Component {
               {this.getCheckButton()}
           </td>
           {this.getCheckboxes(this.props.chsVisitIndex, this.props.bcimShowInfoVisitCount)}
-          <td className="line-total-per-patient">{this.toDollars(this.props.csTotalPerSubject(this.state.id))}</td>
+          <td className="line-total-per-patient">{this.toDollars(this.props.costPerSubject)}</td>
           <td className="line-total">{this.rowTotal()}</td>
       </tr>
      );

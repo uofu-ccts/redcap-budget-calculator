@@ -253,6 +253,9 @@ class BudgetProvider extends Component {
 
   }
 
+  /**
+   * Updates a row's check button, then calls the fuction to set the total per subject.
+   */
   csUpdateRowCheckButtonState = (rowId) => {
     // console.log("csUpdateRowCheckButtonState ... "+rowId)
 
@@ -276,7 +279,7 @@ class BudgetProvider extends Component {
       else {
         return {};
       }
-    });
+    }, ()=>{this.csTotalPerSubject(rowId);});//TODO: Add line total too
 
 
   }
@@ -316,27 +319,27 @@ class BudgetProvider extends Component {
 
   }
 
-  csSetCostPerSubject = (rowId, cost) => {
-    this.setState((state, props) => {
-      let bcrowsCopy = {...state.bcrows};
-      bcrowsCopy[rowId].costPerSubject = cost;
-      return { bcrows:bcrowsCopy } 
-    });
+  csSetCostPerSubject = (state, rowId, cost) => {
+    let bcrowsCopy = {...state.bcrows};
+    bcrowsCopy[rowId].costPerSubject = cost;
+    return { bcrows:bcrowsCopy } 
   }
 
-  csTotalPerSubject = (rowId) => {//TODO: store current total in the budget provider for printing
-    let costPerSubject = 0.00;
-    let currentRow = this.state.bcrows[rowId];
-    let yourCost = (this.state.fundingType=='federal_rate') ? currentRow.federal_rate : currentRow.industry_rate;
-    let numberOfVisits = currentRow.visitCount.filter(obj => {return obj;}).length;
+  csTotalPerSubject = (rowId) => {
 
-    console.log("costPerSubject="+costPerSubject);
-    console.log("yourCost="+yourCost);
-    console.log("numberOfVisits="+numberOfVisits);
+    this.setState((state,props) => {
+      let retval = {};
 
-    costPerSubject = yourCost * numberOfVisits;
+      let costPerSubject = 0.00;
+      let currentRow = state.bcrows[rowId];
+      let yourCost = (state.fundingType=='federal_rate') ? currentRow.federal_rate : currentRow.industry_rate;
+      let numberOfVisits = currentRow.visitCount.filter(obj => {return obj;}).length;
 
-    return costPerSubject;
+      costPerSubject = yourCost * numberOfVisits;
+      retval = this.csSetCostPerSubject(state, rowId, costPerSubject);
+
+      return retval;
+    });
   }
 
   // END:  Clinical Services (CS) section
@@ -437,6 +440,7 @@ class BudgetProvider extends Component {
       }
 
       serviceObj["anyVistsNotSelected"] = true;
+      serviceObj["costPerSubject"] = 0.00;
 
       return ({
         bcrows: 
