@@ -108,20 +108,6 @@ class ClinicalRow extends Component {
     }
   }
 
-  totalPerSubject = () => {//TODO: store current total in the budget provider for printing
-    let costPerSubject = 0.00;
-    let yourCost = (this.props.fundingType=='federal_rate') ? this.props.federalrate : this.props.industryrate;
-    let numberOfVisits = this.props.visitCount.filter(obj => {return obj;}).length;
-
-    console.log("costPerSubject="+costPerSubject);
-    console.log("yourCost="+yourCost);
-    console.log("numberOfVisits="+numberOfVisits);
-
-    costPerSubject = yourCost * numberOfVisits;
-
-    return this.toDollars(costPerSubject);
-  }
-
   rowTotal = () => {//TODO: store current total in the budget provider for printing
     let totalServiceCost = 0.00;
 
@@ -143,7 +129,7 @@ class ClinicalRow extends Component {
               {this.getCheckButton()}
           </td>
           {this.getCheckboxes(this.props.chsVisitIndex, this.props.bcimShowInfoVisitCount)}
-          <td className="line-total-per-patient">{this.totalPerSubject()}</td>
+          <td className="line-total-per-patient">{this.toDollars(this.props.csTotalPerSubject(this.state.id))}</td>
           <td className="line-total">{this.rowTotal()}</td>
       </tr>
      );

@@ -316,6 +316,29 @@ class BudgetProvider extends Component {
 
   }
 
+  csSetCostPerSubject = (rowId, cost) => {
+    this.setState((state, props) => {
+      let bcrowsCopy = {...state.bcrows};
+      bcrowsCopy[rowId].costPerSubject = cost;
+      return { bcrows:bcrowsCopy } 
+    });
+  }
+
+  csTotalPerSubject = (rowId) => {//TODO: store current total in the budget provider for printing
+    let costPerSubject = 0.00;
+    let currentRow = this.state.bcrows[rowId];
+    let yourCost = (this.state.fundingType=='federal_rate') ? currentRow.federal_rate : currentRow.industry_rate;
+    let numberOfVisits = currentRow.visitCount.filter(obj => {return obj;}).length;
+
+    console.log("costPerSubject="+costPerSubject);
+    console.log("yourCost="+yourCost);
+    console.log("numberOfVisits="+numberOfVisits);
+
+    costPerSubject = yourCost * numberOfVisits;
+
+    return costPerSubject;
+  }
+
   // END:  Clinical Services (CS) section
   //
   //////////////////////////////////////////
@@ -461,7 +484,9 @@ class BudgetProvider extends Component {
 
           csUpdateSubjectCountById: this.csUpdateSubjectCountById,
           csVisitChanged: this.csVisitChanged,
-          handleVisitRowButtonClicked: this.handleVisitRowButtonClicked
+          handleVisitRowButtonClicked: this.handleVisitRowButtonClicked,
+
+          csTotalPerSubject: this.csTotalPerSubject
 
         }}>
         {this.props.children}
