@@ -23,7 +23,7 @@ class ClinicalRow extends Component {
     this.props.removeBCService(e, this.props.id)
   }
 
-  toDollars = dollars => {
+  toDollars = dollars => {//TODO: move to *.js library
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -108,6 +108,26 @@ class ClinicalRow extends Component {
     }
   }
 
+  totalPerSubject = () => {//TODO: store current total in the budget provider for printing
+    let costPerSubject = 0.00;
+    let yourCost = (this.props.fundingType=='federal_rate') ? this.props.federalrate : this.props.industryrate;
+    let numberOfVisits = this.props.visitCount.filter(obj => {return obj;}).length;
+
+    console.log("costPerSubject="+costPerSubject);
+    console.log("yourCost="+yourCost);
+    console.log("numberOfVisits="+numberOfVisits);
+
+    costPerSubject = yourCost * numberOfVisits;
+
+    return this.toDollars(costPerSubject);
+  }
+
+  rowTotal = () => {//TODO: store current total in the budget provider for printing
+    let totalServiceCost = 0.00;
+
+    return this.toDollars(totalServiceCost);
+  }
+
   render() { 
     return ( 
       <tr className="service-line-item" onInput={this.handleUpdateTotals}>
@@ -123,8 +143,8 @@ class ClinicalRow extends Component {
               {this.getCheckButton()}
           </td>
           {this.getCheckboxes(this.props.chsVisitIndex, this.props.bcimShowInfoVisitCount)}
-          <td className="line-total-per-patient">$0.00</td>
-          <td className="line-total">$0.00</td>
+          <td className="line-total-per-patient">{this.totalPerSubject()}</td>
+          <td className="line-total">{this.rowTotal()}</td>
       </tr>
      );
   }

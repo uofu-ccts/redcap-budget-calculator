@@ -62,7 +62,7 @@ class BudgetProvider extends Component {
    * Five displayed buttons in the clinical services header.
    * The first is 1 and the 5th is 5, ... not 0 based.
    */
-  cshButtonClicked = (btnIndex, buttonState) => {//TODO: implement me!!!
+  cshButtonClicked = (btnIndex, buttonState) => {
     console.log("Button "+btnIndex+" clicked", btnIndex);
 
     let newVisitState = false;
