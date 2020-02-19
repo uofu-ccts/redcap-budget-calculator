@@ -35,7 +35,6 @@ class BudgetProvider extends Component {
   // BEGIN: Clinical Services Header Context (CSH)
 
   cshNavLeft = () => {
-    //console.log("cshNavLeft clicked");
     this.setState((state, props)=>{
 
       let visitIndex = state.chsVisitIndex;
@@ -47,7 +46,6 @@ class BudgetProvider extends Component {
   }
 
   cshNavRight = () => {
-    // console.log("cshNavRight clicked");
     this.setState((state, props)=>{
       let visitIndex = state.chsVisitIndex;
       visitIndex = visitIndex+5;
@@ -63,7 +61,6 @@ class BudgetProvider extends Component {
    * The first is 1 and the 5th is 5, ... not 0 based.
    */
   cshButtonClicked = (btnIndex, buttonState) => {
-    console.log("Button "+btnIndex+" clicked", btnIndex);
 
     let newVisitState = false;
 
@@ -73,7 +70,6 @@ class BudgetProvider extends Component {
 
     this.setState((state,props)=>{
       let columnIndex = state.chsVisitIndex+btnIndex-1;
-      console.log("columnIndex="+columnIndex);
 
       let bcrowsCopy = {...state.bcrows};
       Object.values(bcrowsCopy).filter(this.isClinical).forEach(obj => {
@@ -101,7 +97,6 @@ class BudgetProvider extends Component {
   // BEGIN: Clinical Services (CS) section
 
   cshSubjectsAndVisitsNeeded = (id) => {
-    //console.log("cshSubjectsAndVisitsNeeded called with "+id);
     this.setState({
       bcInfoModalUsedOnce:true,
       bcimShowInfo:true,
@@ -132,7 +127,6 @@ class BudgetProvider extends Component {
    * updates each row in bcrows with a subject count and visit count array
    */
   bcimUpdateAllSubjectCountsAndVisitCounts = (subjectCount, visitCount) => {
-    // console.log("subjectCount should be " + this.state.bcimShowInfoSubjectCount + " and vist counts should be "+this.state.bcimShowInfoVisitCount);
     let bcrowsCopy = {...this.state.bcrows};
 
     Object.values(bcrowsCopy).filter(this.isClinical).forEach(obj => {
@@ -214,15 +208,15 @@ class BudgetProvider extends Component {
   }
 
   csUpdateSubjectCountById = (e, id) => {
-    // console.log("subjectCount: " + e.target.value + " for id: " + id);
 
     let bcrowsCopy = {...this.state.bcrows};
     bcrowsCopy[id].subjectCount = e.target.value;
-    this.setState({ bcrows:bcrowsCopy });
+    this.setState(
+      { bcrows:bcrowsCopy },
+      this.csUpdateClinicalTotals(id));
   }
 
   csUpdateColumnCheckButtonState = (visitIndex) => {
-    // console.log("csUpdateColumnCheckButtonState ... "+visitIndex)
 
     this.setState((state, props) => {
       let rowsArray = Object.values(state.bcrows);
@@ -231,15 +225,12 @@ class BudgetProvider extends Component {
       for (let i=0; i<rowsArray.length; i++) {
         if (! rowsArray[i].visitCount[visitIndex]) {
           foundNotSelected = true;
-          // console.log("rowsArray[i].visitCount[visitIndex] ... i="+i+"; visitIndex="+visitIndex)
           break;
         }
       }
 
       let visibleColumn = visitIndex % 5;
       if (foundNotSelected != state.chsBtnStates[visibleColumn]) {
-        // console.log("state.chsBtnStates=", state.chsBtnStates);
-        // console.log("column button "+visibleColumn+" needs redraw ... visitIndex="+visitIndex);
         let chsBtnStatesCopy = [...state.chsBtnStates];
 
         chsBtnStatesCopy[visibleColumn] = (foundNotSelected ? 'select' : 'deselect');
@@ -257,7 +248,6 @@ class BudgetProvider extends Component {
    * Updates a row's check button, then calls the fuction to set the total per subject.
    */
   csUpdateRowCheckButtonState = (rowId) => {
-    // console.log("csUpdateRowCheckButtonState ... "+rowId)
 
     //check what the current state is vs what it should be before consuming cycles on creating a copy of bcrows
     this.setState((state, props) => {
@@ -279,7 +269,7 @@ class BudgetProvider extends Component {
       else {
         return {};
       }
-    }, ()=>{this.csTotalPerSubject(rowId);});
+    }, ()=>{this.csUpdateClinicalTotals(rowId);});
 
 
   }
@@ -289,8 +279,6 @@ class BudgetProvider extends Component {
    * the check buttons on the column and row are updated if updateButtonsState=true.
    */
   csVisitChanged = (id, visitIndex, value) => {
-
-    //console.log("id="+id+ "; visitIndex="+visitIndex+"; value="+value);
 
     this.setState((state, props) => {
       let bcrowsCopy = {...state.bcrows};
@@ -319,23 +307,19 @@ class BudgetProvider extends Component {
 
   }
 
-  setRowTotal = (rowId, bcrowsCopy) => {
-      let numberOfVisits = bcrowsCopy[rowId].visitCount.filter(v=>(v)).length;
-      let rowCostPerSubject = bcrowsCopy[rowId].costPerSubject;
-      let subjectCount = bcrowsCopy[rowId].subjectCount;
+  csSetRowTotal = (rowId, bcrowsCopy) => {
 
-      let totalRowCost = rowCostPerSubject * numberOfVisits * subjectCount;
+    let numberOfVisits = bcrowsCopy[rowId].visitCount.filter(v=>(v)).length;
+    let rowCostPerSubject = bcrowsCopy[rowId].costPerSubject;
+    let subjectCount = bcrowsCopy[rowId].subjectCount;
 
-      // console.log("costPerSubject="+rowCostPerSubject+"; numberOfVisits="+numberOfVisits);
+    let totalRowCost = rowCostPerSubject * numberOfVisits * subjectCount;
 
-      bcrowsCopy[rowId].totalCost = totalRowCost;
-      return bcrowsCopy;
+    bcrowsCopy[rowId].totalCost = totalRowCost;
+    return bcrowsCopy;
   }
 
-  csTotalPerSubject = (rowId) => {
-
-    this.setState((state,props) => {
-      let bcrowsCopy = {...state.bcrows};
+  csTotalPerSubject = (state, rowId, bcrowsCopy) => {
 
       let costPerSubject = 0.00;
       let currentRow = state.bcrows[rowId];
@@ -343,11 +327,18 @@ class BudgetProvider extends Component {
       let numberOfVisits = currentRow.visitCount.filter(obj => {return obj;}).length;
 
       costPerSubject = yourCost * numberOfVisits;
-
       bcrowsCopy[rowId].costPerSubject = costPerSubject;
+      return bcrowsCopy;
+  }
 
-      bcrowsCopy = this.setRowTotal(rowId, bcrowsCopy)
-      // console.log("M1_costPerSubject="+costPerSubject);
+  csUpdateClinicalTotals = (rowId) => {
+
+    this.setState((state,props) => {
+
+      let bcrowsCopy = {...state.bcrows};
+ 
+      bcrowsCopy = this.csTotalPerSubject(state, rowId, bcrowsCopy);
+      bcrowsCopy = this.csSetRowTotal(rowId, bcrowsCopy);
 
       return { bcrows:bcrowsCopy } 
     }, );
@@ -540,8 +531,6 @@ class BudgetProvider extends Component {
           csUpdateSubjectCountById: this.csUpdateSubjectCountById,
           csVisitChanged: this.csVisitChanged,
           handleVisitRowButtonClicked: this.handleVisitRowButtonClicked,
-
-          csTotalPerSubject: this.csTotalPerSubject
 
         }}>
         {this.props.children}
