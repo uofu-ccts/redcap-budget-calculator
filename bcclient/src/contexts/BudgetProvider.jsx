@@ -16,7 +16,7 @@ class BudgetProvider extends Component {
       fundingType: '', //determines the "Your Cost" column
       bcrows: {}, // All clinical and non-clinical rows for virtual DOM to display. Authoritative row state **SHOULD BE** preserved here, and not in the row components.
       
-      nonclinicalRowTotals: {}, // calculated totals associated with rows' ID //TODO: Old design. Planning to refactor into bcrows
+      nonclinicalRowsTotal: {}, // calculated totals associated with rows' ID //TODO: Old design. Planning to refactor into bcrows
       clinicalRowsTotal: {}, // calculated totals associated with rows' ID //TODO: Old design. Planning to refactor into bcrows
 
       nonclinicalTotals: 0, // for display in UI
@@ -331,6 +331,26 @@ class BudgetProvider extends Component {
       return bcrowsCopy;
   }
 
+  /**
+   * Calculate and Set Clinical Total Cost
+   */
+  csCalculateClinicalTotals = (bcrowsCopy) => {
+
+    let reducer = (acc, row) => {return acc + row.totalCost;}
+    let clinicalRows = Object.values(bcrowsCopy).filter(this.isClinical);
+    let newClinicalTotal = clinicalRows.reduce( reducer, 0 );
+
+    console.log("clinicalRows=",clinicalRows);
+    console.log("newClinicalTotal="+newClinicalTotal);
+
+    return newClinicalTotal;
+
+    // let crt = {...this.state.clinicalRowsTotal};
+    // let newClinicalTotal = Object.values( crt ).reduce( reducer, 0 );
+
+    // this.setState({clinicalTotals: newClinicalTotal},);
+  }
+
   csUpdateClinicalTotals = (rowId) => {
 
     this.setState((state,props) => {
@@ -339,9 +359,12 @@ class BudgetProvider extends Component {
  
       bcrowsCopy = this.csTotalPerSubject(state, rowId, bcrowsCopy);
       bcrowsCopy = this.csSetRowTotal(rowId, bcrowsCopy);
+      let newClinicalTotal = this.csCalculateClinicalTotals(bcrowsCopy);
 
-      return { bcrows:bcrowsCopy } 
-    }, );
+      return { 
+        bcrows:bcrowsCopy, 
+        clinicalTotals:newClinicalTotal };
+    }, this.calculateGrandTotals);
   }
 
   // END:  Clinical Services (CS) section
@@ -362,20 +385,20 @@ class BudgetProvider extends Component {
 
 
   /**
-   * Non-Clinical Totals for Budget
+   * Non-Clinical Totals for Budget  ////TODO: REFACTOR NON-CLINICAL TOTALS METHODS!!!
    */
   calculateNonclinicalTotals = () => {
     let reducer = (acc, cur) => {return acc + cur;}
-    let ncrt = {...this.state.nonclinicalRowTotals};
+    let ncrt = {...this.state.nonclinicalRowsTotal};
     let newClinicalTotal = Object.values( ncrt ).reduce( reducer, 0 );
 
     this.setState({nonclinicalTotals: newClinicalTotal},this.calculateGrandTotals);
   }
 
   addNonclinicalCost = (id, cost) => {
-    let addedToNCC = {nonclinicalRowTotals: 
+    let addedToNCC = {nonclinicalRowsTotal: 
         {
-          ...this.state.nonclinicalRowTotals,
+          ...this.state.nonclinicalRowsTotal,
         [id]:cost}}
 
     this.setState(
@@ -385,45 +408,12 @@ class BudgetProvider extends Component {
   }
 
   removeNonclinicalCost = (id) => {
-    let updatedNCRT = {...this.state.nonclinicalRowTotals};
+    let updatedNCRT = {...this.state.nonclinicalRowsTotal};
     delete updatedNCRT[id];
     this.setState({
-              nonclinicalRowTotals: updatedNCRT
+              nonclinicalRowsTotal: updatedNCRT
             }, this.calculateNonclinicalTotals);
   }
-
-
-  /**
-   * Clinical Totals for Budget
-   */
-  calculateClinicalTotals = () => {
-    let reducer = (acc, cur) => {return acc + cur;}
-    let crt = {...this.state.clinicalRowTotals};
-    let newClinicalTotal = Object.values( crt ).reduce( reducer, 0 );
-
-    this.setState({clinicalTotals: newClinicalTotal},this.calculateGrandTotals);
-  }
-
-  addClinicalCost = (id, cost) => {
-    let addedToCC = {clinicalRowTotals: 
-        {
-          ...this.state.clinicalRowTotals,
-        [id]:cost}}
-
-    this.setState(
-      addedToCC,
-      this.calculateClinicalTotals
-    );
-  }
-
-  removeNonclinicalCost = (id) => {
-    let updatedNCRT = {...this.state.clinicalRowTotals};
-    delete updatedNCRT[id];
-    this.setState({
-              clinicalRowTotals: updatedNCRT
-            }, this.calculateClinicalTotals);
-  }
-
 
 
 
