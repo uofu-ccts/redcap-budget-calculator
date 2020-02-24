@@ -18,7 +18,7 @@ class BCNav extends Component {
 
   handleDownloadAsPdfClick = () => {
     let downloader = new DownloadPdf();
-    downloader.downloadBudgetAsPdf(this.props.state);
+    downloader.savePdf(this.props.state);
   }
 
   render() { 

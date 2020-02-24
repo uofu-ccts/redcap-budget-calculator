@@ -8,6 +8,8 @@ import TimesIcon from '../components/budgetcalculator/icons/TimesIcon';
 import CheckIcon from '../components/budgetcalculator/icons/CheckIcon';
 import Form from 'react-bootstrap/Form';
 
+import BudgetUtils from '../js/BudgetUtils';
+
 class ClinicalRow extends Component {
   constructor(props) {
     super(props);
@@ -15,19 +17,14 @@ class ClinicalRow extends Component {
       id: props.id,
       yourcost: ((props.fundingType=='federal_rate') ? props.federalrate : props.industryrate),
     }
+
+    let bu = new BudgetUtils();
+    this.toDollars = bu.toDollars;
   }
 
   handleTrash = (e) => {
     e.persist();
     this.props.removeBCService(e, this.props.id)
-  }
-
-  toDollars = dollars => {//TODO: move to *.js library
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2
-    }).format(dollars);
   }
 
   handleSubjectCountChange = event => {

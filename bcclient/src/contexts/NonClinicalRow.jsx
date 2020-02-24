@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import TrashIcon from '../components/budgetcalculator/icons/TrashIcon';
 import InfoCircleIcon from '../components/budgetcalculator/icons/InfoCircleIcon';
+import BudgetUtils from '../js/BudgetUtils';
 
 class NonClinicalRow extends Component {
   constructor(props) {
@@ -11,6 +12,9 @@ class NonClinicalRow extends Component {
       quantity: 1,
       totalcost: 0
     }
+
+    let bu = new BudgetUtils();
+    this.toDollars = bu.toDollars;
   }
 
   componentDidMount() {
@@ -33,13 +37,6 @@ class NonClinicalRow extends Component {
     this.props.removeNonclinicalCost(this.props.id)
   }
 
-  toDollars = dollars => {//TODO:move to an external *.js library
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2
-    }).format(dollars);
-  }
 
   validateTotalCost = total => {
     return isNaN(total) ? 0 : total;
