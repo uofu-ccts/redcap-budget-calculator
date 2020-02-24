@@ -25,7 +25,16 @@
   },
 
   "no-auth-pages": [
-    "index"
+    "index",
+    "api/echo_api",
+    "api/init_calculator_api",
+    "api/service_catalog_api",
+    "api/resource_uri_api",
+    "api/ui_text_api",
+    "api/submission_fields_api",
+    "api/saved_budget_api",
+    "api/rate_field_api",
+    "api/system_settings_api"
   ],
 
 

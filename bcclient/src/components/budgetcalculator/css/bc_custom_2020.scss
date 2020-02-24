@@ -1,0 +1,119 @@
+div.btn-group-budgetcalc{
+  background: #3092c0;
+  border-radius: 8px;
+}
+
+li>a#bdgtcalc-nav, a.nav-link.dropdown-toggle{
+  font-size:large;
+  font-weight: bold;
+  color: white;
+  float: left;
+  border-color: #3092c0;
+  background: #3092c0;
+  font-family: "PT Sans Narrow", "Arial Narrow", Arial, Helvetica, sans-serif;
+  border-radius: 0 !important;
+}
+
+li>a#bdgtcalc-nav:hover, a.nav-link.dropdown-toggle:hover {
+  background: #2588b6;
+  border-color: #2588b6;
+  color: white;
+}
+
+#bc-nav-items{
+  font-size:large;
+  font-weight: bold;
+  color: white;
+}
+
+.navbar-nav li:hover > ul.dropdown-menu {
+    display: block;
+    margin-top:0px;
+}
+
+li.dropdown-submenu, li#bc-dropdown-li {
+    position:relative;
+    padding: 0px;
+    border: 0px;
+    margin: 0px;
+}
+
+li.bc-dropdown-li-search {
+  margin-left: 9px;
+}
+
+.dropdown-item {
+    position:relative;
+    padding-right: 23px;
+    padding-left: 23px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    border: 0px;
+    margin: 0px;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top:-6px;
+    margin-left:0px;
+}
+
+.dropdown-menu > li > a {
+    text-decoration: none;
+}
+
+.dropdown-menu > li > a:hover:after {
+  text-decoration: none;
+  transform: rotate(-90deg);
+}
+
+li a.dropdown-toggle, 
+li a.bc-service-to-add, 
+li a.dropdown-item {
+  text-decoration: none;
+  line-height: 23px;
+  font-size: 16px;
+  color: #2b82ac;
+  border: 0 !important;
+  list-style: none;
+  direction: ltr;
+  box-sizing: inherit;
+  text-align: left;
+  position: relative;
+  display: block;
+  font-family: "PT Sans Narrow", "Arial Narrow", Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  text-decoration: none;
+  text-shadow: none;
+  white-space: normal;
+  padding-top: 9px;
+  background: transparent;
+  }
+
+li a.dropdown-toggle:hover, 
+li a.bc-service-to-add:hover, 
+li a.dropdown-item:hover 
+  {
+    background: #3092c0;
+    color: white;
+  }
+
+  nav#bc-main-nav {
+    font-weight: 400;
+    color: #000000;
+    line-height: normal;
+    font-family: "Open Sans",Helvetica,Arial,sans-serif;
+    font-size: 13px;
+    text-align: left;
+    box-sizing: border-box;
+    display: block;
+  }
+
+  nav.navbar.navbar-expand-sm {
+    vertical-align: middle;
+    padding-top:6px;
+    padding-bottom:0px;
+    border-radius: 8px;
+    background: #3092c0;
+  }
