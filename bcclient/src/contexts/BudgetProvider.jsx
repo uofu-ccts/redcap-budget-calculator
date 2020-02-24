@@ -82,7 +82,7 @@ class BudgetProvider extends Component {
 
       return { bcrows:bcrowsCopy };
     }, 
-    ()=>{this.csHeaderUpdate(); });//update header check buttons and update row check button.
+    ()=>{this.csHeaderUpdate();});//update header check buttons and update row check button *AND* totals.
   }
 
   // END:  Clinical Services Header Context
@@ -204,7 +204,7 @@ class BudgetProvider extends Component {
         chsRightNavState:rightArrow,
         chsBtnStates:btnStates};
 
-    });
+    },  ()=>{this.cshUpdateAllClinicalTotals()});
   }
 
   csUpdateSubjectCountById = (e, id) => {
@@ -351,6 +351,28 @@ class BudgetProvider extends Component {
  
       bcrowsCopy = this.csTotalPerSubject(state, rowId, bcrowsCopy);
       bcrowsCopy = this.csSetRowTotal(rowId, bcrowsCopy);
+      let newClinicalTotal = this.csCalculateClinicalTotals(bcrowsCopy);
+
+      return { 
+        bcrows:bcrowsCopy, 
+        clinicalTotals:newClinicalTotal };
+    }, this.calculateGrandTotals);
+  }
+
+  cshUpdateAllClinicalTotals = () => {//TODO: implement me!!!! and move to correct section
+
+    this.setState((state,props) => {
+
+      let bcrowsCopy = {...state.bcrows};
+      let clinicalRows = Object.values(bcrowsCopy).filter(this.isClinical);
+
+      // console.log("names are ... ",clinicalRows);
+
+      for (let i=0; i<clinicalRows.length; i++) {
+        bcrowsCopy = this.csTotalPerSubject(state, clinicalRows[i].key, bcrowsCopy);
+        bcrowsCopy = this.csSetRowTotal(clinicalRows[i].key, bcrowsCopy);
+      }
+
       let newClinicalTotal = this.csCalculateClinicalTotals(bcrowsCopy);
 
       return { 
