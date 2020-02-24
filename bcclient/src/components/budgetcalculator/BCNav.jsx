@@ -9,6 +9,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 
 import ServiceCatalogDDMenu from '../servicecatalog/ServiceCatalogDDMenu';
 
+import * as jsPDF from 'jspdf';
+
 class BCNav extends Component {
 
   constructor(props) {
@@ -20,6 +22,16 @@ class BCNav extends Component {
 
   handleEditBudgetInfoClick = () => {
     this.state.showInfoCallback();
+  }
+
+  handleDownloadAsPdfClick = () => {
+    console.log("PDF will download ... soon");
+
+    // Default export is a4 paper, portrait, using milimeters for units
+    var doc = new jsPDF();
+    
+    doc.text('Hello world!', 10, 10);
+    doc.save('a4.pdf');
   }
 
   render() { 
@@ -37,7 +49,7 @@ class BCNav extends Component {
         <a className="nav-link btn btn-lg font-weight-bolder" id="bdgtcalc-nav" href="#" onClick={this.handleEditBudgetInfoClick}>Edit Budget Information</a>
       </li>
       <li className="nav-item">
-        <a className="nav-link btn btn-lg font-weight-bolder" id="bdgtcalc-nav" href="#">Download as PDF</a>
+        <a className="nav-link btn btn-lg font-weight-bolder" id="bdgtcalc-nav" href="#" onClick={this.handleDownloadAsPdfClick}>Download as PDF</a>
       </li>
 
     </ul>
