@@ -15,18 +15,6 @@ class NonClinicalRow extends Component {
     this.validateTotalCost = bu.validateTotalCost;
   }
 
-  componentDidMount() {//TODO: needs to call method in BudgetProvider
-    // add total cost for non-clinical total
-    // this.setState(
-    //   (state, props)=>{
-    //     return {totalcost: this.validateTotalCost(props.yourCost * props.quantity)}
-    //   },//TODO: need new grandtotal
-      // ()=>{
-      //   this.props.addNonclinicalCost(this.state.id, this.state.totalcost);
-      // }
-    // );
-  }
-
   handleTrash = (e) => {
     e.persist();
     this.props.removeBCService(e, this.props.id);

@@ -516,7 +516,8 @@ class BudgetProvider extends Component {
         this.ncsCalculateNonclinicalTotals();
       }
       else {
-        //TODO: calculate the clinical totals and grand total for UI
+        //calculate the clinical totals and grand total for UI
+        this.cshUpdateAllClinicalTotals()
       }
     });
   }

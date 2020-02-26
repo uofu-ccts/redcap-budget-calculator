@@ -110,7 +110,7 @@ class ClinicalRow extends Component {
           <td style={{borderRightStyle:'hidden'}}> <span> <button className="delete btn btn-link" title="Delete" data-toggle="tooltip" onClick={this.handleTrash}><TrashIcon /></button> </span> </td>
           <td className="service-title"> <small>{this.props.core} &gt; {this.props.category} </small> <br /><span> {this.props.service} </span> <InfoCircleIcon description={this.props.description} /> </td>
           <td className="base-cost">{this.toDollars(this.props.industryrate)}</td>
-          <td className="your-cost">{this.toDollars(this.findYourRate(this.props))}  </td>
+          <td className="your-cost">{this.toDollars(this.props.yourCost)}</td>
           <td>
               <input className="qty-count" type="number" min="1" value={this.props.subjectCount} onChange={this.handleSubjectCountChange} />
           </td>
