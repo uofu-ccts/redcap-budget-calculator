@@ -3,11 +3,14 @@ import BudgetContext from './BudgetContext';
 import ClinicalRow from './ClinicalRow';
 import BCInfoModal from '../components/budgetcalculator/BCInfoModal';
 
+import BudgetUtils from '../js/BudgetUtils';
+
 
 class BudgetClinicalRowsConsumer extends Component {
-
-  isClinical = obj => {//TODO: move to *.js library
-      return parseInt(obj.clinical);
+  constructor(props) {
+    super(props);
+    let bu = new BudgetUtils();
+    this.isClinical = bu.isClinical;
   }
 
   displayRows = rows => {
