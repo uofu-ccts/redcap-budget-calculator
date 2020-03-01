@@ -61,7 +61,8 @@ class DownloadPdf
     doc.autoTable({
       head:this.clinicalHeaders,
       body:[
-        ['1', '2', '3', '4', '5', '6', '7', '8']
+        ['1', '2', '3', '4', '5', '6', '7', '8'],
+        ['', '', '', '', '', '', 'Clinical Total:', '8']
         ],
             theme: 'striped',
             margin: {top: 60}
@@ -70,7 +71,8 @@ class DownloadPdf
     doc.autoTable({
       head:this.nonClinicalHeaders,
       body:[
-        ['1', '2', '3', '4', '5', '6']
+        ['1', '2', '3', '4', '5', '6'],['1', '2', '3', '4', '5', '6'],['1', '2', '3', '4', '5', '6'],
+        ['','','','','Non-Clinical Total:','6']
         ],
             theme: 'striped',
             margin: {top: 60},
