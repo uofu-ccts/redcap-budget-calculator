@@ -602,6 +602,7 @@ class BudgetProvider extends Component {
     return ( 
       <BudgetContext.Provider
         value={{
+          bcstate: this.state,
           bcrows: this.state.bcrows,
           fundingType: this.state.fundingType,
 

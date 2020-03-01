@@ -9,7 +9,7 @@ class BCNav extends Component {
     super(props);
     this.state = {
       showInfoCallback: this.props.showInfoCallback
-    }
+    };
   }
 
   handleEditBudgetInfoClick = () => {
@@ -18,7 +18,7 @@ class BCNav extends Component {
 
   handleDownloadAsPdfClick = () => {
     let downloader = new DownloadPdf();
-    downloader.savePdf(this.props.state);
+    downloader.savePdf(this.props.bcstate);
   }
 
   render() { 

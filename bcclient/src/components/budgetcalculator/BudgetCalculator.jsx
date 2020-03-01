@@ -68,7 +68,9 @@ class BudgetCalculator extends Component {
               submitSaveCallback={this.submitSaveCallback}
               handleHideSave={this.handleHideSave} />
 
-            <BCNav showInfoCallback={this.showInfoCallback} />
+            <BCNav 
+              showInfoCallback={this.showInfoCallback}  
+              bcstate={this.props.bcstate}/>
             <br />
             <br />
 

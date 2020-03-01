@@ -21,14 +21,17 @@ class BudgetCalculatorPage extends Component {
   render() { 
     return ( 
       <BudgetProvider>
-        <BudgetCalculator />
         <BudgetContext.Consumer>
           {context => (
+            <>
+              <BudgetCalculator 
+                bcstate={context.bcstate}/>
               <BCWelcomeModal 
                 showWelcome={this.state.showWelcome} 
                 welcomeCallback={this.welcomeCallback} 
                 hideWelcome={this.handleHideWelcome} 
                 setFundingType={context.setFundingType}/>
+            </>
           )}
         </BudgetContext.Consumer>
 

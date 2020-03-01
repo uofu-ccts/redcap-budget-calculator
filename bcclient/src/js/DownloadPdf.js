@@ -1,4 +1,5 @@
 import * as jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 import BudgetUtils from '../js/BudgetUtils';
 
@@ -27,24 +28,70 @@ class DownloadPdf
             {title: 'Cost Per Subject', dataKey: 'cost_per_subject'},           // 6
             {title: 'Total', dataKey: 'subtotal'}                               // 7
         ];
+
+    this.clinicalHeaders = [[
+      'Clinical Service', 
+      'Base Cost', 
+      'Your Rate', 
+      'Subjects', 
+      'Quantity Type', 
+      'Visits', 
+      'Cost Per Subject', 
+      'Total']];
+
+    this.nonClinicalHeaders = [[
+      'Non-Clinical Service', 
+      'Base Cost', 
+      'Your Rate', 
+      'Quantity', 
+      'Quantity Type', 
+      'Total']];
   }
 
-  savePdf(budgetState) {
+  /**
+   * Making a copy of the budgetState, then using the copy for creating the PDF.
+   */
+  savePdf(originalBudget) {
+    const budgetCopy = {...originalBudget}
+
+    console.log("PDF will download .... soon.",budgetCopy);
 
     let doc = new jsPDF('l', 'pt');
+    // doc.autoTable(columnLookup, pdfFormattedRequest.clinical, {
+    doc.autoTable({
+      head:this.clinicalHeaders,
+      body:[
+        ['1', '2', '3', '4', '5', '6', '7', '8']
+        ],
+            theme: 'striped',
+            margin: {top: 60}
+        });
+
+    doc.autoTable({
+      head:this.nonClinicalHeaders,
+      body:[
+        ['1', '2', '3', '4', '5', '6']
+        ],
+            theme: 'striped',
+            margin: {top: 60},
+            startY: doc.autoTable.previous.finalY
+        });
+
+    doc.text('Grand Total: ' + '$$$$', 650, doc.autoTable.previous.finalY + 25);
+
 
     // doc.autoTable(columnLookup, pdfFormattedRequest.clinical, {
     //     theme: 'striped',
     //     margin: {top: 60}
     // });
-    doc.text('Test worked!!', 10, 10);
+    // doc.text('Test worked!!', 10, 10);
 
     doc.save('budget.pdf');
   }
 
   testDownloadWorking()
   {
-    console.log("PDF will download .... soon");
+    console.log("PDF will download .... soon.");
 
     // Default export is a4 paper, portrait, using milimeters for units
     let doc = new jsPDF();
