@@ -17,6 +17,8 @@ class DownloadPdf
   {
     let bu = new BudgetUtils();
     this.toDollars = bu.toDollars;
+    this.isClinical = bu.isClinical;
+    this.isNotClinical = bu.isNotClinical;
 
     this.columnLookup = [
             {title: 'Clinical Service', dataKey: 'service'},                    // 0
@@ -54,32 +56,71 @@ class DownloadPdf
   savePdf(originalBudget) {
     const budgetCopy = {...originalBudget}
 
+    let clinicalTotals = this.toDollars(budgetCopy.clinicalTotals);
+    let nonclinicalTotals = this.toDollars(budgetCopy.nonclinicalTotals);
+    let grandTotal = this.toDollars(budgetCopy.grandTotal);
+
+    let rows = budgetCopy.bcrows;
+
+    // preparing data for the clinical table
+    let clinicalData = [];
+
+    Object.values(rows).filter(this.isClinical).forEach(obj => {
+      clinicalData.push(
+        [
+          obj.service,
+          this.toDollars(obj.industry_rate),
+          this.toDollars(obj.yourCost),
+          obj.subjectCount,
+          "Q. Type",
+          "tbd",
+          this.toDollars(obj.costPerSubject),
+          this.toDollars(obj.totalCost)
+        ]);
+    });
+
+    clinicalData.push(['', '', '', '', '', '', 'Clinical Total:', clinicalTotals]);
+
+    //preparing data for the non-clinical table
+    let nonClinicalData = [];
+
+    Object.values(rows).filter(this.isNotClinical).forEach(obj => {
+      nonClinicalData.push(
+        [
+          obj.service,
+          this.toDollars(obj.industry_rate),
+          this.toDollars(obj.yourCost),
+          obj.quantity,
+          "Q. Type",
+          this.toDollars(obj.totalCost)
+        ]);
+    });
+    
+    nonClinicalData.push(['','','','','Non-Clinical Total:', nonclinicalTotals]);
+
     console.log("PDF will download .... soon.",budgetCopy);
 
+    //creating the PDF
     let doc = new jsPDF('l', 'pt');
     // doc.autoTable(columnLookup, pdfFormattedRequest.clinical, {
     doc.autoTable({
       head:this.clinicalHeaders,
-      body:[
-        ['1', '2', '3', '4', '5', '6', '7', '8'],
-        ['', '', '', '', '', '', 'Clinical Total:', '8']
-        ],
+      body:
+            clinicalData,
             theme: 'striped',
             margin: {top: 60}
         });
 
     doc.autoTable({
       head:this.nonClinicalHeaders,
-      body:[
-        ['1', '2', '3', '4', '5', '6'],['1', '2', '3', '4', '5', '6'],['1', '2', '3', '4', '5', '6'],
-        ['','','','','Non-Clinical Total:','6']
-        ],
+      body:
+            nonClinicalData,
             theme: 'striped',
             margin: {top: 60},
             startY: doc.autoTable.previous.finalY
         });
 
-    doc.text('Grand Total: ' + '$$$$', 650, doc.autoTable.previous.finalY + 25);
+    doc.text('Grand Total: ' + grandTotal, 650, doc.autoTable.previous.finalY + 25);
 
 
     // doc.autoTable(columnLookup, pdfFormattedRequest.clinical, {
