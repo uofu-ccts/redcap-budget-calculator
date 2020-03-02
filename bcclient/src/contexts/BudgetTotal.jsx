@@ -1,18 +1,15 @@
 import React, {Component} from 'react';
 import BudgetContext from './BudgetContext';
 
+import BudgetUtils from '../js/BudgetUtils';
+
 class BudgetTotal extends Component {
   constructor(props) {
     super(props);
     this.state = {}
-  }
 
-  toDollars = dollars => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2
-    }).format(dollars);
+    let bu = new BudgetUtils();
+    this.toDollars = bu.toDollars;
   }
 
   render() { 

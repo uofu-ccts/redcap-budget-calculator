@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
-import Navbar from 'react-bootstrap/Navbar';
-import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-
-import ButtonGroup from 'react-bootstrap/ButtonGroup'
-import ToggleButton from 'react-bootstrap/ToggleButton'
-import Dropdown from 'react-bootstrap/Dropdown';
-
 import ServiceCatalogDDMenu from '../servicecatalog/ServiceCatalogDDMenu';
+
+import DownloadPdf from '../../js/DownloadPdf'
 
 class BCNav extends Component {
 
@@ -15,11 +9,16 @@ class BCNav extends Component {
     super(props);
     this.state = {
       showInfoCallback: this.props.showInfoCallback
-    }
+    };
   }
 
   handleEditBudgetInfoClick = () => {
     this.state.showInfoCallback();
+  }
+
+  handleDownloadAsPdfClick = () => {
+    let downloader = new DownloadPdf();
+    downloader.savePdf(this.props.bcstate);
   }
 
   render() { 
@@ -37,30 +36,12 @@ class BCNav extends Component {
         <a className="nav-link btn btn-lg font-weight-bolder" id="bdgtcalc-nav" href="#" onClick={this.handleEditBudgetInfoClick}>Edit Budget Information</a>
       </li>
       <li className="nav-item">
-        <a className="nav-link btn btn-lg font-weight-bolder" id="bdgtcalc-nav" href="#">Download as PDF</a>
+        <a className="nav-link btn btn-lg font-weight-bolder" id="bdgtcalc-nav" href="#" onClick={this.handleDownloadAsPdfClick}>Download as PDF</a>
       </li>
 
     </ul>
   </div>
 </nav>
-      // <div className="d-flex mt-3 btn-group-budgetcalc">
-      // <ButtonGroup toggle className="btn-group">
-      //   <Dropdown>
-      //     <Dropdown.Toggle className="btn btn-lg font-weight-bolder btn-budgetcalc " type="radio" name="radio" value="1">
-      //       Add Service
-      //     </Dropdown.Toggle>
-
-      //     <ServiceCatalogDDMenu />
-
-      //   </Dropdown>
-      //   <ToggleButton className="btn btn-default btn-lg font-weight-bolder btn-budgetcalc" type="radio" name="radio" value="2" onChange={this.handleEditBudgetInfoClick}>
-      //     Edit Budget Information
-      //   </ToggleButton>
-      //   <ToggleButton className="btn btn-default btn-lg font-weight-bolder btn-budgetcalc" type="radio" name="radio" value="3">
-      //     Download as PDF
-      //   </ToggleButton>
-      // </ButtonGroup>
-      // </div>
      );
   }
 }

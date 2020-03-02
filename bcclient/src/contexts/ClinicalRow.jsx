@@ -8,26 +8,23 @@ import TimesIcon from '../components/budgetcalculator/icons/TimesIcon';
 import CheckIcon from '../components/budgetcalculator/icons/CheckIcon';
 import Form from 'react-bootstrap/Form';
 
+import BudgetUtils from '../js/BudgetUtils';
+
 class ClinicalRow extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: props.id,
-      yourcost: ((props.fundingType=='federal_rate') ? props.federalrate : props.industryrate),
+      id: props.id
     }
+
+    let bu = new BudgetUtils();
+    this.toDollars = bu.toDollars;
+    this.findYourRate = bu.findYourRate;
   }
 
   handleTrash = (e) => {
     e.persist();
     this.props.removeBCService(e, this.props.id)
-  }
-
-  toDollars = dollars => {//TODO: move to *.js library
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2
-    }).format(dollars);
   }
 
   handleSubjectCountChange = event => {
@@ -113,7 +110,7 @@ class ClinicalRow extends Component {
           <td style={{borderRightStyle:'hidden'}}> <span> <button className="delete btn btn-link" title="Delete" data-toggle="tooltip" onClick={this.handleTrash}><TrashIcon /></button> </span> </td>
           <td className="service-title"> <small>{this.props.core} &gt; {this.props.category} </small> <br /><span> {this.props.service} </span> <InfoCircleIcon description={this.props.description} /> </td>
           <td className="base-cost">{this.toDollars(this.props.industryrate)}</td>
-          <td className="your-cost">{(this.props.fundingType=='federal_rate') ? this.toDollars(this.props.federalrate) : this.toDollars(this.props.industryrate)}  </td>
+          <td className="your-cost">{this.toDollars(this.props.yourCost)}</td>
           <td>
               <input className="qty-count" type="number" min="1" value={this.props.subjectCount} onChange={this.handleSubjectCountChange} />
           </td>
