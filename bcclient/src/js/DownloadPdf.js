@@ -73,7 +73,7 @@ class DownloadPdf
           this.toDollars(obj.yourCost),
           obj.subjectCount,
           "Q. Type",
-          "tbd",
+          obj.visitCount.filter(vc => {return vc;}).length,
           this.toDollars(obj.costPerSubject),
           this.toDollars(obj.totalCost)
         ]);
