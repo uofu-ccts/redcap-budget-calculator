@@ -19,7 +19,6 @@ class ClinicalRow extends Component {
 
     let bu = new BudgetUtils();
     this.toDollars = bu.toDollars;
-    this.findYourRate = bu.findYourRate;
   }
 
   handleTrash = (e) => {
