@@ -630,7 +630,7 @@ a.button {
   -webkit-box-shadow: 0 0 10px #000;
   z-index: 20;
 }
-
+/* 
 .tooltip4sm {
   display: none;
   background: url(./images/black_arrow_small.png);
@@ -662,7 +662,7 @@ a.button {
   font-size: 13px;
   color: #fff;
   z-index: 20;
-}
+} */
 
 /* css for timepicker */
 
