@@ -436,6 +436,28 @@ class BudgetCalculator extends AbstractExternalModule
         return $resources;
     }
 
+    public function getPerService()
+    {
+        $resources = array();
+
+        $sourcePID = $this->getSystemSetting("reference-pid");
+        $result = $this->query("
+                SELECT element_enum
+                FROM redcap_metadata
+                WHERE project_id = $sourcePID AND field_name = 'per_service'
+            ");
+        $perService = db_fetch_assoc($result);
+        $psString = $perService["element_enum"];
+        $psRawArray = explode("\\n", $psString);
+        foreach ($psRawArray as $line)
+        {
+            $a = explode(',',$line);
+            $resources[trim($a[0])] = trim($a[1]);
+        }
+
+        return $resources;
+    }
+
     /**
      * Returns URIs of resources the client will need.
      */

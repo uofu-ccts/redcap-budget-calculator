@@ -34,7 +34,8 @@
     "api/submission_fields_api",
     "api/saved_budget_api",
     "api/rate_field_api",
-    "api/system_settings_api"
+    "api/system_settings_api",
+    "api/per_service_api"
   ],
 
 
