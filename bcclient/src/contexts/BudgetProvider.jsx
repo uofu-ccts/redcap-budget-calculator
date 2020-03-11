@@ -2,39 +2,60 @@ import React, {Component} from 'react';
 import BudgetContext from './BudgetContext';
 
 import BudgetUtils from '../js/BudgetUtils';
+import PerServiceData from '../js/PerServiceData';
 
 class BudgetProvider extends Component {
   
   constructor(props) {
     super(props);
     this.state = {
-      bcInfoModalUsedOnce: false,
-      bcimShowInfo: false,
-      bcimShowSave: false,
-      bcimShowInfoSubjectCount: 0, // The info modal populates this field.
-      bcimShowInfoVisitCount: 0, // Number of columns of visits that can be selected. The info modal populates this field.
-      bcInfoModalNeeded: false, // when needed, the ID of the row that needs the info is populated in this attribute.
+        bcInfoModalUsedOnce: false,
+        bcimShowInfo: false,
+        bcimShowSave: false,
+        bcimShowInfoSubjectCount: 0, // The info modal populates this field.
+        bcimShowInfoVisitCount: 0, // Number of columns of visits that can be selected. The info modal populates this field.
+        bcInfoModalNeeded: false, // when needed, the ID of the row that needs the info is populated in this attribute.
 
-      fundingType: '', // Determines the "Your Cost" column. Set by the BCWelcomeModal.
-      bcrows: {}, // All clinical and non-clinical rows for virtual DOM to display. Authoritative row state **SHOULD BE** preserved here, and not in the row components.
-      
-      // nonclinicalRowsTotal: {}, // calculated totals associated with rows' ID //TODO: Old design. Planning to refactor into bcrows
-      // clinicalRowsTotal: {}, // calculated totals associated with rows' ID //TODO: Old design. Planning to refactor into bcrows
+        fundingType: '', // Determines the "Your Cost" column. Set by the BCWelcomeModal.
+        bcrows: {}, // All clinical and non-clinical rows for virtual DOM to display. Authoritative row state **SHOULD BE** preserved here, and not in the row components.
+        
+        // nonclinicalRowsTotal: {}, // calculated totals associated with rows' ID //TODO: Old design. Planning to refactor into bcrows
+        // clinicalRowsTotal: {}, // calculated totals associated with rows' ID //TODO: Old design. Planning to refactor into bcrows
 
-      nonclinicalTotals: 0, // for display in UI
-      clinicalTotals: 0, // for display in UI
-      grandTotal: 0, // for display in UI
+        nonclinicalTotals: 0, // for display in UI
+        clinicalTotals: 0, // for display in UI
+        grandTotal: 0, // for display in UI
 
-      chsLeftNavState: 'disabled', //nav states, ... 'active' and 'disabled'
-      chsRightNavState: 'disabled',
-      chsBtnStates: ['disabled','disabled','disabled','disabled','disabled'], //button states, ... 'select', 'deselect' and 'disabled'
-      chsVisitIndex: 1, //Current index being display (the visit page we're on). Base index is 1, not 0. Changes in increments of 5
-     }
+        chsLeftNavState: 'disabled', //nav states, ... 'active' and 'disabled'
+        chsRightNavState: 'disabled',
+        chsBtnStates: ['disabled','disabled','disabled','disabled','disabled'], //button states, ... 'select', 'deselect' and 'disabled'
+        chsVisitIndex: 1, // Current index being display (the visit page we're on). Base index is 1, not 0. Changes in increments of 5
 
-     let bu = new BudgetUtils();
-     this.isClinical = bu.isClinical;
-     this.isNotClinical = bu.isNotClinical;
+        perService: {} // human readable quantity types
+      }
+
+    this.perServiceData = new PerServiceData();
+    this.perServiceData.fetchPerServicesFromApi(this.psdSetPerService);
+
+    let bu = new BudgetUtils();
+    this.isClinical = bu.isClinical;
+    this.isNotClinical = bu.isNotClinical;
   }
+
+  //////////////////////////////////////////
+  //
+  // BEGIN: Per Service Data
+
+  psdSetPerService = (perServiceArray) => {
+    this.setState((state, props) =>{
+      return {perService:perServiceArray};
+    });
+  }
+
+  // END:  Per Service Data
+  //
+  //////////////////////////////////////////
+
 
   //////////////////////////////////////////
   //
@@ -609,6 +630,8 @@ class BudgetProvider extends Component {
           nonclinicalTotals: this.state.nonclinicalTotals,
           clinicalTotals: this.state.clinicalTotals,
           grandTotal: this.state.grandTotal,
+
+          perService: this.state.perService,
 
           // addNonclinicalCost: this.addNonclinicalCost,
           // removeNonclinicalCost: this.removeNonclinicalCost,

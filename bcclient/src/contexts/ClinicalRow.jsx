@@ -113,7 +113,7 @@ class ClinicalRow extends Component {
           <td>
               <input className="qty-count" type="number" min="1" value={this.props.subjectCount} onChange={this.handleSubjectCountChange} />
           </td>
-          <td>Q. Type</td>
+          <td>{this.props.perServiceReadable[this.props.perService]}</td>
           <td className="allVisits">
               {this.getCheckButton()}
           </td>

@@ -44,6 +44,8 @@ class BudgetNONClinicalRowsConsumer extends Component {
                           totalCost={obj.totalCost}
                           yourCost={obj.yourCost}
                           quantity={obj.quantity}
+                          quantity={obj.quantity}
+                          perService={obj.per_service}
 
                           removeBCService={context.removeBCService}
                           fundingType={context.fundingType}
@@ -52,6 +54,7 @@ class BudgetNONClinicalRowsConsumer extends Component {
 
                           addNonclinicalCost={context.addNonclinicalCost}
                           removeNonclinicalCost={context.removeNonclinicalCost}
+                          perServiceReadable={context.perService}
                       />
                   ))}
               </>
