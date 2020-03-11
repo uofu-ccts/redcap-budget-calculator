@@ -59,6 +59,7 @@ class DownloadPdf
     let clinicalTotals = this.toDollars(budgetCopy.clinicalTotals);
     let nonclinicalTotals = this.toDollars(budgetCopy.nonclinicalTotals);
     let grandTotal = this.toDollars(budgetCopy.grandTotal);
+    let perService = budgetCopy.perService;
 
     let rows = budgetCopy.bcrows;
 
@@ -72,7 +73,7 @@ class DownloadPdf
           this.toDollars(obj.industry_rate),
           this.toDollars(obj.yourCost),
           obj.subjectCount,
-          "Q. Type",
+          perService[obj.per_service],
           obj.visitCount.filter(vc => {return vc;}).length,
           this.toDollars(obj.costPerSubject),
           this.toDollars(obj.totalCost)
@@ -91,7 +92,7 @@ class DownloadPdf
           this.toDollars(obj.industry_rate),
           this.toDollars(obj.yourCost),
           obj.quantity,
-          "Q. Type",
+          perService[obj.per_service],
           this.toDollars(obj.totalCost)
         ]);
     });
