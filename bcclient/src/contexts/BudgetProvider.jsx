@@ -175,14 +175,18 @@ class BudgetProvider extends Component {
   cshUpdateCheckButtons = (state) => {
     let btnStates = [];
 
+    //limit searched bcrows to the clinical rows
+    let clinicalRows = Object.values(state.bcrows).filter(this.isClinical);
+
+
     for (let i=0; i<5; i++) {
       let columnExists = (state.bcimShowInfoVisitCount >= (state.chsVisitIndex + i));
 
-      if (columnExists) {
+      if (columnExists && clinicalRows.length > 0) {
         //check for select and deselect
         //TODO: if display optimization is needed, improve perfomance by finding any 'false' instead of all 'false' visitCount
         let visitCountIndex = state.chsVisitIndex + i - 1;
-        let deselectedCheckboxFound = Object.values(state.bcrows).filter(obj=>{return (! obj.visitCount[ visitCountIndex ]);}).length > 0;
+        let deselectedCheckboxFound = Object.values(clinicalRows).filter(obj=>{return (! obj.visitCount[ visitCountIndex ]);}).length > 0;
 
         let stateToPush = 'deselect';
         if (deselectedCheckboxFound) {
@@ -538,7 +542,9 @@ class BudgetProvider extends Component {
       }
       else {
         //calculate the clinical totals and grand total for UI
-        this.cshUpdateAllClinicalTotals()
+        this.cshUpdateAllClinicalTotals();
+        //update column buttons
+        this.csHeaderUpdate();
       }
     });
   }
