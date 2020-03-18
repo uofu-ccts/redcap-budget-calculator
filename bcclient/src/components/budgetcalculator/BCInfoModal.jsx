@@ -77,8 +77,8 @@ class BCInfoModal extends Component {
               <input type="hidden" name="redcap_csrf_token" value="" />
           </Modal.Body>
           <Modal.Footer>
-            <Button id="welcomeConfirmBtn" variant="secondary" onClick={this.handleCancel}>Cancel</Button>
-            <Button id="welcomeConfirmBtn" variant="primary" type="submit" onClick={this.handleSubmit}>Confirm</Button>
+            <Button variant="secondary" onClick={this.handleCancel}>Cancel</Button>
+            <Button variant="primary" type="submit" onClick={this.handleSubmit}>Confirm</Button>
           </Modal.Footer>
         </Form>
       </Modal>
