@@ -46,11 +46,11 @@ class ServiceSubMenus extends Component {
 
     //NOTE: The names of submenus are unique so can be used as keys. Service names could be non-unique, but in practice generally are so for now are used for keys
     return Object.entries(menuTreeObj).map(coreobj => (
-            <li key={coreobj} className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#">{coreobj[0]}</a>
+            <li key={coreobj} className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#/">{coreobj[0]}</a>
               <ul className="dropdown-menu">
                 {
                   Object.entries(coreobj[1]).map(categoryobj => (
-                  <li key={categoryobj} className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#">{categoryobj[0]}</a>
+                  <li key={categoryobj} className="dropdown-submenu"><a className="dropdown-item dropdown-toggle" href="#/">{categoryobj[0]}</a>
                     <ul className="dropdown-menu">
                       {
                       Object.entries(categoryobj[1]).map(serviceobj => (
