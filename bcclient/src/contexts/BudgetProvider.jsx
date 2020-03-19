@@ -245,6 +245,9 @@ class BudgetProvider extends Component {
   csUpdateColumnCheckButtonState = (visitIndex) => {
 
     this.setState((state, props) => {
+      console.log("pts-69:csUpdateColumnCheckButtonState->visitIndex",visitIndex);
+      console.log("pts-69:csUpdateColumnCheckButtonState->state",state);
+
       let rowsArray = Object.values(state.bcrows);
       let foundNotSelected = false;
 
@@ -305,8 +308,11 @@ class BudgetProvider extends Component {
    * the check buttons on the column and row are updated if updateButtonsState=true.
    */
   csVisitChanged = (id, visitIndex, value) => {
-
     this.setState((state, props) => {
+      console.log("pts-69:csVisitChange->state",state);
+      console.log("pts-69:csVisitChange->visitIndex",visitIndex);
+      console.log("pts-69:csVisitChange->value",value);
+
       let bcrowsCopy = {...state.bcrows};
       bcrowsCopy[id].visitCount[visitIndex] = value;
       return { bcrows:bcrowsCopy } 
