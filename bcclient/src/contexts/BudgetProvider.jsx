@@ -256,7 +256,7 @@ class BudgetProvider extends Component {
       }
 
       let visibleColumn = visitIndex % 5;
-      if (foundNotSelected != state.chsBtnStates[visibleColumn]) {
+      if (foundNotSelected !== state.chsBtnStates[visibleColumn]) {
         let chsBtnStatesCopy = [...state.chsBtnStates];
 
         chsBtnStatesCopy[visibleColumn] = (foundNotSelected ? 'select' : 'deselect');
@@ -287,7 +287,7 @@ class BudgetProvider extends Component {
         }
       }
 
-      if (foundNotSelected != state.bcrows[rowId].anyVistsNotSelected) {
+      if (foundNotSelected !== state.bcrows[rowId].anyVistsNotSelected) {
         let bcrowsCopy = {...state.bcrows};
         bcrowsCopy[rowId].anyVistsNotSelected = foundNotSelected;
         return { bcrows:bcrowsCopy};
@@ -315,15 +315,13 @@ class BudgetProvider extends Component {
   }
 
   handleVisitRowButtonClicked = (id, select) => {
-    console.log("handleVisitRowButtonClicked...");
-
     this.setState((state, props)=>{
       let visitCountLength = state.bcrows[id].visitCount.length;
       let bcrowsCopy = {...state.bcrows};
 
 
       for (let i=0; i<visitCountLength; i++) {
-        if (state.bcrows[id].visitCount[i] != select) {
+        if (state.bcrows[id].visitCount[i] !== select) {
           bcrowsCopy[id].visitCount[i] = select;
         }
       }
@@ -349,7 +347,7 @@ class BudgetProvider extends Component {
 
       let costPerSubject = 0.00;
       let currentRow = state.bcrows[rowId];
-      let yourCost = (state.fundingType=='federal_rate') ? currentRow.federal_rate : currentRow.industry_rate;
+      let yourCost = (state.fundingType==='federal_rate') ? currentRow.federal_rate : currentRow.industry_rate;
       let numberOfVisits = currentRow.visitCount.filter(obj => {return obj;}).length;
 
       costPerSubject = yourCost * numberOfVisits;
@@ -422,8 +420,7 @@ class BudgetProvider extends Component {
    * Non-Clinical Totals for Budget
    */
   ncsCalculateNonclinicalTotals = () => {
-    console.log("defining reducer ...");
-    let reducer = (acc, cur) => {console.log("acc="+acc+"; cur=",cur);return acc + cur.totalCost;}
+    let reducer = (acc, cur) => {return acc + cur.totalCost;}
 
     this.setState((state, props) => {
       let ncrt = Object.values(state.bcrows).filter(this.isNotClinical);
@@ -559,7 +556,7 @@ class BudgetProvider extends Component {
     }
     else {
       //update header buttons if clinical service added
-      if (serviceObj.clinical == "1") {
+      if (serviceObj.clinical === "1") {
         this.csHeaderUpdate();
       }
     }
