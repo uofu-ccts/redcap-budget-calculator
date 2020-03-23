@@ -46,4 +46,4 @@ This script is useful for building production versions of the Budget Calculator 
 
 ### `npm run test`
 
-* **Under development** * Runs automated unit tests to check the client code is working as expected.
+_**Under development**_ ... Runs automated unit tests to check the client code is working as expected.
