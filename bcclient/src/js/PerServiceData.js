@@ -1,6 +1,9 @@
+import { bcConfig } from './config.js';
+
 class PerServiceData {
   constructor() {
     this.fetchPerServicesFromApi = this.fetchPerServicesFromApi.bind(this);
+    console.log("psd ... bcConfig.urlBase=",bcConfig.urlBase);//TODO: remove this line
   }
 
   //side effect of setting state in component's state passed into constructor

@@ -1,9 +1,11 @@
 import jsonata from "jsonata";
+import { bcConfig } from './config.js';
+
 
 //Services catalog data utility class
 class ServiceData 
 {
-  constructor (data, setData)
+  constructor (data, setData) //TODO: This constructor is being called frequently. Look into reducing the calls.
   {
     this.stateData = data;
     this.setStateData = setData;
@@ -11,6 +13,7 @@ class ServiceData
     this.fetchServicesFromApi = this.fetchServicesFromApi.bind(this);
     this.filterServiceInstancesByKeyword =  this.filterServiceInstancesByKeyword.bind(this);
     this.parseJsonListOfServices = this.parseJsonListOfServices.bind(this);
+    console.log("sd ... bcConfig.urlBase=",bcConfig.urlBase);//TODO: remove this line
   }
 
   //side effect of setting state in component's state passed into constructor

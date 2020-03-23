@@ -42,8 +42,6 @@ class BudgetUtils
   isNotClinical(obj) {
       return (! parseInt(obj.clinical));
   }
-
-
 }
 
 export default BudgetUtils;
