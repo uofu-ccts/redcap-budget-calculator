@@ -16,4 +16,4 @@ Budget Calculator is an external module designed for use with REDCap.
 
 # Budget Calculator React Client
 
-Documentation for the React client used with the Budget Calculator, see [bcclient/README.md](bcclient/README.md)
+Documentation for the React client used with the Budget Calculator, see [bcclient/README.md](bcclient/)
