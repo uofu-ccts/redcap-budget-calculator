@@ -2,7 +2,7 @@
 
 The Budget Calculator uses a ReactJS relationship based separation of concerns (SoC) coupled with the ECMAScript Fetch API and PHP based RESTful APIs for further separation of concerns at the HTTP pipeline level.
 
-That means, devolpers can use the Budget calculator's web client components with or without the Budget Calculator's PHP services. Developers can reorganize the Budget Calculator's React client in similar fashion to moving around bricks in a LEGO&reg; model. Also, institutions may choose to use the Budget Calculator's PHP services as the basis for new applications, or integrate the Budget calculator's PHP services and/or React client into an existing enterprise tool with minimal fuss.
+That means, devolpers can use the Budget Calculator's web client components with or without the Budget Calculator's PHP services. Developers can reorganize the Budget Calculator's React client in similar fashion to moving around bricks in a LEGO&reg; model. Also, institutions may choose to use the Budget Calculator's PHP services as the basis for new applications, or integrate the Budget calculator's PHP services and/or React client into an existing enterprise tool with minimal fuss.
 
 ![GitHub Logo](documentation/2020_BC_api_ui_split.jpg)
 
