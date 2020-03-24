@@ -13,3 +13,7 @@ Budget Calculator is an external module designed for use with REDCap.
 7. Click `External Modules` on the left sidebar.
 8. Click the `Enable a module` button on the External Modules - Module Manager page.
 9. Click the `Enable` button next to the Budget Calculator from the available modules list.
+
+# Budget Calculator React Client
+
+Documentation for the React client used with the Budget Calculator, see [bcclient/README.md](bcclient/README.md)
