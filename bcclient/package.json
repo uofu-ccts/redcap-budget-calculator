@@ -1,8 +1,8 @@
 {
   "name": "bcclient",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
-  "homepage": "/redcap/modules/budget_calculator_v0.1/resources/bcclient/",
+  "homepage": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
@@ -23,7 +23,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "redcap-build": "react-scripts build && rm -rf ../bcclient.php && cp -R build/index.html ../bcclient.php && rm -rf ../resources/bcclient && cp -R build ../resources/bcclient",
-    "tgd-build": "react-scripts build && rm -rf /Users/tdavis/workspaces/2019mamp/04-aug-redcapdev/redcap/modules/budget_calculator_v0.1/bcclient.php && cp -R build/index.html /Users/tdavis/workspaces/2019mamp/04-aug-redcapdev/redcap/modules/budget_calculator_v0.1/bcclient.php && rm -rf /Users/tdavis/workspaces/2019mamp/04-aug-redcapdev/redcap/modules/budget_calculator_v0.1/resources/bcclient && cp -R build /Users/tdavis/workspaces/2019mamp/04-aug-redcapdev/redcap/modules/budget_calculator_v0.1/resources/bcclient",
+    "tgd-build": "react-scripts build && rm -rf /Users/tdavis/workspaces/2019mamp/04-aug-redcapdev/redcap/modules/budget_calculator_v1.0/bcclient.php && cp -R build/index.html /Users/tdavis/workspaces/2019mamp/04-aug-redcapdev/redcap/modules/budget_calculator_v1.0/bcclient.php && rm -rf /Users/tdavis/workspaces/2019mamp/04-aug-redcapdev/redcap/modules/budget_calculator_v1.0/resources/bcclient && cp -R build /Users/tdavis/workspaces/2019mamp/04-aug-redcapdev/redcap/modules/budget_calculator_v1.0/resources/bcclient",
     "test": "react-scripts test"
   },
   "eslintConfig": {

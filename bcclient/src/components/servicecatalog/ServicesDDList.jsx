@@ -5,7 +5,6 @@ import SearchBox from '../tools/SearchBox';
 import ServiceData from '../../js/ServiceData';
 
 import Dropdown from 'react-bootstrap/Dropdown'
-import ServiceMenuItem from './ServiceMenuItem';
 import ServiceSubMenus from './ServiceSubMenus';
 
 function ServicesDDList(props) {

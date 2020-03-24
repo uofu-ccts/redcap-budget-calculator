@@ -5,7 +5,7 @@ import NonClinicalRow from './NonClinicalRow';
 class BudgetNONClinicalRowsConsumer extends Component {
 
   isNonClinical = obj => {
-      return parseInt(obj.clinical) == 0;
+      return parseInt(obj.clinical) === 0;
   }
 
   displayRows = rows => {
@@ -44,6 +44,7 @@ class BudgetNONClinicalRowsConsumer extends Component {
                           totalCost={obj.totalCost}
                           yourCost={obj.yourCost}
                           quantity={obj.quantity}
+                          perService={obj.per_service}
 
                           removeBCService={context.removeBCService}
                           fundingType={context.fundingType}
@@ -52,6 +53,7 @@ class BudgetNONClinicalRowsConsumer extends Component {
 
                           addNonclinicalCost={context.addNonclinicalCost}
                           removeNonclinicalCost={context.removeNonclinicalCost}
+                          perServiceReadable={context.perService}
                       />
                   ))}
               </>

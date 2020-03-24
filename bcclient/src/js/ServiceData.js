@@ -1,9 +1,11 @@
 import jsonata from "jsonata";
+import { bcConfig } from './config.js';
+
 
 //Services catalog data utility class
 class ServiceData 
 {
-  constructor (data, setData)
+  constructor (data, setData) //TODO: This constructor is being called frequently. Look into reducing the calls.
   {
     this.stateData = data;
     this.setStateData = setData;
@@ -11,22 +13,14 @@ class ServiceData
     this.fetchServicesFromApi = this.fetchServicesFromApi.bind(this);
     this.filterServiceInstancesByKeyword =  this.filterServiceInstancesByKeyword.bind(this);
     this.parseJsonListOfServices = this.parseJsonListOfServices.bind(this);
+    console.log("sd ... bcConfig.urlBase=",bcConfig.urlBase);//TODO: remove this line
   }
 
   //side effect of setting state in component's state passed into constructor
   fetchServicesFromApi()
   {
-    //if using outside of REDCap External module, make sure this path code is adjust to match your API endpoint
-    let basePath = 'http://2019augredcap:8888/redcap';//customize basePath for your development or production environment
-
-    const localUri = window.location.href;
-    const found = localUri.indexOf("/redcap");//location of REDCap directory to prepend the API request path to
-    if (found > -1) 
-    {
-      basePath = localUri.substring(0, found+7);
-    }
-
-    const serviceCatalogAPI = basePath + '/api/?NOAUTH&type=module&prefix=budget_calculator&page=api/service_catalog_api';
+    //all paths are configurable in 'config.js'
+    const serviceCatalogAPI = bcConfig.urlBase + bcConfig.urlPathToREDCap + bcConfig.serviceCatalogApi;
 
     fetch(serviceCatalogAPI)
       .then(response => response.json())

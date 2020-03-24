@@ -27,16 +27,16 @@ class BCNav extends Component {
   <div className="collapse navbar-collapse" id="navbarNavDropdown">
     <ul className="navbar-nav">
       <li className="nav-item dropdown">
-        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a className="nav-link dropdown-toggle" href="#/" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Add Service
         </a>
         <ServiceCatalogDDMenu />
       </li>
       <li className="nav-item">
-        <a className="nav-link btn btn-lg font-weight-bolder" id="bdgtcalc-nav" href="#" onClick={this.handleEditBudgetInfoClick}>Edit Budget Information</a>
+        <a className="nav-link btn btn-lg font-weight-bolder" id="bdgtcalc-nav" href="#/" onClick={this.handleEditBudgetInfoClick}>Edit Budget Information</a>
       </li>
       <li className="nav-item">
-        <a className="nav-link btn btn-lg font-weight-bolder" id="bdgtcalc-nav" href="#" onClick={this.handleDownloadAsPdfClick}>Download as PDF</a>
+        <a className="nav-link btn btn-lg font-weight-bolder" id="bdgtcalc-nav" href="#/" onClick={this.handleDownloadAsPdfClick}>Download as PDF</a>
       </li>
 
     </ul>

@@ -54,6 +54,7 @@ class BudgetClinicalRowsConsumer extends Component {
                           anyVistsNotSelected={obj.anyVistsNotSelected}
                           costPerSubject={obj.costPerSubject}
                           totalCost={obj.totalCost}
+                          perService={obj.per_service}
 
                           bcrows={context.bcrows}
                           csUpdateSubjectCountById={context.csUpdateSubjectCountById}
@@ -61,6 +62,7 @@ class BudgetClinicalRowsConsumer extends Component {
                           bcimShowInfoVisitCount={context.bcimShowInfoVisitCount}
                           csVisitChanged={context.csVisitChanged}
                           handleVisitRowButtonClicked={context.handleVisitRowButtonClicked}
+                          perServiceReadable={context.perService}
                       />
                   ))}
 

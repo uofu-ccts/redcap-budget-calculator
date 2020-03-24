@@ -35,7 +35,7 @@ class NonClinicalRow extends Component {
         <td>
             <input className="qty-count" type="number" min="1" value={this.props.quantity} onChange={this.handleQtyCountChange}/>
         </td>
-        <td>Q. Type</td>
+        <td>{this.props.perServiceReadable[this.props.perService]}</td>
         <td className="non_clinical-blank" colSpan="7"></td>
         <td className="line-total">{this.toDollars(this.props.totalCost)}</td>
       </tr>

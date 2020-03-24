@@ -2,39 +2,60 @@ import React, {Component} from 'react';
 import BudgetContext from './BudgetContext';
 
 import BudgetUtils from '../js/BudgetUtils';
+import PerServiceData from '../js/PerServiceData';
 
 class BudgetProvider extends Component {
   
   constructor(props) {
     super(props);
     this.state = {
-      bcInfoModalUsedOnce: false,
-      bcimShowInfo: false,
-      bcimShowSave: false,
-      bcimShowInfoSubjectCount: 0, // The info modal populates this field.
-      bcimShowInfoVisitCount: 0, // Number of columns of visits that can be selected. The info modal populates this field.
-      bcInfoModalNeeded: false, // when needed, the ID of the row that needs the info is populated in this attribute.
+        bcInfoModalUsedOnce: false,
+        bcimShowInfo: false,
+        bcimShowSave: false,
+        bcimShowInfoSubjectCount: 0, // The info modal populates this field.
+        bcimShowInfoVisitCount: 0, // Number of columns of visits that can be selected. The info modal populates this field.
+        bcInfoModalNeeded: false, // when needed, the ID of the row that needs the info is populated in this attribute.
 
-      fundingType: '', // Determines the "Your Cost" column. Set by the BCWelcomeModal.
-      bcrows: {}, // All clinical and non-clinical rows for virtual DOM to display. Authoritative row state **SHOULD BE** preserved here, and not in the row components.
-      
-      // nonclinicalRowsTotal: {}, // calculated totals associated with rows' ID //TODO: Old design. Planning to refactor into bcrows
-      // clinicalRowsTotal: {}, // calculated totals associated with rows' ID //TODO: Old design. Planning to refactor into bcrows
+        fundingType: '', // Determines the "Your Cost" column. Set by the BCWelcomeModal.
+        bcrows: {}, // All clinical and non-clinical rows for virtual DOM to display. Authoritative row state **SHOULD BE** preserved here, and not in the row components.
+        
+        // nonclinicalRowsTotal: {}, // calculated totals associated with rows' ID //TODO: Old design. Planning to refactor into bcrows
+        // clinicalRowsTotal: {}, // calculated totals associated with rows' ID //TODO: Old design. Planning to refactor into bcrows
 
-      nonclinicalTotals: 0, // for display in UI
-      clinicalTotals: 0, // for display in UI
-      grandTotal: 0, // for display in UI
+        nonclinicalTotals: 0, // for display in UI
+        clinicalTotals: 0, // for display in UI
+        grandTotal: 0, // for display in UI
 
-      chsLeftNavState: 'disabled', //nav states, ... 'active' and 'disabled'
-      chsRightNavState: 'disabled',
-      chsBtnStates: ['disabled','disabled','disabled','disabled','disabled'], //button states, ... 'select', 'deselect' and 'disabled'
-      chsVisitIndex: 1, //Current index being display (the visit page we're on). Base index is 1, not 0. Changes in increments of 5
-     }
+        chsLeftNavState: 'disabled', //nav states, ... 'active' and 'disabled'
+        chsRightNavState: 'disabled',
+        chsBtnStates: ['disabled','disabled','disabled','disabled','disabled'], //button states, ... 'select', 'deselect' and 'disabled'
+        chsVisitIndex: 1, // Current index being display (the visit page we're on). Base index is 1, not 0. Changes in increments of 5
 
-     let bu = new BudgetUtils();
-     this.isClinical = bu.isClinical;
-     this.isNotClinical = bu.isNotClinical;
+        perService: {} // human readable quantity types
+      }
+
+    this.perServiceData = new PerServiceData();
+    this.perServiceData.fetchPerServicesFromApi(this.psdSetPerService);
+
+    let bu = new BudgetUtils();
+    this.isClinical = bu.isClinical;
+    this.isNotClinical = bu.isNotClinical;
   }
+
+  //////////////////////////////////////////
+  //
+  // BEGIN: Per Service Data
+
+  psdSetPerService = (perServiceArray) => {
+    this.setState((state, props) =>{
+      return {perService:perServiceArray};
+    });
+  }
+
+  // END:  Per Service Data
+  //
+  //////////////////////////////////////////
+
 
   //////////////////////////////////////////
   //
@@ -154,14 +175,18 @@ class BudgetProvider extends Component {
   cshUpdateCheckButtons = (state) => {
     let btnStates = [];
 
+    //limit searched bcrows to the clinical rows
+    let clinicalRows = Object.values(state.bcrows).filter(this.isClinical);
+
+
     for (let i=0; i<5; i++) {
       let columnExists = (state.bcimShowInfoVisitCount >= (state.chsVisitIndex + i));
 
-      if (columnExists) {
+      if (columnExists && clinicalRows.length > 0) {
         //check for select and deselect
         //TODO: if display optimization is needed, improve perfomance by finding any 'false' instead of all 'false' visitCount
         let visitCountIndex = state.chsVisitIndex + i - 1;
-        let deselectedCheckboxFound = Object.values(state.bcrows).filter(obj=>{return (! obj.visitCount[ visitCountIndex ]);}).length > 0;
+        let deselectedCheckboxFound = Object.values(clinicalRows).filter(obj=>{return (! obj.visitCount[ visitCountIndex ]);}).length > 0;
 
         let stateToPush = 'deselect';
         if (deselectedCheckboxFound) {
@@ -220,6 +245,9 @@ class BudgetProvider extends Component {
   csUpdateColumnCheckButtonState = (visitIndex) => {
 
     this.setState((state, props) => {
+      console.log("pts-69:csUpdateColumnCheckButtonState->visitIndex",visitIndex);
+      console.log("pts-69:csUpdateColumnCheckButtonState->state",state);
+
       let rowsArray = Object.values(state.bcrows);
       let foundNotSelected = false;
 
@@ -231,7 +259,7 @@ class BudgetProvider extends Component {
       }
 
       let visibleColumn = visitIndex % 5;
-      if (foundNotSelected != state.chsBtnStates[visibleColumn]) {
+      if (foundNotSelected !== state.chsBtnStates[visibleColumn]) {
         let chsBtnStatesCopy = [...state.chsBtnStates];
 
         chsBtnStatesCopy[visibleColumn] = (foundNotSelected ? 'select' : 'deselect');
@@ -262,7 +290,7 @@ class BudgetProvider extends Component {
         }
       }
 
-      if (foundNotSelected != state.bcrows[rowId].anyVistsNotSelected) {
+      if (foundNotSelected !== state.bcrows[rowId].anyVistsNotSelected) {
         let bcrowsCopy = {...state.bcrows};
         bcrowsCopy[rowId].anyVistsNotSelected = foundNotSelected;
         return { bcrows:bcrowsCopy};
@@ -280,8 +308,11 @@ class BudgetProvider extends Component {
    * the check buttons on the column and row are updated if updateButtonsState=true.
    */
   csVisitChanged = (id, visitIndex, value) => {
-
     this.setState((state, props) => {
+      console.log("pts-69:csVisitChange->state",state);
+      console.log("pts-69:csVisitChange->visitIndex",visitIndex);
+      console.log("pts-69:csVisitChange->value",value);
+
       let bcrowsCopy = {...state.bcrows};
       bcrowsCopy[id].visitCount[visitIndex] = value;
       return { bcrows:bcrowsCopy } 
@@ -290,15 +321,13 @@ class BudgetProvider extends Component {
   }
 
   handleVisitRowButtonClicked = (id, select) => {
-    console.log("handleVisitRowButtonClicked...");
-
     this.setState((state, props)=>{
       let visitCountLength = state.bcrows[id].visitCount.length;
       let bcrowsCopy = {...state.bcrows};
 
 
       for (let i=0; i<visitCountLength; i++) {
-        if (state.bcrows[id].visitCount[i] != select) {
+        if (state.bcrows[id].visitCount[i] !== select) {
           bcrowsCopy[id].visitCount[i] = select;
         }
       }
@@ -324,7 +353,7 @@ class BudgetProvider extends Component {
 
       let costPerSubject = 0.00;
       let currentRow = state.bcrows[rowId];
-      let yourCost = (state.fundingType=='federal_rate') ? currentRow.federal_rate : currentRow.industry_rate;
+      let yourCost = (state.fundingType==='federal_rate') ? currentRow.federal_rate : currentRow.industry_rate;
       let numberOfVisits = currentRow.visitCount.filter(obj => {return obj;}).length;
 
       costPerSubject = yourCost * numberOfVisits;
@@ -397,8 +426,7 @@ class BudgetProvider extends Component {
    * Non-Clinical Totals for Budget
    */
   ncsCalculateNonclinicalTotals = () => {
-    console.log("defining reducer ...");
-    let reducer = (acc, cur) => {console.log("acc="+acc+"; cur=",cur);return acc + cur.totalCost;}
+    let reducer = (acc, cur) => {return acc + cur.totalCost;}
 
     this.setState((state, props) => {
       let ncrt = Object.values(state.bcrows).filter(this.isNotClinical);
@@ -517,7 +545,9 @@ class BudgetProvider extends Component {
       }
       else {
         //calculate the clinical totals and grand total for UI
-        this.cshUpdateAllClinicalTotals()
+        this.cshUpdateAllClinicalTotals();
+        //update column buttons
+        this.csHeaderUpdate();
       }
     });
   }
@@ -532,7 +562,7 @@ class BudgetProvider extends Component {
     }
     else {
       //update header buttons if clinical service added
-      if (serviceObj.clinical == "1") {
+      if (serviceObj.clinical === "1") {
         this.csHeaderUpdate();
       }
     }
@@ -609,6 +639,8 @@ class BudgetProvider extends Component {
           nonclinicalTotals: this.state.nonclinicalTotals,
           clinicalTotals: this.state.clinicalTotals,
           grandTotal: this.state.grandTotal,
+
+          perService: this.state.perService,
 
           // addNonclinicalCost: this.addNonclinicalCost,
           // removeNonclinicalCost: this.removeNonclinicalCost,

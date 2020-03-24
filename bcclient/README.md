@@ -1,12 +1,15 @@
-# Dashboard SPA
+# Budget Calculator Services and Client
 
-This is the Single Page Application for the CCTS Dashboard web app. It is written using `react-router-bootstrap`.
+The Budget Calculator uses a ReactJS relationship based separation of concerns (SoC) coupled with the ECMAScript Fetch API and PHP based RESTful APIs for further separation of concerns at the HTTP pipeline level.
 
-The main service for this app uses Spring Boot. See the main [Read Me](../../../README.md) for more information about the Java Spring Boot portion of this applications.
+That means, devolpers can use the Budget Calculator's web client components with or without the Budget Calculator's PHP services. Developers can reorganize the Budget Calculator's React client in similar fashion to moving around bricks in a LEGO&reg; model. Also, institutions may choose to use the Budget Calculator's PHP services as the basis for new applications, or integrate the Budget calculator's PHP services and/or React client into an existing enterprise tool with minimal fuss.
+
+![GitHub Logo](documentation/2020_BC_api_ui_split.jpg)
+
 
 # ReactJS
 
-The SPA was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The Budget Calculator React client was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 
@@ -20,10 +23,14 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
-### `npm test`
+During development of the Budget Calculator client, you may find it helpful to connect to a Budget Calculator's RESTful APIs by installing the Budget Calculator external module on a REDCap server and configuring your development ReactJS client's 'src/js/config.js' to point at the server's URL and REDCap path so that the Budget Calculator's client can retreive and display meaningful data from the external module's service endpoints.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm redcap-build`
+
+Transpiles, optimizes, minifies the current Budget Calculator's ReactJS code. Then, copies the production build to the parent PHP project's static files directory for inclusion with the PHP composure build used to generate the Budget Calculator REDCap external module.
+
+When building the Budget Calculator external module for use on a REDCap server, this ReactJS project must be built first using the 'redcap-build' script before building the final Composure PHP project.
 
 ### `npm run build`
 
@@ -35,44 +42,8 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run spring-build`
+This script is useful for building production versions of the Budget Calculator for use in projects where the PHP services are not needed, or in projects where additional tiers exist between the PHP services and the React client.
 
-Builds the app for production to the `build` folder. Then, copies the `build` directory to Spring Boot's `static` directory for inclusion in the Spring Boot jar and use when Spring is run from an IDE.
+### `npm run test`
 
-## Included projects
-
-* [react-router](https://github.com/ReactTraining/react-router)
-* [react-bootstrap](https://github.com/react-bootstrap/react-bootstrap)
-* [react-router-bootstrap](https://github.com/react-bootstrap/react-router-bootstrap)
-* [octicons](https://github.com/primer/octicons/tree/master/lib/octicons_react)
-
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+_**Under development**_ ... Runs automated unit tests to check the client code is working as expected.

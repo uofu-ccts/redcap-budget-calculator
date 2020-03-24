@@ -60,7 +60,7 @@ class BCWelcomeModal extends Component {
                 <input type="hidden" name="redcap_csrf_token" value="" />
             </Modal.Body>
             <Modal.Footer>
-              <Button id="welcomeConfirmBtn" variant="primary" disabled={! this.state.buttonActive} type="submit">Create New Budget</Button>
+              <Button variant="primary" disabled={! this.state.buttonActive} type="submit">Create New Budget</Button>
             </Modal.Footer>
           </Form>
 

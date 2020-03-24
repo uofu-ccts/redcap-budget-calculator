@@ -3,9 +3,6 @@
  */
 class BudgetUtils 
 {
-  constructor ()
-  {}
-
   toDollars(dollars) {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -21,7 +18,7 @@ class BudgetUtils
   /**
    * For the clinical and non-clinical row components.
    */
-  findYourRate(props) {
+  findYourRateByProps(props) {
     return this.findYourRate(props.fundingType, props.federalrate, props.industryrate);
   }
 
@@ -29,7 +26,7 @@ class BudgetUtils
    * Used by BudgetProvider.addBCService().
    */
   findYourRate(fundingType, federalrate, industryrate) {
-    return (fundingType=='federal_rate') ? federalrate : industryrate;
+    return (fundingType==='federal_rate') ? federalrate : industryrate;
   }
 
   /**
@@ -45,8 +42,6 @@ class BudgetUtils
   isNotClinical(obj) {
       return (! parseInt(obj.clinical));
   }
-
-
 }
 
 export default BudgetUtils;
