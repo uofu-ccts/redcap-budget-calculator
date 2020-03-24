@@ -6,6 +6,15 @@ That means, devolpers can use the Budget Calculator's web client components with
 
 ![GitHub Logo](documentation/2020_BC_api_ui_split.jpg)
 
+# Budget Calculator Link
+
+Once the Budget Calculator REDCap external module is installed and configured, the home page is located at:
+
+&lt;REDCap URL path&gt;/modules/budget_calculator_v1.0/resources/bcclient/index.html
+
+For example, if the REDCap is installed for on the domain 'https://example.com/redcap', then the location of the installed Budget Calculator is
+
+https://example.com/redcap/modules/budget_calculator_v1.0/resources/bcclient/index.html
 
 # ReactJS
 
