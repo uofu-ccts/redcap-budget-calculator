@@ -17,3 +17,11 @@ Budget Calculator is an external module designed for use with REDCap.
 # Budget Calculator React Client
 
 Documentation for the React client used with the Budget Calculator, see [bcclient/README.md](bcclient/)
+
+
+# Building with PHing
+
+This project contains integration with [PHing](https://www.phing.info/guide/hlhtml/#ch.gettingstarted) for building and
+deployment of the ReactJS client and the PHP based REDCap external module. You may choose to only build the PHP based REDCap external module while using the prebuilt React client found in 'resources/bcclient', or fully build the project from the PHP and ReactJS source.
+
+NOTE: Building the React client with PHing requires a current version of NPM to be installed on your build machine. 

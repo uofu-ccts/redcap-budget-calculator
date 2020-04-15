@@ -5,4 +5,13 @@ composer.phar
 
 # these are built by a npm script in the reactjs project
 bcclient.php
-resources/bcclient
+build
+
+# ./bin directory is where the BudgetCalculator PHing build tool expects to find
+# the composure installation (https://getcomposer.org/) installed as 'composer'
+bin
+
+# if building the react client as part of your build process, you may want to 
+# ignore the react resources placed in the 'resources/bcclient' folder
+#
+#resources/bcclient
