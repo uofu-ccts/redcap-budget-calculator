@@ -52,7 +52,7 @@
     <!-- ============================================  -->
     <!-- Target: copy                                  -->
     <!-- ============================================  -->
-    <target name="copy" depends="composer">
+    <target name="copy">
         
         <echo msg="Copying files and folders to build directory..." />
 
@@ -105,6 +105,15 @@
         </copy>
         
     </target>
+
+    <!-- ============================================  -->
+    <!-- Target: Zip Budget Calculator                 -->
+    <!-- ============================================  -->
+    <!-- Requires the zip extension be installed  -->
+    <!-- <target name="zipbc">
+      <echo msg="Zip Budget Calculator external module for REDCap repo" />
+      <zip destfile="build/budgetcalculator.zip" basedir="./build" />   
+    </target> -->
 
     <!-- ============================================  -->
     <!-- Target: buildall with react client built      -->
