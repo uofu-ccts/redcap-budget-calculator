@@ -5,6 +5,10 @@
     <property name="basedir" value="." override="true"/>
     <property name="modulename" value="budget_calculator_v1.0" override="true"/>
 
+    <!-- CHANGE FROM './rcdeploy' TO CORRECT REDCAP 'module' DIRECTORY -->
+    <property name="deploydir" value="./rcdeploy" override="true"/>
+
+
     <!-- ============================================  -->
     <!-- Target: prepare                               -->
     <!-- ============================================  -->
@@ -107,6 +111,23 @@
     <!-- ============================================  -->
     <target name="buildall" depends="react,composer,copy">
         <echo msg="Budget Calculator assembled in './build' directory." />
+    </target>
+
+    <!-- ============================================  -->
+    <!-- Target: buildalldeploy                        -->
+    <!-- ============================================  -->
+    <target name="buildalldeploy" depends="react,composer,copy">
+
+        <echo msg="Removing old version and deploying new version." />
+
+        <delete dir="${deploydir}/${modulename}" />
+
+        <copy todir="${deploydir}/${modulename}" >
+          <fileset dir="build/${modulename}">
+            <include name="**" />
+          </fileset>
+        </copy>
+
     </target>
 
     <!-- ==================================================  -->

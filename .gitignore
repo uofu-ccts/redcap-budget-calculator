@@ -6,6 +6,7 @@ composer.phar
 # these are built by a npm script in the reactjs project
 bcclient.php
 build
+rcdeploy
 
 # ./bin directory is where the BudgetCalculator PHing build tool expects to find
 # the composure installation (https://getcomposer.org/) installed as 'composer'
