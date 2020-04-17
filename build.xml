@@ -17,6 +17,17 @@
     </target>
 
     <!-- ============================================  -->
+    <!-- Target: react                               -->
+    <!-- ============================================  -->
+    <target 
+      name="react" 
+      description="Building ReactJS client and adding to Composer project">
+
+        <exec command="npm run redcap-build" dir="${basedir}/bcclient" />
+
+    </target>
+
+    <!-- ============================================  -->
     <!-- Target: composer                               -->
     <!-- ============================================  -->
     <target name="composer" description="Installing dependencies" depends="prepare">
@@ -42,7 +53,16 @@
     </target> -->
 
     <!-- ============================================  -->
-    <!-- (DEFAULT)  Target: dist                       -->
+    <!-- Target: dist with react client built          -->
+    <!-- ============================================  -->
+    <target name="distwithclient" depends="react,composer">
+        <echo msg="Creating archive..." />
+
+        <echo msg="Files copied and compressed in build directory OK!" />
+    </target>
+
+    <!-- ============================================  -->
+    <!-- (DEFAULT)  Target: dist with default client   -->
     <!-- ============================================  -->
     <target name="dist" depends="composer">
         <echo msg="Creating archive..." />
