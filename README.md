@@ -24,6 +24,14 @@ For documentation for the React client used with the Budget Calculator, see [bcc
 This project contains integration with [PHing](https://www.phing.info/guide/hlhtml/#ch.gettingstarted) for building and
 deployment of the ReactJS client and the PHP based REDCap external module. You may choose to only build the PHP based REDCap external module while using the prebuilt React client found in 'resources/bcclient', or fully build the project from both the PHP and the ReactJS source. The default PHing task uses the prebuilt ReactJS client. There is also another PHing task for building both the ReactJS client and the PHP REDCap external module.
 
+## TL;DR
+
+- Install Composer as &lt;project&gt;/bin/composer
+- 'php ./bin/composer install'
+- Copy '&lt;project&gt;/./vendor/phing' directory to '&lt;project&gt;/bin/phing'
+- 'php bin/phing/phing/bin/phing.php'
+- See 'build' directory for REDCap Budget Calculator external module.
+
 ## Installing and using Composer
 
 The REDCap Budget Calculator uses Composer as its package manager. To use Composer, install it as &lt;project&gt;/bin/composer. See the instructions for installing and using Composer at the Composer project home page. See [https://getcomposer.org/](https://getcomposer.org/). The PHing tasks in this project depend on Composer being located in &lt;project&gt;/bin/composer. However, you can customize 'build.xml' to fit your build environment's needs.
@@ -42,4 +50,4 @@ After installing, Composer as &lt;project folder&gt;/bin/composer , install the 
 
 You will find that PHing is now installed at **&lt;project folder&gt;/vendor/phing/phing/bin/phing.php** and can run with the command 'php ./vendor/phing/phing/bin/phing.php'. However, the 'vendor' directory is not stable and contents will come and go during the build process. Copy the ./vendor/phing directory to '&lt;project folder&gt;/bin/phing' and run the default PHing task with the command 'php bin/phing/phing/bin/phing.php'.
 
-To build the react client with NPM and then assemble the Budget Calculator external module use the command 'php bin/phing/phing/bin/phing.php distwithclient'. The default task uses a prebuilt React client, instead of building from the React source in the bcclient directory.
+To build the react client with NPM and then assemble the Budget Calculator external module use the command 'php bin/phing/phing/bin/phing.php buildall'. The default task uses a prebuilt React client, instead of building from the React source in the bcclient directory.

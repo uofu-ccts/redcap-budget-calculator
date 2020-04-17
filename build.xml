@@ -3,6 +3,7 @@
 <project name="BudgetCalculator" default="dist">
 
     <property name="basedir" value="." override="true"/>
+    <property name="modulename" value="budget_calculator_v1.0" override="true"/>
 
     <!-- ============================================  -->
     <!-- Target: prepare                               -->
@@ -11,9 +12,9 @@
         <echo msg="Removing old build directory and contents" />
         <delete dir="./build" />
 
-        <echo msg="Making external module directory ./build/budget_calculator_v1.0" />
+        <echo msg="Creating external module directory ./build/${modulename}" />
         <mkdir dir="./build" />
-        <mkdir dir="./build/budget_calculator_v1.0" />
+        <mkdir dir="./build/${modulename}" />
     </target>
 
     <!-- ============================================  -->
@@ -21,14 +22,18 @@
     <!-- ============================================  -->
     <target 
       name="react" 
-      description="Building ReactJS client and adding to Composer project">
+      description="Create an optimized production build of React client and add to Composer project">
 
+        <echo msg="Creating an optimized production build of React client ..." />
+        <echo msg="(Requires 'npm' be installed.)" />
+
+        <exec command="npm install" dir="${basedir}/bcclient" />
         <exec command="npm run redcap-build" dir="${basedir}/bcclient" />
 
     </target>
 
     <!-- ============================================  -->
-    <!-- Target: composer                               -->
+    <!-- Target: composer                              -->
     <!-- ============================================  -->
     <target name="composer" description="Installing dependencies" depends="prepare">
         
@@ -41,30 +46,73 @@
     </target>
 
     <!-- ============================================  -->
-    <!-- Target: build                                 -->
+    <!-- Target: copy                                  -->
     <!-- ============================================  -->
-    <!-- <target name="build/budget_calculator_v1.0" depends="composer">
+    <target name="copy" depends="composer">
+        
         <echo msg="Copying files and folders to build directory..." />
-        <copy todir="build" >
+
+        <copy todir="build/${modulename}/api" >
           <fileset dir="./api">
             <include name="**" />
           </fileset>
         </copy>
-    </target> -->
 
-    <!-- ============================================  -->
-    <!-- Target: dist with react client built          -->
-    <!-- ============================================  -->
-    <target name="distwithclient" depends="react,composer">
-        <echo msg="Creating archive..." />
+        <copy todir="build/${modulename}/resources" >
+          <fileset dir="./resources">
+            <include name="**" />
+          </fileset>
+        </copy>
 
-        <echo msg="Files copied and compressed in build directory OK!" />
+        <copy todir="build/${modulename}/templates" >
+          <fileset dir="./templates">
+            <include name="**" />
+          </fileset>
+        </copy>
+
+        <copy todir="build/${modulename}/vendor" >
+          <fileset dir="./vendor">
+            <include name="**" />
+          </fileset>
+        </copy>
+
+        <copy todir="build/${modulename}" >
+          <fileset dir=".">
+            <include name="*.js" />
+          </fileset>
+        </copy>
+
+        <copy todir="build/${modulename}" >
+          <fileset dir=".">
+            <include name="*.php" />
+          </fileset>
+        </copy>
+
+        <copy todir="build/${modulename}" >
+          <fileset dir=".">
+            <include name="*.xml" />
+          </fileset>
+        </copy>
+
+        <copy todir="build/${modulename}" >
+          <fileset dir=".">
+            <include name="config.json" />
+          </fileset>
+        </copy>
+        
     </target>
 
     <!-- ============================================  -->
-    <!-- (DEFAULT)  Target: dist with default client   -->
+    <!-- Target: buildall with react client built      -->
     <!-- ============================================  -->
-    <target name="dist" depends="composer">
+    <target name="buildall" depends="react,composer,copy">
+        <echo msg="Budget Calculator assembled in './build' directory." />
+    </target>
+
+    <!-- ==================================================  -->
+    <!-- (DEFAULT)  Target: dist build with default client   -->
+    <!-- ==================================================  -->
+    <target name="dist" depends="composer,copy">
         <echo msg="Creating archive..." />
 
         <echo msg="Files copied and compressed in build directory OK!" />
