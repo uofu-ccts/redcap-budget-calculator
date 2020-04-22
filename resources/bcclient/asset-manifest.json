@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/static/css/main.3b80cd30.chunk.css",
+    "main.js": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/static/js/main.ce34f51e.chunk.js",
+    "main.js.map": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/static/js/main.ce34f51e.chunk.js.map",
+    "runtime~main.js": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/static/js/runtime~main.ca9b62fe.js",
+    "runtime~main.js.map": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/static/js/runtime~main.ca9b62fe.js.map",
+    "static/css/2.de424728.chunk.css": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/static/css/2.de424728.chunk.css",
+    "static/js/2.c77adc27.chunk.js": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/static/js/2.c77adc27.chunk.js",
+    "static/js/2.c77adc27.chunk.js.map": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/static/js/2.c77adc27.chunk.js.map",
+    "index.html": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/index.html",
+    "precache-manifest.80ba54202c136b62e5aeaa343f0569cb.js": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/precache-manifest.80ba54202c136b62e5aeaa343f0569cb.js",
+    "service-worker.js": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/service-worker.js",
+    "static/css/2.de424728.chunk.css.map": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/static/css/2.de424728.chunk.css.map",
+    "static/css/main.3b80cd30.chunk.css.map": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/static/css/main.3b80cd30.chunk.css.map",
+    "static/media/bc_custom.css": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/static/media/OpenSans-SemiBoldItalic.4f04fe54.ttf",
+    "static/media/logo.png": "/redcap/modules/budget_calculator_v1.0/resources/bcclient/static/media/logo.90c7de32.png"
+  }
+}
