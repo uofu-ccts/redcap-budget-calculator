@@ -48,7 +48,7 @@ Add the Composer executable to &lt;project folder&gt;/bin with the file name of 
 
 After installing Composer as &lt;project folder&gt;/bin/composer , install the project dependencies with the commands **'php ./bin/composer install'** and **'php ./bin/composer update'** from your Budget Calculator project root.
 
-You will find that PHing is now installed at **&lt;project folder&gt;/vendor/phing/phing/bin/phing.php** and can run with the command 'php ./vendor/phing/phing/bin/phing.php'. However, the 'vendor' directory is not stable and contents will come and go during the build process. Copy the ./vendor/phing directory to '&lt;project folder&gt;/bin/phing' and run the default PHing task with the command 'php bin/phing/phing/bin/phing.php'.
+PHing is now installed at **&lt;project folder&gt;/vendor/phing/phing/bin/phing.php** and can run with the command 'php ./vendor/phing/phing/bin/phing.php'. However, the 'vendor' directory is not stable and contents will come and go during the build process. Copy the ./vendor/phing directory to '&lt;project folder&gt;/bin/phing' and run the default PHing task with the command 'php bin/phing/phing/bin/phing.php'.
 
 To build the react client with NPM and then assemble the Budget Calculator external module use the command 'php bin/phing/phing/bin/phing.php buildall'. The default task uses a prebuilt React client, instead of building from the React source in the bcclient directory.
 
