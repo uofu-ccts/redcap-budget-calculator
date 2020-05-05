@@ -5,10 +5,10 @@ Budget Calculator is an external module designed for use with REDCap.
 # Install
 
 1. Copy or clone the Budget Calculator repository found at https://github.com/ui-icts/redcap-budget-calculator
-2. Rename the Budget Calculator's folder to `budget_calculator_v0.1`. The folder name must end with a version number in proper format, or REDCap will not be able to install and deploy the external module.
+2. Rename the Budget Calculator's folder to `budget_calculator_v1.0`. The folder name must end with a version number in proper format, or REDCap will not be able to install and deploy the external module.
 3. Install Composer dependency manager using the instructions found at https://getcomposer.org. Local or global installation will work.
 4. Run `composer install` from the Budget Calculator project folder to add the PHP dependencies for the Budget Calculator to the project. They are installed in the `vendor` directory. If you do not intend to make any development changes, use the command `composer install --no-dev` instead of `composer install`.
-5. Deploy the Budget Calculator to your REDCap environment by copying the Budget Calculator folder to the `<REDCap>/module` directory. If you installed the composer exectable locally in the Budget Calculator, do not copy it over to the REDCap environment with the rest of the project. Remember proper REDCap naming conventions are necessary for external modules to be recognized by REDCap.
+5. Deploy the Budget Calculator to your REDCap environment by copying the Budget Calculator folder to the `<REDCap>/module` directory. If you installed the composer executable locally in the Budget Calculator, do not copy it over to the REDCap environment with the rest of the project. Remember proper REDCap naming conventions are necessary for external modules to be recognized by REDCap.
 6. Navigate to the `Control Center` as your REDCap admin.
 7. Click `External Modules` on the left sidebar.
 8. Click the `Enable a module` button on the External Modules - Module Manager page.
@@ -44,9 +44,9 @@ Building the React client with PHing requires a current version of NPM to be ins
 
 PHP's Composer loads dependencies for the Budget Calculator. PHing is setup as a dev dependency for the Budget Calculator's PHP project.
 
-Add the Composer executable to &lt;project folder&gt;/bin with the file name of 'composer'. This location and name are required for the default PHing build.xml to work properly. Modify 'build.xml' for PHing if 'composer' is installed in another location.
+Add the Composer executable to &lt;project folder&gt;/bin with the file name of 'composer', renaming from 'composer.phar'. This location and name are required for the default PHing build.xml to work properly. Modify 'build.xml' for PHing if 'composer' is installed in another location.
 
-After installing, Composer as &lt;project folder&gt;/bin/composer , install the project dependencies with the commands **'php ./bin/composer install'** and **'php ./bin/composer update'** from your Budget Calculator project root.
+After installing Composer as &lt;project folder&gt;/bin/composer , install the project dependencies with the commands **'php ./bin/composer install'** and **'php ./bin/composer update'** from your Budget Calculator project root.
 
 You will find that PHing is now installed at **&lt;project folder&gt;/vendor/phing/phing/bin/phing.php** and can run with the command 'php ./vendor/phing/phing/bin/phing.php'. However, the 'vendor' directory is not stable and contents will come and go during the build process. Copy the ./vendor/phing directory to '&lt;project folder&gt;/bin/phing' and run the default PHing task with the command 'php bin/phing/phing/bin/phing.php'.
 
