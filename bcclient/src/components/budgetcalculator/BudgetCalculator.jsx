@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import './css/bc_custom.css';
 import './css/bc_custom_2020.scss';
 
 import BCJumbotron from './BCJumbotron';

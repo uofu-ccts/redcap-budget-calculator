@@ -27,8 +27,8 @@ class BCNav extends Component {
   <div className="collapse navbar-collapse" id="navbarNavDropdown">
     <ul className="navbar-nav">
       <li className="nav-item dropdown">
-        <a className="nav-link dropdown-toggle" href="#/" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Add Service
+        <a className="nav-link btn btn-lg dropdown-toggle" href="#/" role="button" id="navbarDropdownMenuLink dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Add a Service
         </a>
         <ServiceCatalogDDMenu />
       </li>
