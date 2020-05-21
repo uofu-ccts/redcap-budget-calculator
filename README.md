@@ -46,7 +46,9 @@ PHP's Composer loads dependencies for the Budget Calculator. PHing is setup as a
 
 Add the Composer executable to &lt;project folder&gt;/bin with the file name of 'composer', renaming from 'composer.phar'. This location and name are required for the default PHing build.xml to work properly. Modify 'build.xml' for PHing if 'composer' is installed in another location.
 
+
 After installing Composer as &lt;project folder&gt;/bin/composer, install the project dependencies with the commands **'php ./bin/composer install'** and **'php ./bin/composer update'** from your Budget Calculator project root.
+
 
 PHing is now installed at **&lt;project folder&gt;/vendor/phing/phing/bin/phing.php** and can run with the command 'php ./vendor/phing/phing/bin/phing.php'. However, the 'vendor' directory is not stable and contents will come and go during the build process. Copy the ./vendor/phing directory to '&lt;project folder&gt;/bin/phing' and run the default PHing task with the command 'php bin/phing/phing/bin/phing.php'.
 
