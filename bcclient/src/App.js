@@ -1,5 +1,5 @@
 import React from 'react';
-import BudgetCalculatorPage from './components/BudgetCalculatorPage';
+import BudgetCalculatorPage from './lib/bc/components/BudgetCalculatorPage';
 
 // Importing the Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css";
