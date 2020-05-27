@@ -18,11 +18,17 @@ https://example.com/redcap/modules/budget_calculator_v1.0/resources/bcclient/ind
 
 # ReactJS
 
-The Budget Calculator React client was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The Budget Calculator React client was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). 
+
+## Repurposing the Budget Calculator Client as a React Component
+
+To include the React client for the Budget Calculator in another project, copy the bcclient/src/lib directory to the src/lib directory in your React project. Then import and use the BudgetCalculatorPage component in your project as seen in the App.js file in this project.
+
+It is likely that you will have to modify config.js, ServiceData.js, and PerServiceData.js before data will display in your copy of the Budget Calculator client.
 
 ## Available Scripts
 
-In the project directory, you can run:
+In this React project directory, you can run:
 
 ### `npm start`
 
