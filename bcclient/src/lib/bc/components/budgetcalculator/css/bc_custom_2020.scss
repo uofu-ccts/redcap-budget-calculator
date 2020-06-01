@@ -70,7 +70,7 @@ div.btn-group-budgetcalc{
   border-radius: 8px;
 }
 
-li>a#bdgtcalc-nav, a.nav-link.dropdown-toggle{
+li>a.bdgtcalc-nav, a.nav-link.dropdown-toggle{
   font-size:large;
   font-weight: bold;
   color: white;
@@ -80,7 +80,7 @@ li>a#bdgtcalc-nav, a.nav-link.dropdown-toggle{
   border-radius: 0 !important;
 }
 
-li>a#bdgtcalc-nav:hover, a.nav-link.dropdown-toggle:hover {
+li>a.bdgtcalc-nav:hover, a.nav-link.dropdown-toggle:hover {
   background: #2588b6;
   border-color: #2588b6;
   color: white;
