@@ -4,6 +4,8 @@ import BudgetContext from './BudgetContext';
 import BudgetUtils from '../js/BudgetUtils';
 import PerServiceData from '../js/PerServiceData';
 
+import {bcConfig} from '../js/config';
+
 class BudgetProvider extends Component {
   
   constructor(props) {
@@ -16,7 +18,7 @@ class BudgetProvider extends Component {
         bcimShowInfoVisitCount: 0, // Number of columns of visits that can be selected. The info modal populates this field.
         bcInfoModalNeeded: false, // when needed, the ID of the row that needs the info is populated in this attribute.
 
-        fundingType: '', // Determines the "Your Cost" column. Set by the BCWelcomeModal.
+        fundingType: bcConfig.presetFundingType ? bcConfig.presetFundingType : '', // Determines the "Your Cost" column. Set by the BCWelcomeModal.
         bcrows: {}, // All clinical and non-clinical rows for virtual DOM to display. Authoritative row state **SHOULD BE** preserved here, and not in the row components.
         
         // nonclinicalRowsTotal: {}, // calculated totals associated with rows' ID //TODO: Old design. Planning to refactor into bcrows
@@ -41,7 +43,8 @@ class BudgetProvider extends Component {
     this.isClinical = bu.isClinical;
     this.isNotClinical = bu.isNotClinical;
   }
-
+  
+  
   //////////////////////////////////////////
   //
   // BEGIN: Per Service Data
@@ -272,7 +275,7 @@ class BudgetProvider extends Component {
     });
 
   }
-
+  
   /**
    * Updates a row's check button, then calls the fuction to set the total per subject.
    */
@@ -491,7 +494,19 @@ class BudgetProvider extends Component {
    */
   setFundingType = (e, fundingType) => {
     this.setState({ fundingType: fundingType });
+    // if (this.state.bcrows !== {}) {
+    //   this.cshUpdateAllClinicalTotals();
+    //   this.ncsCalculateNonclinicalTotals();
+    // }
   }
+
+  // toggleFundingType = () => {
+  //   this.setState({
+  //     fundingType: this.state.fundingType === 'federal_rate' ? 'industry_rate' : 'federal_rate'
+  //   })
+  //   console.log('[provider] funding type changed to: ' + this.state.fundingType)
+  // }
+
 
   handleQtyCountChange = (rowId, value) => {
     let rowNotClinical;
@@ -503,7 +518,7 @@ class BudgetProvider extends Component {
 
       updatedBCRows[rowId].quantity = value;
 
-      if (rowNotClinical) {
+      if (rowNotClinical) { // this might cause an issue with rate changing for yourCost
         updatedBCRows[rowId].totalCost = updatedBCRows[rowId].yourCost * updatedBCRows[rowId].quantity;
       }
       else {
@@ -629,12 +644,14 @@ class BudgetProvider extends Component {
   }
 
   render() { 
+    
     return ( 
       <BudgetContext.Provider
         value={{
           bcstate: this.state,
           bcrows: this.state.bcrows,
           fundingType: this.state.fundingType,
+          // toggleFundingType: this.toggleFundingType,
 
           nonclinicalTotals: this.state.nonclinicalTotals,
           clinicalTotals: this.state.clinicalTotals,
