@@ -494,10 +494,10 @@ class BudgetProvider extends Component {
    */
   setFundingType = (e, fundingType) => {
     this.setState({ fundingType: fundingType });
-    // if (this.state.bcrows !== {}) {
-    //   this.cshUpdateAllClinicalTotals();
-    //   this.ncsCalculateNonclinicalTotals();
-    // }
+    if (this.state.bcrows !== {}) {
+      this.cshUpdateAllClinicalTotals();
+      this.ncsCalculateNonclinicalTotals();
+    }
   }
 
   // toggleFundingType = () => {

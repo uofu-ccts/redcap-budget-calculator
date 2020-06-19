@@ -44,7 +44,7 @@ class BudgetClinicalRowsConsumer extends Component {
                           service={obj.service}
                           description={obj.service_description}
                           industryrate={obj.industry_rate}
-                          yourCost={obj.yourCost}
+                          yourCost={context.fundingType === 'federal_rate' ?  obj.federal_rate : obj.industry_rate}
                           federalrate={obj.federal_rate}
                           clinical={obj.clinical}
                           removeBCService={context.removeBCService}

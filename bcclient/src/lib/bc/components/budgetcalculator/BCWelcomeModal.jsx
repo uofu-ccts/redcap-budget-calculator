@@ -28,12 +28,16 @@ class BCWelcomeModal extends Component {
   }
 
   render() { 
+    
+    
     return (
       <Modal id="welcomeModal" centered backdrop="static" show={this.props.showWelcome} aria-labelledby="welcomeModal" aria-hidden="true">
           <div role="document">
             <Form id="welcomeForm" onSubmit={this.handleSubmit}>
             <Modal.Body>
-              <p>Thank you for using the Budget Calculator! Please provide the following information to get started.</p>
+              {/* reword this for using it both at the beginning and when changing */}
+              <p>Please set or update your funding type below.</p>
+                {/* Thank you for using the Budget Calculator!  */}
 
                 <Form.Row>
                     <Form.Group className="initial-info">
@@ -60,7 +64,7 @@ class BCWelcomeModal extends Component {
                 <input type="hidden" name="redcap_csrf_token" value="" />
             </Modal.Body>
             <Modal.Footer>
-              <Button id="blue" disabled={! this.state.buttonActive} type="submit">Create New Budget</Button>
+              <Button id="blue" disabled={! this.state.buttonActive} type="submit">Set Rate</Button>
             </Modal.Footer>
           </Form>
 

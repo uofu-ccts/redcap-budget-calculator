@@ -16,7 +16,8 @@ class BudgetCalculator extends Component {
       showInfo: false,
       showSave: false,
       showInfoSubjectCount: "",
-      showInfoVisitCount: ""
+      showInfoVisitCount: "",
+      welcomeOpenCallback: this.props.welcomeOpenCallback
     }
   }
 
@@ -46,6 +47,9 @@ class BudgetCalculator extends Component {
   }
 
   handleHideWelcome = () => this.setState({showWelcome: false});
+  handleShowWelcome = () => {
+    this.state.welcomeOpenCallback()
+  };
 
   render() { 
     return ( 
@@ -68,12 +72,15 @@ class BudgetCalculator extends Component {
               handleHideSave={this.handleHideSave} />
 
             <BCNav 
-              showInfoCallback={this.showInfoCallback}  
+              showInfoCallback={this.showInfoCallback}
+              handleShowWelcome={this.handleShowWelcome}  
               bcstate={this.props.bcstate}/>
             <br />
             <br />
 
             <BCServicesTable />
+              <><small>Current funding type: {this.props.bcstate.fundingType}</small></>
+
 
             <div id="disclaimer">
               This is a work in progress and not representative of the final product. Pricing data is for testing purposes only.

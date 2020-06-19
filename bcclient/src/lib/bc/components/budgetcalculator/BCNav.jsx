@@ -8,7 +8,8 @@ class BCNav extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showInfoCallback: this.props.showInfoCallback
+      showInfoCallback: this.props.showInfoCallback,
+      welcomeOpenCallback: this.props.handleShowWelcome
     };
   }
 
@@ -16,10 +17,15 @@ class BCNav extends Component {
     this.state.showInfoCallback();
   }
 
+  handleShowWelcomeCallback = () => {
+    this.state.welcomeOpenCallback();
+  }
+
   handleDownloadAsPdfClick = () => {
     let downloader = new DownloadPdf();
     downloader.savePdf(this.props.bcstate);
   }
+
 
   render() { 
     return (
@@ -36,9 +42,11 @@ class BCNav extends Component {
         <a className="nav-link btn btn-lg font-weight-bolder bdgtcalc-nav" href="#/" onClick={this.handleEditBudgetInfoClick}>Edit Budget Information</a>
       </li>
       <li className="nav-item">
+        <a className="nav-link btn btn-lg font-weight-bolder bdgtcalc-nav" href="#/" onClick={this.handleShowWelcomeCallback}>Edit Rate</a>
+      </li>
+      <li className="nav-item">
         <a className="nav-link btn btn-lg font-weight-bolder bdgtcalc-nav" href="#/" onClick={this.handleDownloadAsPdfClick}>Download as PDF</a>
       </li>
-
     </ul>
   </div>
 </nav>
