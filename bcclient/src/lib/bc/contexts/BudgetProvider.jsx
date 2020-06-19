@@ -342,11 +342,11 @@ class BudgetProvider extends Component {
 
   csSetRowTotal = (rowId, bcrowsCopy) => {
 
-    let numberOfVisits = bcrowsCopy[rowId].visitCount.filter(v=>(v)).length;
+    // let numberOfVisits = bcrowsCopy[rowId].visitCount.filter(v=>(v)).length;
     let rowCostPerSubject = bcrowsCopy[rowId].costPerSubject;
     let subjectCount = bcrowsCopy[rowId].subjectCount;
 
-    let totalRowCost = rowCostPerSubject * numberOfVisits * subjectCount;
+    let totalRowCost = rowCostPerSubject * subjectCount;
 
     bcrowsCopy[rowId].totalCost = totalRowCost;
     return bcrowsCopy;
