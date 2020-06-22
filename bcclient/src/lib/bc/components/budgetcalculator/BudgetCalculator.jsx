@@ -79,7 +79,7 @@ class BudgetCalculator extends Component {
             <br />
 
             <BCServicesTable />
-              <><small>Current funding type: {this.props.bcstate.fundingType}</small></>
+              <><small>Current funding type: {this.props.bcstate.fundingType==='federal_rate'? 'Half Rate' : 'Full Rate'}</small></>
 
 
             <div id="disclaimer">

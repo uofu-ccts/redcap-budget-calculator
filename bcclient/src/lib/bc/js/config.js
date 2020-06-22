@@ -23,5 +23,9 @@ export const bcConfig = {
   /* In order to allow users to default to a funding type, enter the name of the funding type 
   - in this case, 'federal_rate' or 'industry_rate' 
   OR leave blank to allow user to set funding type for each use */
-  presetFundingType: ''
+  presetFundingType: '',
+  /* Configure UI-only labels here:
+    list the full cost rate first, as the first index of this array becomes 'industry_rate'
+    once the rate is set with BCWelcomeModal */ 
+  fundingLabels: ['Full Rate', 'Half Rate']
   };

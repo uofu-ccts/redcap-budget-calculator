@@ -500,13 +500,6 @@ class BudgetProvider extends Component {
     }
   }
 
-  // toggleFundingType = () => {
-  //   this.setState({
-  //     fundingType: this.state.fundingType === 'federal_rate' ? 'industry_rate' : 'federal_rate'
-  //   })
-  //   console.log('[provider] funding type changed to: ' + this.state.fundingType)
-  // }
-
 
   handleQtyCountChange = (rowId, value) => {
     let rowNotClinical;
