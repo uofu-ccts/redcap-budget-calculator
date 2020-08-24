@@ -41,8 +41,8 @@ class BudgetNONClinicalRowsConsumer extends Component {
                           industryrate={obj.industry_rate}
                           federalrate={obj.federal_rate}
                           clinical={obj.clinical}
-                          totalCost={obj.totalCost}
-                          yourCost={obj.yourCost}
+                          totalCost={context.fundingType === 'federal_rate' ? (obj.federal_rate * obj.quantity) : (obj.industry_rate * obj.quantity)}
+                          yourCost={context.fundingType === 'federal_rate' ?  obj.federal_rate : obj.industry_rate}
                           quantity={obj.quantity}
                           perService={obj.per_service}
 
