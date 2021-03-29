@@ -13,11 +13,24 @@ Budget Calculator is an external module designed for use with REDCap.
 7. Click `External Modules` on the left sidebar.
 8. Click the `Enable a module` button on the External Modules - Module Manager page.
 9. Click the `Enable` button next to the Budget Calculator from the available modules list.
+10. Build with Composer/PHing (follow instructions below under 'TL;DR' section).
+11. Cd in to `bcclient` and install the dependencies with `npm install —force` (some dependencies are out of date; this is fixed by running `npm audit fix —force` change package.json jspdf release to `^1.5.3`, `npm install`)
+12. Create a ‘Service Catalog’ redcap project using ‘ServiceCatalogTemplate.xml’
+13. Upload services to the project or create test services
+14. Update the settings exported from `bcclient/src/lib/bc/js/config.js`
+15. You may also need to update ‘ServiceData.js’ and ‘PerServiceData.js’
+16. Yout may also need to update the “homepage” setting in `bcclient/package.json` to point to your redcap modules folder
+17. Build the react client with `npm run redcap-build`
+18. Update the links path in config.json to point to “bcclient”
+19. In REDCap, configure the Budget Calculator module
 
 # Budget Calculator React Client
 
 For documentation for the React client used with the Budget Calculator, see [bcclient/README.md](bcclient/). The React client is an NPM project that can be built and run directly from its project directory in 'bcclient'.
 
+## Installing and configuring NPM
+
+Building the React client with PHing requires a current version of NPM to be installed on your build machine. See [https://www.npmjs.com/get-npm](https://www.npmjs.com/get-npm) for instructions on installing and configuring NPM.
 
 # Building with PHing
 
@@ -26,19 +39,12 @@ deployment of the ReactJS client and the PHP based REDCap external module. You m
 
 ## TL;DR
 
+- `mkdir <project>/bin`
 - Install Composer as &lt;project&gt;/bin/composer
 - 'php ./bin/composer install'
-- Copy '&lt;project&gt;/./vendor/phing' directory to '&lt;project&gt;/bin/phing'
-- 'php bin/phing/phing/bin/phing.php'
-- See 'build' directory for REDCap Budget Calculator external module.
+- Copy '&lt;project&gt;/./vendor/phing' directory to '&lt;project&gt;/bin/'
+- `php bin/phing/phing/bin/phing.php`
 
-## Installing and using Composer
-
-The REDCap Budget Calculator uses Composer as its package manager. To use Composer, install it as &lt;project&gt;/bin/composer. See the instructions for installing and using Composer at the Composer project home page. See [https://getcomposer.org/](https://getcomposer.org/). The PHing tasks in this project depend on Composer being located in &lt;project&gt;/bin/composer. However, you can customize 'build.xml' to fit your build environment's needs.
-
-## Installing and configuring NPM
-
-Building the React client with PHing requires a current version of NPM to be installed on your build machine. See [https://www.npmjs.com/get-npm](https://www.npmjs.com/get-npm) for instructions on installing and configuring NPM.
 
 ## Install and run PHing
 
