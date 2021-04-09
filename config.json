@@ -19,7 +19,7 @@
       {
         "name": "Budget Calculator",
         "icon": "clipboard_task",
-        "url": "index.php"
+        "url": "bcclient"
       }
     ]
   },
@@ -47,85 +47,10 @@
       "required": true
     },
     {
-      "key": "welcome-dialog",
-      "name": "Text to display to user on page load (HTML allowed)",
-      "type": "textarea",
-      "required": true,
-      "default": "Thank you for using the Budget Calculator! Please provide the following information to get started."
-    },
-    {
-      "key": "terms-text",
-      "name": "Custom terms user must agree to before being allowed access to the Budget Calculator (leave blank to disable)",
-      "type": "textarea",
-      "default": "I understand that this tool is intended for budgeting purposes only and rates are subject to change."
-    },
-    {
       "key": "noauth-access",
       "name": "Allow access without a REDCap login",
       "type": "checkbox",
-      "default": false
-    },
-    {
-      "key": "save-for-later",
-      "name": "Allow logged in users to to save and restore budgets",
-      "type": "checkbox",
-      "default": false
-    },
-    {
-      "key": "save-token",
-      "name": "API import/update token for 'Save for Later' project (must use included template)",
-      "type": "text",
-      "required": true,
-      "branchingLogic": {
-        "field": "save-for-later",
-        "value": true
-      }
-    },
-    {
-      "key": "export-enabled",
-      "name": "Allow PDF download of budget",
-      "type": "checkbox",
       "default": true
-    },
-    {
-      "key": "submission-target",
-      "name": "Target location for submitted requests",
-      "type": "radio",
-      "choices": [
-        {
-          "name": "Disabled",
-          "value": 0
-        },
-        {
-          "name": "REDCap Project",
-          "value": 1
-        },
-        {
-          "name": "External API",
-          "value": 2
-        }
-      ]
-    },
-    {
-      "key": "submission-pid",
-      "name": "Target project for submitted requests (must use included template)",
-      "type": "project-id",
-      "required": true,
-      "branchingLogic": {
-        "field": "submission-target",
-        "value": 1
-      }
-    },
-    {
-      "key": "submission-dialog",
-      "name": "Text to display to user before confirming a request submission (HTML allowed)",
-      "type": "textarea",
-      "required": true,
-      "default": "We require some additional information before your request can be submitted.",
-      "branchingLogic": {
-        "field": "submission-target",
-        "value": 1
-      }
     }
   ]
 }

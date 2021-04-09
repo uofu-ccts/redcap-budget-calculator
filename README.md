@@ -40,7 +40,7 @@ deployment of the ReactJS client and the PHP based REDCap external module. You m
 ## TL;DR
 
 - `mkdir <project>/bin`
-- Install Composer as &lt;project&gt;/bin/composer
+- Install [Composer](https://getcomposer.org) as &lt;project&gt;/bin/composer
 - 'php ./bin/composer install'
 - Copy '&lt;project&gt;/./vendor/phing' directory to '&lt;project&gt;/bin/'
 - `php bin/phing/phing/bin/phing.php`
