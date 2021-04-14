@@ -17,11 +17,11 @@ Budget Calculator is an external module designed for use with REDCap.
 11. Cd to `bcclient` and install the dependencies with `npm install —force` (some dependencies are out of date; this is fixed by running `npm audit fix —force` change package.json jspdf release to `^1.5.3`, then `npm install`)
 12. Create a ‘Service Catalog’ redcap project using the included ‘ServiceCatalogTemplate.xml’
 13. Upload services to the project or create test services
-14. Update the settings exported from `bcclient/src/lib/bc/js/config.js` for environment. You may also need to update ‘ServiceData.js’ and ‘PerServiceData.js’.
-16. Update or modify the “homepage” setting in `bcclient/package.json` to point to your redcap modules folder
-17. Build the react client with `npm run redcap-build`
-18. Update the links path in config.json to point to “bcclient”
-19. In REDCap, configure the Budget Calculator module
+14. Update the settings exported from `bcclient/src/lib/bc/js/config.js` for environment - you may also need to update ‘ServiceData.js’ and ‘PerServiceData.js’.
+15. Update or modify the “homepage” setting in `bcclient/package.json` to point to your redcap modules folder
+16. Build the react client with `npm run redcap-build`
+17. Update the links path in `config.json` to point to “bcclient”
+18. Navigate to the `Control Center` > `External Modules` as your REDCap admin, and configure the Budget Calculator module.
 
 # Budget Calculator React Client
 
