@@ -80,7 +80,7 @@ class BudgetCalculator extends AbstractExternalModule
     public function redcap_module_link_check_display($project_id, $link)
     {
         if ($this->getSystemSetting('noauth-access') == true) {
-            $link['url'] = $link['url'] . '&NOAUTH';
+            $link['url'] = $link['url'];
         }
 
         return $link;
