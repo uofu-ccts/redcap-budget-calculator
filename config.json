@@ -25,7 +25,6 @@
   },
 
   "no-auth-pages": [
-    "index",
     "api/echo_api",
     "api/init_calculator_api",
     "api/service_catalog_api",
@@ -45,12 +44,6 @@
       "name": "Service Catalog reference project (must use included template)",
       "type": "project-id",
       "required": true
-    },
-    {
-      "key": "noauth-access",
-      "name": "Allow access without a REDCap login",
-      "type": "checkbox",
-      "default": true
     }
   ]
 }
