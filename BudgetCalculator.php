@@ -4,7 +4,7 @@ namespace UIOWA\BudgetCalculator;
 use ExternalModules\AbstractExternalModule;
 use ExternalModules\ExternalModules;
 
-require_once 'vendor/autoload.php';
+// require_once 'vendor/autoload.php';
 
 class BudgetCalculator extends AbstractExternalModule
 {
